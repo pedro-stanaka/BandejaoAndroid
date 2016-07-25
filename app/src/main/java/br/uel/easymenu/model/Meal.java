@@ -34,7 +34,6 @@ public class Meal implements Parcelable, Comparable<Meal> {
 
     private long id;
 
-    @JsonProperty("meal_date")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private java.util.Calendar date;
 

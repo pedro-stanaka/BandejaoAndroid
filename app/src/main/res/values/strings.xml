@@ -17,6 +17,7 @@
     <string name="network_error">It occurred a network error</string>
     <string name="parse_error">The server did not return a valid JSON</string>
     <string name="unknown_network_error">There was an unknown error from the server</string>
+    <string name="invalid_json">The server returned a different format</string>
     <string name="new_meals">Menu has been updated. Nice Meal!!! =)</string>
 
     <string name="breakfast">Breakfast</string>

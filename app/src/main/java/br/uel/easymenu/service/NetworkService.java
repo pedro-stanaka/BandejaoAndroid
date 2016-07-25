@@ -16,7 +16,9 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -52,12 +54,20 @@ public class NetworkService {
         StringRequest request = new StringRequest(Request.Method.GET, urlWeeklyMeals, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                response = response.replaceAll("\\\\", "");
 
                 List<Meal> meals = mealService.deserializeMeal(response);
-                mealService.replaceMealsFromCurrentWeek(meals);
 
-                if (listener != null) {
-                    listener.onSuccess();
+                if(meals != null) {
+                    mealService.replaceMealsFromCurrentWeek(meals);
+
+                    if (listener != null) {
+                        listener.onSuccess();
+                    }
+                }
+                else {
+                    NetworkEvent event = new NetworkEvent(NetworkErrorType.INVALID_JSON);
+                    eventBus.post(event);
                 }
             }
         }, new Response.ErrorListener() {
@@ -72,8 +82,14 @@ public class NetworkService {
                 eventBus.post(event);
                 Log.e(App.TAG, "Error: " + errorType + "");
             }
-        });
-
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Accept", "application/json");
+                return params;
+            }
+        };
         requestQueue.add(request);
     }
 

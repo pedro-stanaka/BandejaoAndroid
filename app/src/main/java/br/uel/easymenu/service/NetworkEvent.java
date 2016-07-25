@@ -51,7 +51,8 @@ public class NetworkEvent {
         SERVER_ERROR(R.string.server_error),
         GENERIC_ERROR(R.string.network_error),
         PARSE_ERROR(R.string.parse_error),
-        UNKNOWN_ERROR(R.string.unknown_network_error);
+        UNKNOWN_ERROR(R.string.unknown_network_error),
+        INVALID_JSON(R.string.invalid_json);
 
         public final int resourceId;
 

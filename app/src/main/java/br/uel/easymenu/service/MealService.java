@@ -36,16 +36,12 @@ public class MealService {
     public List<Meal> deserializeMeal(String json) {
         List<Meal> meals = null;
 
-        CollectionType type = mapper.getTypeFactory().
-                constructCollectionType(List.class, Meal.class);
         try {
+            CollectionType type = mapper.getTypeFactory().
+                    constructCollectionType(List.class, Meal.class);
             meals = mapper.readValue(json, type);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        if (meals == null) {
-            throw new RuntimeException("Json not valid: " + json);
         }
 
         return meals;
