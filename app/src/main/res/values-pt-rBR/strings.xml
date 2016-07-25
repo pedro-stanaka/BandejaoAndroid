@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Bandejao</string>
+    <string name="app_name">Bandejão</string>
     <string name="title">Cardápio - %1$s</string>
     <string name="title_without_university">Cardápio</string>
     <string name="playservices_not_supported">Play services não encontrado.</string>
