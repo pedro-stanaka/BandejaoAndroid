@@ -1,4 +1,4 @@
-package br.uel.easymenu.adapter;
+package br.uel.easymenu.gui;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,14 +8,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import br.uel.easymenu.R;
+import br.uel.easymenu.adapter.MealListAdapter;
 
-public class LastDishDivider extends RecyclerView.ItemDecoration {
+public class MealDivider extends RecyclerView.ItemDecoration {
 
     private Context context;
 
     private Drawable divider;
 
-    public LastDishDivider(Context context) {
+    public MealDivider(Context context) {
         this.context = context;
         this.divider = ContextCompat.getDrawable(context, R.drawable.line_divider);
     }

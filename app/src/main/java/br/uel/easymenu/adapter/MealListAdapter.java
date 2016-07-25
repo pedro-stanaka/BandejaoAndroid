@@ -11,6 +11,8 @@ import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import java.util.List;
 
 import br.uel.easymenu.R;
+import br.uel.easymenu.gui.DishViewHolder;
+import br.uel.easymenu.gui.MealViewHolder;
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
 

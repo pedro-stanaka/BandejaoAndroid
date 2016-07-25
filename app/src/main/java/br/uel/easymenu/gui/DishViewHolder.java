@@ -1,4 +1,4 @@
-package br.uel.easymenu.adapter;
+package br.uel.easymenu.gui;
 
 import android.view.View;
 import android.widget.TextView;
