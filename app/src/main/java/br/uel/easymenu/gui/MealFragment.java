@@ -6,6 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import br.uel.easymenu.R;
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
@@ -21,11 +26,12 @@ public class MealFragment extends Fragment {
 
         ViewGroup group = (ViewGroup) rootView.findViewById(R.id.layout_dishes);
 
-        Meal meal = bundle.getParcelable(MEAL_ARGS);
+        List<Meal> meals = bundle.getParcelableArrayList(MEAL_ARGS);
 
         LayoutInflater inflaterTextView = LayoutInflater.from(this.getActivity());
 
-        for (Dish dish : meal.getDishes()) {
+        // TODO: Fix this
+        for (Dish dish : meals.get(0).getDishes()) {
             TextView dishTxtView = (TextView) inflaterTextView.inflate(R.layout.dish_text, null);
             dishTxtView.setText(dish.getDishName());
             group.addView(dishTxtView);
@@ -33,6 +39,4 @@ public class MealFragment extends Fragment {
 
         return rootView;
     }
-
-
 }

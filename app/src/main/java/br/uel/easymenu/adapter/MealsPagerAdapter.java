@@ -4,22 +4,27 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import br.uel.easymenu.gui.MealFragment;
-import br.uel.easymenu.model.Meal;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import br.uel.easymenu.gui.MealFragment;
+import br.uel.easymenu.model.GroupedMeals;
+import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.utils.CalendarUtils;
+
 public class MealsPagerAdapter extends FragmentStatePagerAdapter {
 
-    private List<Meal> meals;
+    private GroupedMeals groupedMeals;
 
-    public MealsPagerAdapter(FragmentManager fm, List<Meal> meals) {
+    public MealsPagerAdapter(FragmentManager fm, GroupedMeals meals) {
         super(fm);
-        this.meals = meals;
+        this.groupedMeals = meals;
     }
 
     @Override
@@ -27,7 +32,8 @@ public class MealsPagerAdapter extends FragmentStatePagerAdapter {
         Fragment mealFragment = new MealFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(MealFragment.MEAL_ARGS, meals.get(position));
+        ArrayList<Meal> meals = groupedMeals.getMealsByIndex(position);
+        bundle.putParcelableArrayList(MealFragment.MEAL_ARGS, meals);
         mealFragment.setArguments(bundle);
 
         return mealFragment;
@@ -35,12 +41,13 @@ public class MealsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return meals.size();
+        return groupedMeals.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        Calendar calendar = meals.get(position).getDate();
+
+        Calendar calendar = groupedMeals.getDateByIndex(position);
 
         DateFormat dateFormatDate = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
         DateFormat dateFormatDayOfWeek = new SimpleDateFormat("E", Locale.getDefault());

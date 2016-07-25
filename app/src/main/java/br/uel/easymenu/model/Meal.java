@@ -2,17 +2,15 @@ package br.uel.easymenu.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
+
+import br.uel.easymenu.utils.CalendarUtils;
 
 public class Meal implements Parcelable {
-
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     public static final Meal.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
 
@@ -34,7 +32,7 @@ public class Meal implements Parcelable {
 
     private long id;
 
-    private Calendar date;
+    private java.util.Calendar date;
 
     private List<Dish> dishes = new ArrayList<Dish>();
 
@@ -43,7 +41,7 @@ public class Meal implements Parcelable {
     public Meal() {
     }
 
-    public Meal(Calendar date, String period, List<Dish> dishes) {
+    public Meal(java.util.Calendar date, String period, List<Dish> dishes) {
         this.date = date;
         this.period = period;
         this.dishes = dishes;
@@ -51,21 +49,27 @@ public class Meal implements Parcelable {
 
     public Meal(Parcel in) {
         id = in.readLong();
-        date = (Calendar) in.readSerializable();
+        date = (java.util.Calendar) in.readSerializable();
         period = in.readString();
         in.readTypedList(dishes, Dish.CREATOR);
     }
 
-    public Calendar getDate() {
+    public java.util.Calendar getDate() {
         return date;
     }
 
-    public void setDate(Calendar date) {
+    public void setDate(java.util.Calendar date) {
         this.date = date;
     }
 
-    public boolean compareDate(Calendar compareDate) {
-        return SDF.format(this.date.getTime()).equals(SDF.format(compareDate.getTime()));
+    public boolean compareDate(java.util.Calendar compareDate) {
+        String thisDate = CalendarUtils.fromCalendarToString(this.date);
+        String thatDate = CalendarUtils.fromCalendarToString(compareDate);
+        return thisDate.equals(thatDate);
+    }
+
+    public String getStringDate() {
+        return CalendarUtils.fromCalendarToString(this.date);
     }
 
     public long getId() {

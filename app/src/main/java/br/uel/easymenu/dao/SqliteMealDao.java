@@ -3,21 +3,17 @@ package br.uel.easymenu.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+
+import java.util.List;
+import java.util.Map;
+
 import br.uel.easymenu.model.Dish;
+import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.tables.MealTable;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import br.uel.easymenu.utils.CalendarUtils;
 
 public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
-
-    //    The date is stored as a string with this format in the database
-    private static String DATE_FORMAT = "yyyy-MM-dd";
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     private static String DEFAULT_FILTER = "'+1 day',  'weekday 0', '-7 day'";
 
@@ -50,9 +46,9 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     }
 
     @Override
-    public List<Meal> mealsOfTheWeek(Calendar calendar) {
+    public List<Meal> mealsOfTheWeek(java.util.Calendar calendar) {
 
-        String calendarQueryString = dateFormat.format(calendar.getTime());
+        String calendarQueryString = CalendarUtils.fromCalendarToString(calendar);
 
         String sql = "SELECT * FROM " + MealTable.NAME +
                 " WHERE (" + SAME_WEEK + ") AND ( " + SAME_YEAR + ")" +
@@ -66,12 +62,18 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     }
 
     @Override
+    public GroupedMeals mealsOfTheWeekGroupedByDay(java.util.Calendar calendar) {
+        List<Meal> weeklyMeals = mealsOfTheWeek(calendar);
+        return new GroupedMeals(weeklyMeals);
+    }
+
+    @Override
     protected void populateValues(ContentValues values, Meal meal) {
 
         if (meal.getId() != 0)
             values.put(MealTable.ID_MEAL, meal.getId());
 
-        String dateString = dateFormat.format(meal.getDate().getTime());
+        String dateString = CalendarUtils.fromCalendarToString(meal.getDate());
         values.put(MealTable.DATE_MEAL, dateString);
 
         values.put(MealTable.PERIOD, meal.getPeriod());
@@ -82,7 +84,8 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
         Meal meal = new Meal();
 
         meal.setId(getLongFromColumn(MealTable.ID_MEAL, cursor));
-        meal.setDate(parseDateToCalendar(cursor));
+        String calendarString = getStringFromColumn(MealTable.DATE_MEAL, cursor);
+        meal.setDate(CalendarUtils.fromStringToCalendar(calendarString));
         meal.setPeriod(getStringFromColumn(MealTable.PERIOD, cursor));
 
         SqliteDishDao dishDao = new SqliteDishDao(context);
@@ -91,19 +94,4 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
 
         return meal;
     }
-
-    private Calendar parseDateToCalendar(Cursor cursor) {
-        Calendar calendar = Calendar.getInstance();
-
-        String dateString = getStringFromColumn(MealTable.DATE_MEAL, cursor);
-        try {
-            Date date = dateFormat.parse(dateString);
-            calendar.setTime(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return calendar;
-    }
-
 }

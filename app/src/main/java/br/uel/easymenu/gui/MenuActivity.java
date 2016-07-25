@@ -14,17 +14,15 @@ import com.google.inject.Key;
 
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import br.uel.easymenu.R;
 import br.uel.easymenu.adapter.MealsPagerAdapter;
 import br.uel.easymenu.adapter.MissingMealAdapter;
 import br.uel.easymenu.dao.MealDao;
-import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.service.NetworkService;
 import roboguice.RoboGuice;
-import roboguice.inject.InjectView;
 import roboguice.util.RoboContext;
 
 public class MenuActivity extends AppCompatActivity implements RoboContext {
@@ -40,6 +38,7 @@ public class MenuActivity extends AppCompatActivity implements RoboContext {
 
     private final static String MENU_WITHOUT_MEALS = "without_meals";
 
+    // TODO: Use InjectView
     private ViewPager viewPager;
 
     private Toolbar toolbar;
@@ -58,27 +57,25 @@ public class MenuActivity extends AppCompatActivity implements RoboContext {
 
         setSupportActionBar(toolbar);
         setGuiWithMeals();
-
         // TODO: Setup do broadcast receiver
     }
 
     private void setGuiWithMeals() {
-        List<Meal> meals = mealDao.mealsOfTheWeek(Calendar.getInstance());
+        GroupedMeals groupedMeals = mealDao.mealsOfTheWeekGroupedByDay(Calendar.getInstance());
 
-        // This is wrong
-        // Get meals of the same day with period
-        FragmentStatePagerAdapter mealsPagerAdapter = (meals.size() > 0) ?
-                new MealsPagerAdapter(getSupportFragmentManager(), meals) :
+        FragmentStatePagerAdapter mealsPagerAdapter = (groupedMeals.size() > 0) ?
+                new MealsPagerAdapter(getSupportFragmentManager(), groupedMeals) :
                 new MissingMealAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(mealsPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        if(meals.size() > 0) {
-            for (int i = 0; i < meals.size(); i++) {
-                if (meals.get(i).compareDate(Calendar.getInstance())) {
-                    tabLayout.getTabAt(i).select();
-                }
+        // Setting today's tab
+        if(groupedMeals.hasDay(Calendar.getInstance())) {
+            int index = groupedMeals.getPositionByDay(Calendar.getInstance());
+            TabLayout.Tab tab = tabLayout.getTabAt(index);
+            if (tab != null) {
+                tab.select();
             }
         }
     }
