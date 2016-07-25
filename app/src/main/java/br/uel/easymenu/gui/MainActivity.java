@@ -3,18 +3,16 @@ package br.uel.easymenu.gui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import br.uel.easymenu.App;
-import br.uel.easymenu.service.GcmService;
+
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.inject.Inject;
+import com.google.android.gms.common.GoogleApiAvailability;
+
+import br.uel.easymenu.App;
+import br.uel.easymenu.gcm.RegistrationIntentService;
 import roboguice.RoboGuice;
 import roboguice.activity.RoboActivity;
 
 public class MainActivity extends RoboActivity {
-
-    @Inject
-    private GcmService gcmService;
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -27,15 +25,8 @@ public class MainActivity extends RoboActivity {
         startActivity(intent);
 
         if (checkPlayServices()) {
-
-            String regId = gcmService.getRegistrationId();
-
-            if (regId == null) {
-                gcmService.registerInBackground();
-            } else {
-                Log.d(App.TAG, "User registered with id : " + regId);
-            }
-
+            Intent intentGcm = new Intent(this, RegistrationIntentService.class);
+            startService(intentGcm);
         } else {
             Log.e(App.TAG, "No valid Google Play Services APK found");
         }
@@ -43,19 +34,15 @@ public class MainActivity extends RoboActivity {
         finish();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkPlayServices();
-    }
-
     private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
             } else {
+                Log.i(App.TAG, "This device is not supported.");
                 finish();
             }
             return false;
