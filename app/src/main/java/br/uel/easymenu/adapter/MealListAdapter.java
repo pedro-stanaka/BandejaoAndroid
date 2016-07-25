@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.uel.easymenu.R;
@@ -16,7 +15,7 @@ import br.uel.easymenu.model.Meal;
 
 public class MealListAdapter extends BaseExpandableListAdapter {
 
-    private List<Meal> meals = new ArrayList();
+    private List<Meal> meals;
 
     private Context context;
 
@@ -25,7 +24,7 @@ public class MealListAdapter extends BaseExpandableListAdapter {
     public MealListAdapter(Context context, List<Meal> meals) {
         this.meals = meals;
         this.context = context;
-        inflater = LayoutInflater.from(context);
+        this.inflater = LayoutInflater.from(context);
     }
 
     @Override

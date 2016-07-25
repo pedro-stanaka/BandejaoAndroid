@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.inject.Inject;
 
 import br.uel.easymenu.App;
 import br.uel.easymenu.dao.MealDao;
+import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
 
 public class MealService {

@@ -1,12 +1,10 @@
 <resources>
 
-    <style name="Theme.EasyMenuTheme" parent="Base.Theme.EasyMenuTheme"></style>
-
     <style name="Base.Theme.EasyMenuTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#673AB7</item>
-        <item name="colorPrimaryDark">#512DA8</item>
-        <item name="colorAccent">#FF4081</item>
-        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/secondaryColor</item>
     </style>
+
 
 </resources>
