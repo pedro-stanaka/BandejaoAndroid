@@ -74,7 +74,7 @@ public class MealService {
             try {
                 Log.i(App.TAG, "Deleting " + oldMeals.size() + " meals in the database: " + oldMeals);
 
-                for (Meal meal : newMeals) {
+                for (Meal meal : oldMeals) {
                     mealDao.delete(meal.getId());
                 }
                 Log.i(App.TAG, "Inserting " + newMeals.size() + " new meals in the database: " + newMeals);

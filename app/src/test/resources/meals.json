@@ -1,0 +1,23 @@
+[
+  {
+    "date": "{{ monday }}",
+    "period": "BREAKFAST",
+    "dishes": [
+      "Burger"
+    ]
+  },
+  {
+    "date": "{{ monday }}",
+    "period": "LUNCH",
+    "dishes": [
+      "Lettuce"
+    ]
+  },
+  {
+    "date": "{{ monday }}",
+    "period": "DINNER",
+    "dishes": [
+      "Rice"
+    ]
+  }
+]

@@ -13,7 +13,13 @@ import javax.inject.Inject;
 import br.uel.easymenu.ioc.RobolectricApp;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.service.MealService;
+import br.uel.easymenu.service.Serializer;
+import br.uel.easymenu.utils.CalendarUtils;
 
+import static br.uel.easymenu.CalendarFactory.monday;
+import static br.uel.easymenu.CalendarFactory.mondayPlusDays;
+import static br.uel.easymenu.utils.CalendarUtils.dayOfWeekName;
+import static br.uel.easymenu.utils.CalendarUtils.fromCalendarToString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
@@ -22,17 +28,15 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class TestJsonResponse {
 
     @Inject
-    MealService mealService;
+    Serializer serializer;
 
     private List<Meal> meals;
 
     @Before
     public void injectVariables() throws Exception {
         RobolectricApp.component().inject(this);
-        String mealsJson = JsonUtils.convertJsonToString("success.json");
-//      TODO: Fix this after refactoring
-//        meals = mealService.deserializeMeal(mealsJson);
-        meals = null;
+        String mealsJson = JsonUtils.convertJsonToString("meals.json");
+        meals = serializer.deserialize(mealsJson, Meal.class);
     }
 
     @Test
@@ -42,22 +46,22 @@ public class TestJsonResponse {
 
     @Test
     public void mealPeriods() throws Exception {
-        assertThat(meals.get(0).getPeriod(), equalTo(Meal.LUNCH));
-        assertThat(meals.get(1).getPeriod(), equalTo(Meal.BREAKFAST));
-        assertThat(meals.get(2).getPeriod(), equalTo(Meal.BOTH));
+        assertThat(meals.get(0).getPeriod(), equalTo(Meal.BREAKFAST));
+        assertThat(meals.get(1).getPeriod(), equalTo(Meal.LUNCH));
+        assertThat(meals.get(2).getPeriod(), equalTo(Meal.DINNER));
     }
 
     @Test
     public void mealDishes() throws Exception {
-        assertThat(meals.get(0).getDishes().get(1).getDishName(), equalTo("Burger"));
-        assertThat(meals.get(1).getDishes().get(1).getDishName(), equalTo("Lettuce"));
+        assertThat(meals.get(0).getDishes().get(0).getDishName(), equalTo("Burger"));
+        assertThat(meals.get(1).getDishes().get(0).getDishName(), equalTo("Lettuce"));
         assertThat(meals.get(2).getDishes().get(0).getDishName(), equalTo("Rice"));
     }
 
     @Test
     public void mealDate() throws Exception {
-        assertThat(meals.get(0).getStringDate(), equalTo("2016-04-15"));
-        assertThat(meals.get(1).getStringDate(), equalTo("2016-04-15"));
-        assertThat(meals.get(2).getStringDate(), equalTo("2016-04-16"));
+        assertThat(meals.get(0).getStringDate(), equalTo(fromCalendarToString(monday())));
+        assertThat(meals.get(0).getStringDate(), equalTo(fromCalendarToString(monday())));
+        assertThat(meals.get(0).getStringDate(), equalTo(fromCalendarToString(monday())));
     }
 }

@@ -6,8 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.greenrobot.eventbus.EventBus;
 
+import javax.inject.Named;
+
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.dao.UniversityDao;
+import br.uel.easymenu.service.DefaultResponseHandler;
 import br.uel.easymenu.service.MealService;
 
 public class MockModule extends AppModule {
@@ -20,8 +23,10 @@ public class MockModule extends AppModule {
     }
 
     @Override
-    public MealService provideMealService(ObjectMapper mapper, MealDao mealDao, EventBus eventBus, UniversityDao universityDao) {
-        return new MealService(mapper, this.mealDaoMock, eventBus, universityDao);
+    public MealService provideMealService(@Named("url.weekly_meals") String url,
+                                          MealDao mealDao,
+                                          DefaultResponseHandler meals) {
+        return new MealService(url, mealDao, meals);
     }
 
 }

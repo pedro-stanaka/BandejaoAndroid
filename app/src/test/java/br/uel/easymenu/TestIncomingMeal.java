@@ -69,7 +69,7 @@ public class TestIncomingMeal {
         meals.remove(0);
 
         mealService.matchMeals(meals, university);
-        assertThat(mealDao.count(), equalTo(university.getMeals().size()));
+        assertThat(mealDao.count(), equalTo(meals.size()));
     }
 
     @Test
