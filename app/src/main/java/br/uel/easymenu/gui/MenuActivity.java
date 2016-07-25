@@ -91,6 +91,12 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setDisplayHomeAsUpEnabled(true);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Set the Actionbar title
+        String title = getString(R.string.title);
+        String universityTitle = getString(R.string.university_name);
+        String actionbarTitle = String.format(title, universityTitle);
+        actionBar.setTitle(actionbarTitle);
+
         bus.register(this);
 
         // TODO: Check if it has Internet
