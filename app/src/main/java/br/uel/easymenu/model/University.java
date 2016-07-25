@@ -46,6 +46,9 @@ public class University {
 
     public void setMeals(List<Meal> meals) {
         this.meals = meals;
+        for (Meal meal : meals) {
+            meal.setUniversity(this);
+        }
     }
 
     @Override

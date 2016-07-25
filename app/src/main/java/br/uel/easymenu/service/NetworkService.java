@@ -1,7 +1,6 @@
 package br.uel.easymenu.service;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;

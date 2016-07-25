@@ -19,11 +19,14 @@ import javax.inject.Inject;
 
 import br.uel.easymenu.dao.DishDao;
 import br.uel.easymenu.dao.MealDao;
+import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.ioc.RobolectricApp;
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.model.University;
 import br.uel.easymenu.tables.DbHelper;
 
+import static br.uel.easymenu.utils.CalendarUtils.fromStringToCalendar;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -37,6 +40,9 @@ public class TestDaoMeal {
 
     @Inject
     DishDao dishDao;
+
+    @Inject
+    UniversityDao universityDao;
 
     @Before
     public void setupTests() {
@@ -115,12 +121,13 @@ public class TestDaoMeal {
         List<Meal> meals = createMeals("2014-02-05", "2014-02-10", "2014-02-12");
 
         mealDao.insert(meals);
+        University university = meals.get(0).getUniversity();
 
-        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-07"), null);
+        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-07"), university);
         assertThat(queryMeals.size(), equalTo(1));
         assertThat(queryMeals.get(0).getDate(), equalTo(meals.get(0).getDate()));
 
-        List<Meal> newMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-14"), null);
+        List<Meal> newMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-14"), university);
         assertThat(newMeals.size(), equalTo(2));
         assertThat(newMeals.get(0).getDate(), equalTo(meals.get(1).getDate()));
     }
@@ -129,8 +136,9 @@ public class TestDaoMeal {
     public void testMealDifferentYear() throws Exception {
         List<Meal> meals = createMeals("2013-02-10", "2014-02-11", "2015-02-12");
         mealDao.insert(meals);
+        University university = meals.get(0).getUniversity();
 
-        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-10"), null);
+        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-10"), university);
         assertThat(queryMeals.size(), equalTo(1));
         assertThat(queryMeals.get(0).getDate(), equalTo(meals.get(1).getDate()));
     }
@@ -139,8 +147,9 @@ public class TestDaoMeal {
     public void testMealSameValues() throws Exception {
         List<Meal> meals = createMeals("2014-02-10", "2014-02-10", "2014-02-10");
         mealDao.insert(meals);
+        University university = meals.get(0).getUniversity();
 
-        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-12"), null);
+        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-12"), university);
         assertThat(queryMeals.size(), equalTo(1));
         assertThat(queryMeals.get(0).getDate(), equalTo(meals.get(0).getDate()));
     }
@@ -149,12 +158,13 @@ public class TestDaoMeal {
     public void testNewYearWeek() throws Exception {
         List<Meal> meals = createMeals("2014-12-27", "2014-12-31", "2015-01-01", "2015-01-02", "2015-01-04", "2016-01-01");
         mealDao.insert(meals);
+        University university = meals.get(0).getUniversity();
 
-        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2015-01-02"), null);
+        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2015-01-02"), university);
         assertThat(queryMeals.size(), equalTo(3));
         assertThat(queryMeals.get(0).getDate(), equalTo(meals.get(1).getDate()));
 
-        queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-12-30"), null);
+        queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-12-30"), university);
         assertThat(queryMeals.size(), equalTo(3));
         assertThat(queryMeals.get(1).getDate(), equalTo(meals.get(2).getDate()));
     }
@@ -163,22 +173,12 @@ public class TestDaoMeal {
 
         List<Meal> meals = new ArrayList<>();
 
+        University university = new UniversityBuilder().withName("Name").build();
+        universityDao.insert(university);
         for (String calendar : calendars) {
-            meals.add(new MealBuilder().withDate(calendar).build());
+            meals.add(new MealBuilder().withDate(calendar).withUniversity(university).build());
         }
 
         return meals;
-    }
-
-    private Calendar fromStringToCalendar(String calendarStr) {
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        try {
-            calendar.setTime(sdf.parse(calendarStr));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return calendar;
     }
 }

@@ -1,12 +1,10 @@
-package br.uel.easymenu.utils;
+package br.uel.easymenu;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 
 import java.io.InputStream;
 import java.util.HashMap;
-
-import br.uel.easymenu.CalendarFactory;
 
 import static br.uel.easymenu.utils.CalendarUtils.fromCalendarToString;
 

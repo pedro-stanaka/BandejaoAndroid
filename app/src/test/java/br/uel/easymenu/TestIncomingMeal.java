@@ -18,17 +18,19 @@ import java.util.List;
 import javax.inject.Inject;
 
 import br.uel.easymenu.dao.MealDao;
+import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.ioc.RobolectricApp;
 import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.model.University;
 import br.uel.easymenu.service.MealService;
 import br.uel.easymenu.tables.DbHelper;
 
 import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
@@ -39,6 +41,9 @@ public class TestIncomingMeal {
 
     @Inject
     MealService mealService;
+
+    @Inject
+    UniversityDao universityDao;
 
     @Before
     public void setupTests() {
@@ -55,97 +60,64 @@ public class TestIncomingMeal {
     public void testPersistNewMeals() throws Exception {
         List<Meal> meals = MealBuilder.createFakeMeals();
         mealDao.insert(meals);
-        assertEquals(mealDao.count(), meals.size());
+        assertThat(mealDao.count(), equalTo(meals.size()));
     }
 
     @Test
     public void testReplaceOldMeals() throws Exception {
-        List<Meal> meals = MealBuilder.createFakeMeals();
-        mealDao.insert(meals);
+        University university = UniversityBuilder.createFakeUniversty();
+        List<Meal> meals = university.getMeals();
+        universityDao.insertWithMeals(university);
         meals.remove(0);
-//        mealService.replaceMealsFromCurrentWeek(meals);
-        assertEquals(mealDao.count(), meals.size());
+
+        mealService.replaceMealsFromCurrentWeek(meals, university);
+        assertThat(mealDao.count(), equalTo(university.getMeals().size()));
     }
 
     @Test
     public void twoEqualMealsShouldNotBeReplaced() {
-        List<Meal> firstMeals =  MealBuilder.createFakeMeals();
+        University university = UniversityBuilder.createFakeUniversty();
+        universityDao.insertWithMeals(university);
+        List<Meal> firstMeals = university.getMeals();
+
         List<Meal> secondMeals =  MealBuilder.createFakeMeals();
 
-        mealDao.insert(firstMeals);
-//        mealService.replaceMealsFromCurrentWeek(secondMeals);
+        mealService.replaceMealsFromCurrentWeek(secondMeals, university);
         // It shouldn't remove the first meals and insert the new swapped one
-        assertEquals(firstMeals.get(0).getId(), mealDao.fetchAll().get(0).getId());
+        assertThat(firstMeals.get(0).getId(), equalTo(mealDao.fetchAll().get(0).getId()));
     }
 
     @Test
     public void mealsShouldNotBeReplacedWithDifferentOrder() throws Exception {
-        List<Meal> firstMeals = MealBuilder.createFakeMeals();
-        List<Meal> swappedMeals = MealBuilder.createFakeMeals();
+        University university = UniversityBuilder.createFakeUniversty();
+        universityDao.insertWithMeals(university);
+        List<Meal> firstMeals = university.getMeals();
 
+        List<Meal> swappedMeals = MealBuilder.createFakeMeals();
         Collections.swap(swappedMeals, 0, 2);
         Collections.swap(swappedMeals, 1, 2);
-        mealDao.insert(firstMeals);
-//        mealService.replaceMealsFromCurrentWeek(swappedMeals);
-        assertEquals(firstMeals.get(0).getId(), mealDao.fetchAll().get(0).getId());
+
+        mealService.replaceMealsFromCurrentWeek(swappedMeals, university);
+        assertThat(firstMeals.get(0).getId(), equalTo(mealDao.fetchAll().get(0).getId()));
     }
 
     @Test
     public void testDatabaseRollback() throws Exception {
         // Populating the database first
-        List<Meal> firstMeals = MealBuilder.createFakeMeals();
-        mealDao.insert(firstMeals);
-        int mealsSize = mealDao.count();
+        University university = UniversityBuilder.createFakeUniversty();
+        universityDao.insertWithMeals(university);
+        int initialMealsSize = university.getMeals().size();
 
         // Injection of mock
         MealDao mealDaoMock = mock(MealDao.class);
         doThrow(new SQLiteException()).when(mealDaoMock).insert(anyList());
-
         RobolectricApp.mockComponent(mealDaoMock).inject(this);
 
         List<Meal> exceptionMeals = MealBuilder.createFakeMeals();
         // Removing to confirm the rollback
         exceptionMeals.remove(0);
-//        mealService.replaceMealsFromCurrentWeek(exceptionMeals);
+        mealService.replaceMealsFromCurrentWeek(exceptionMeals, university);
 
-        assertEquals(mealsSize, firstMeals.size());
-    }
-
-    @Test
-    public void testMealSelectionByHourOfDay() throws Exception {
-        List<Meal> meals = createMealsWithDifferentPeriods();
-        assertMealsTime(meals);
-    }
-
-    @Test
-    public void testMealSelectionByHourOfDayIndex() throws Exception {
-        List<Meal> meals = createMealsWithDifferentPeriods();
-        Collections.swap(meals, 1, 2);
-        Collections.swap(meals, 0, 2);
-        assertMealsTime(meals);
-    }
-
-    private void assertMealsTime(List<Meal> meals) {
-        assertMealTime(meals, Meal.BREAKFAST, 7);
-        assertMealTime(meals, Meal.LUNCH, 10);
-        assertMealTime(meals, Meal.LUNCH, 13);
-        assertMealTime(meals, Meal.DINNER, 15);
-        assertMealTime(meals, Meal.DINNER, 20);
-        assertMealTime(meals, Meal.BREAKFAST, 23);
-    }
-
-    private void assertMealTime(List<Meal> meals, String period, int hourOfDay) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        Meal meal = mealService.selectMealByTime(meals, calendar);
-        assertThat(meal.getPeriod(), equalTo(period));
-    }
-
-    private List<Meal> createMealsWithDifferentPeriods() throws Exception {
-        Meal mealBreakfast = new MealBuilder().withPeriod(Meal.BREAKFAST).build();
-        Meal mealLunch = new MealBuilder().withPeriod(Meal.LUNCH).build();
-        Meal mealDinner = new MealBuilder().withPeriod(Meal.DINNER).build();
-
-        return Arrays.asList(mealBreakfast, mealLunch, mealDinner);
+        assertEquals(initialMealsSize, university.getMeals().size());
     }
 }

@@ -63,16 +63,4 @@ public class TestDaoUniversity {
         assertThat(university.getFullName(), equalTo(universityDatabase.getFullName()));
         assertThat(university.getName(), equalTo(universityDatabase.getName()));
     }
-
-    @Test
-    public void testMealAssociation() throws Exception {
-        List<Meal> meals = MealBuilder.createFakeMeals();
-        University university = new UniversityBuilder().withMeals(MealBuilder.createFakeMeals()).build();
-        universityDao.insert(university);
-        assertThat(mealDao.count(), equalTo(meals.size()));
-
-        Meal meal = mealDao.findById(1);
-        assertThat(meal.getStringDate(), equalTo(meals.get(0).getStringDate()));
-        assertThat(meal.getPeriod(), equalTo(meals.get(0).getPeriod()));
-    }
 }

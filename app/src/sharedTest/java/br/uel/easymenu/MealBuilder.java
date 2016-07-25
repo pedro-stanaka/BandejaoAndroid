@@ -6,6 +6,7 @@ import java.util.List;
 
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.model.University;
 import br.uel.easymenu.utils.CalendarUtils;
 
 public class MealBuilder {
@@ -13,6 +14,7 @@ public class MealBuilder {
     Calendar calendar = Calendar.getInstance();
     String period = Meal.LUNCH;
     List<Dish> dishes = new ArrayList<Dish>();
+    University university = new UniversityBuilder().build();
 
     public static List<Meal> createFakeMeals() {
         return createFakeMeals(Calendar.getInstance());
@@ -20,12 +22,16 @@ public class MealBuilder {
 
     public static List<Meal> createFakeMeals(Calendar... calendars) {
         ArrayList<Meal> fakeMeals = new ArrayList<>();
+        final University university = new UniversityBuilder().withName("Name").build();
         for (final Calendar calendar : calendars) {
             fakeMeals.addAll(
                     new ArrayList<Meal>() {{
-                        add(new MealBuilder().withCalendar(calendar).withDishes("Rice", "Pizza").withPeriod(Meal.LUNCH).build());
-                        add(new MealBuilder().withCalendar(calendar).withDishes("Beans").withPeriod(Meal.BOTH).build());
-                        add(new MealBuilder().withCalendar(calendar).withDishes("Burger").withPeriod(Meal.BREAKFAST).build());
+                        add(new MealBuilder().withCalendar(calendar).withUniversity(university)
+                                .withDishes("Rice", "Pizza").withPeriod(Meal.LUNCH).build());
+                        add(new MealBuilder().withCalendar(calendar).withUniversity(university)
+                                .withDishes("Beans").withPeriod(Meal.BOTH).build());
+                        add(new MealBuilder().withCalendar(calendar).withUniversity(university)
+                                .withDishes("Burger").withPeriod(Meal.BREAKFAST).build());
                     }});
         }
         return fakeMeals;
@@ -66,7 +72,12 @@ public class MealBuilder {
         return this;
     }
 
+    public MealBuilder withUniversity(University university) {
+        this.university = university;
+        return this;
+    }
+
     public Meal build() {
-        return new Meal(calendar, period, dishes);
+        return new Meal(calendar, period, dishes, university);
     }
 }

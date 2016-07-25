@@ -9,4 +9,6 @@ public interface UniversityDao extends Dao<University> {
     public University findByName(String name);
 
     public List<University> orderByName();
+
+    public long insertWithMeals(University university);
 }

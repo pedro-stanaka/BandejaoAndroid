@@ -65,7 +65,7 @@ public class MealService {
 
     public void replaceMealsFromCurrentWeek(List<University> universities) {
 
-        for(University university : universities) {
+        for (University university : universities) {
 
             University persistedUniversity = universityDao.findByName(university.getName());
             if(persistedUniversity == null) {
@@ -109,6 +109,40 @@ public class MealService {
                 } finally {
                     mealDao.endTransaction();
                 }
+            }
+        }
+    }
+
+    public void replaceMealsFromCurrentWeek(List<Meal> meals, University university) {
+
+        if(university.getId() == 0) {
+            throw new IllegalArgumentException("Don't pass an unpersisted university to this method");
+        }
+
+        List<Meal> mealsCurrentWeek = mealDao.mealsOfTheWeek(Calendar.getInstance(), university);
+        Collections.sort(meals);
+
+        if (!meals.equals(mealsCurrentWeek)) {
+            mealDao.beginTransaction();
+            try {
+                Log.i(App.TAG, "Deleting " + meals.size() + " meals in the database: " + mealsCurrentWeek);
+
+                for (Meal meal : mealsCurrentWeek) {
+                    mealDao.delete(meal.getId());
+                }
+                mealDao.insert(meals);
+
+                Log.i(App.TAG, "Inserting " + meals.size() + " new meals in the database: " + meals);
+                mealDao.setTransactionSuccess();
+
+                // Updating UI
+                NetworkEvent event = new NetworkEvent(NetworkEvent.Type.SUCCESS);
+                eventBus.post(event);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(App.TAG, "Error in new meals persistence " + e.getMessage());
+            } finally {
+                mealDao.endTransaction();
             }
         }
     }

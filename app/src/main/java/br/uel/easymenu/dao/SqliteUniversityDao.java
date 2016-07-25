@@ -6,7 +6,6 @@ import android.database.Cursor;
 
 import java.util.List;
 
-import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.model.University;
 import br.uel.easymenu.tables.UniversityTable;
 
@@ -17,6 +16,21 @@ public class SqliteUniversityDao extends SqliteDao<University> implements Univer
     public SqliteUniversityDao(Context context) {
         super(context, UniversityTable.NAME);
         this.context = context;
+    }
+
+    @Override
+    public long insert(University object) {
+        long id = super.insert(object);
+        object.setId(id);
+        return id;
+    }
+
+    @Override
+    public long insertWithMeals(University university) {
+        this.insert(university);
+        SqliteMealDao mealDao = new SqliteMealDao(context);
+        mealDao.insert(university.getMeals());
+        return university.getId();
     }
 
     @Override
@@ -56,4 +70,6 @@ public class SqliteUniversityDao extends SqliteDao<University> implements Univer
         Cursor cursor = database.rawQuery(sql, null);
         return fetchObjectsFromCursor(cursor);
     }
+
+
 }

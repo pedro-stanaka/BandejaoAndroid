@@ -27,6 +27,10 @@ public class UniversityBuilder {
         return this;
     }
 
+    public static University createFakeUniversty() {
+        return new UniversityBuilder().withMeals(MealBuilder.createFakeMeals()).build();
+    }
+
     public University build() {
         University university = new University();
         university.setName(name);

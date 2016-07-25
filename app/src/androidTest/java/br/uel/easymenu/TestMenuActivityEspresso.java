@@ -23,7 +23,6 @@ import java.util.Calendar;
 import br.uel.easymenu.adapter.MealListAdapter;
 import br.uel.easymenu.gui.MenuActivity;
 import br.uel.easymenu.model.Meal;
-import br.uel.easymenu.utils.JsonUtils;
 import br.uel.easymenu.utils.ResourceUtils;
 
 import static android.support.test.espresso.Espresso.onView;

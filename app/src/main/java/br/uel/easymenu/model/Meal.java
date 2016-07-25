@@ -46,10 +46,11 @@ public class Meal implements Parcelable, Comparable<Meal> {
     public Meal() {
     }
 
-    public Meal(java.util.Calendar date, String period, List<Dish> dishes) {
+    public Meal(java.util.Calendar date, String period, List<Dish> dishes, University university) {
         this.date = date;
         this.period = period;
         this.dishes = dishes;
+        this.university = university;
     }
 
     public Meal(Parcel in) {

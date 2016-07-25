@@ -2,14 +2,27 @@ package br.uel.easymenu.ioc;
 
 import org.robolectric.RuntimeEnvironment;
 
-import br.uel.easymenu.TestMenuActivity;
+import br.uel.easymenu.TestDaoMeal;
+import br.uel.easymenu.TestDaoUniversity;
+import br.uel.easymenu.TestIncomingMeal;
+import br.uel.easymenu.TestJsonResponse;
+import br.uel.easymenu.TestMealByHour;
 import br.uel.easymenu.dao.MealDao;
 import dagger.Component;
 
 public class RobolectricApp {
 
+    @Component(modules = AppModule.class)
+    public interface RobolectricComponent {
+        void inject(TestJsonResponse testJsonResponse);
+        void inject(TestIncomingMeal testIncomingMeal);
+        void inject(TestDaoMeal testDaoMeal);
+        void inject(TestDaoUniversity testDaoUniversity);
+        void inject(TestMealByHour testMealByHour);
+    }
+
     public static RobolectricComponent component() {
-        return DaggerTestComponent
+        return DaggerRobolectricApp_RobolectricComponent
                 .builder()
                 .appModule(new AppModule(RuntimeEnvironment.application))
                 .build();
@@ -18,7 +31,7 @@ public class RobolectricApp {
     // This method of passing mocks does not scale
     // If you have more mocks in the tests, check the library https://github.com/fabioCollini/DaggerMock
     public static RobolectricComponent mockComponent(MealDao mockDao) {
-        return DaggerTestComponent
+        return DaggerRobolectricApp_RobolectricComponent
                 .builder()
                 .appModule(new MockModule(RuntimeEnvironment.application, mockDao))
                 .build();

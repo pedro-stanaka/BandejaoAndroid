@@ -30,7 +30,7 @@ public class TestJsonResponse {
     public void injectVariables() throws Exception {
         RobolectricApp.component().inject(this);
         String mealsJson = JsonUtils.convertJsonToString("success.json");
-//      TODO: Fix this
+//      TODO: Fix this after refactoring
 //        meals = mealService.deserializeMeal(mealsJson);
         meals = null;
     }
