@@ -98,7 +98,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.bignerdranch.android:expandablerecyclerview:2.1.1'
-    compile 'com.commonsware.cwac:wakeful:1.0.+'
+    compile 'com.commonsware.cwac:wakeful:1.1.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'net.danlew:android.joda:2.9.3'
     compile ('com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0') {

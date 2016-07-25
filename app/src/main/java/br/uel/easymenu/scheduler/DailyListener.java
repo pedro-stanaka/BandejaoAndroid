@@ -10,11 +10,13 @@ import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
 
 import br.uel.easymenu.App;
 
 public class DailyListener implements WakefulIntentService.AlarmListener {
+
+    private static final int HOUR_ALARM = 10;
 
     @Override
     public void scheduleAlarms(AlarmManager alarmManager, PendingIntent pendingIntent, Context context) {
@@ -22,17 +24,17 @@ public class DailyListener implements WakefulIntentService.AlarmListener {
         // register when enabled in preferences
         Log.i(App.TAG, "Schedule update check...");
 
-        // every day at 10 am
-        Calendar calendar = Calendar.getInstance();
-        // if it's after or equal 10 am schedule for next day
-        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 10) {
-            calendar.add(Calendar.DAY_OF_YEAR, 1); // add, not set!
-        }
-        calendar.set(Calendar.HOUR_OF_DAY, 10);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
+        DateTime dateTime = DateTime.now();
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+        if(dateTime.getHourOfDay() >= HOUR_ALARM) {
+            dateTime = dateTime.plusDays(1);
+        }
+        dateTime = dateTime
+                .withHourOfDay(HOUR_ALARM)
+                .withMinuteOfHour(0)
+                .withSecondOfMinute(0);
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC, dateTime.getMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
@@ -57,7 +59,7 @@ public class DailyListener implements WakefulIntentService.AlarmListener {
     }
 
     @Override
-    public long getMaxAge() {
+    public long getMaxAge(Context context) {
         return (AlarmManager.INTERVAL_DAY + 60 * 1000);
     }
 }

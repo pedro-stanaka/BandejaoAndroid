@@ -11,6 +11,8 @@ import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
+import br.uel.easymenu.App;
+
 public class ConnectivityReceiver extends BroadcastReceiver {
 
     public static void enableReceiver(Context context) {
@@ -31,9 +33,7 @@ public class ConnectivityReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-            Log.d("ConnectivityReceiver", "ConnectivityReceiver invoked...");
-
-            Log.d("ConnectivityReceiver", "Update check daily is enabled!");
+            Log.d(App.TAG, "ConnectivityReceiver invoked...");
 
             boolean noConnectivity = intent.getBooleanExtra(
                     ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
@@ -48,7 +48,7 @@ public class ConnectivityReceiver extends BroadcastReceiver {
                 if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 
                     if (netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                        Log.d("ConnectivityReceiver", "We have internet, start update check and disable receiver!");
+                        Log.d(App.TAG, "We have internet, start update check and disable receiver!");
 
                         Intent backgroundIntent = new Intent(context, BackgroundService.class);
                         WakefulIntentService.sendWakefulWork(context, backgroundIntent);
