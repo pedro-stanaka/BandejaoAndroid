@@ -1,5 +1,7 @@
 package br.uel.easymenu.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ public class University {
 
     private String name;
 
+    @JsonProperty("long_name")
     private String fullName;
 
     private List<Meal> meals = new ArrayList<>();
@@ -43,5 +46,15 @@ public class University {
 
     public void setMeals(List<Meal> meals) {
         this.meals = meals;
+    }
+
+    @Override
+    public String toString() {
+        return "University{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", meals=" + meals +
+                '}';
     }
 }

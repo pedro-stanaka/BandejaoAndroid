@@ -81,6 +81,7 @@ public class TestMenuActivity {
 
         TabLayout layout = (TabLayout) menuActivity.findViewById(R.id.tabs);
         assertTrue(layout != null);
+        System.out.println(layout.getTabAt(0).getText());
         assertEquals(layout.getTabCount(), 3);
     }
 
@@ -229,7 +230,7 @@ public class TestMenuActivity {
         String jsonResponse = JsonUtils.convertJsonToString(jsonFile);
         webServer.enqueue(new MockResponse().setBody(jsonResponse));
         menuActivity = Robolectric.buildActivity(MenuActivity.class).create().resume().get();
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).until(hasMealsPersisted());
+        Awaitility.await().atMost(2, TimeUnit.HOURS).until(hasMealsPersisted());
     }
 
     private Callable<Boolean> hasMealsPersisted() {

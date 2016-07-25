@@ -25,6 +25,7 @@ import javax.inject.Named;
 
 import br.uel.easymenu.App;
 import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.model.University;
 
 import static br.uel.easymenu.service.NetworkEvent.NetworkErrorType;
 
@@ -56,10 +57,11 @@ public class NetworkService {
             public void onResponse(String response) {
                 response = response.replaceAll("\\\\", "");
 
-                List<Meal> meals = mealService.deserializeMeal(response);
+                List<University> universities = mealService.deserializeMeal(response);
 
-                if(meals != null) {
-                    mealService.replaceMealsFromCurrentWeek(meals);
+                if(universities != null) {
+
+                    mealService.replaceMealsFromCurrentWeek(universities);
 
                     if (listener != null) {
                         listener.onSuccess();

@@ -20,7 +20,9 @@ import javax.inject.Inject;
 
 import br.uel.easymenu.App;
 import br.uel.easymenu.dao.MealDao;
+import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.model.University;
 
 public class MealService {
 
@@ -35,53 +37,74 @@ public class MealService {
 
     private MealDao mealDao;
 
+    private UniversityDao universityDao;
+
     private EventBus eventBus;
 
     @Inject
-    public MealService(ObjectMapper mapper, MealDao mealDao, EventBus eventBus) {
+    public MealService(ObjectMapper mapper, MealDao mealDao, EventBus eventBus, UniversityDao universityDao) {
         this.mapper = mapper;
         this.mealDao = mealDao;
         this.eventBus = eventBus;
+        this.universityDao = universityDao;
     }
 
-    public List<Meal> deserializeMeal(String json) {
-        List<Meal> meals = null;
+    public List<University> deserializeMeal(String json) {
+        List<University> universities = null;
 
         try {
             CollectionType type = mapper.getTypeFactory().
-                    constructCollectionType(List.class, Meal.class);
-            meals = mapper.readValue(json, type);
+                    constructCollectionType(List.class, University.class);
+            universities = mapper.readValue(json, type);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return meals;
+        return universities;
     }
 
-    public void replaceMealsFromCurrentWeek(List<Meal> meals) {
-        List<Meal> mealsCurrentWeek = mealDao.mealsOfTheWeek(Calendar.getInstance());
-        Collections.sort(meals);
+    public void replaceMealsFromCurrentWeek(List<University> universities) {
 
-        if (!meals.equals(mealsCurrentWeek)) {
-            mealDao.beginTransaction();
-            try {
-                Log.i(App.TAG, "Deleting " + meals.size() + " meals in the database: " + mealsCurrentWeek);
+        for(University university : universities) {
 
-                for (Meal meal : mealsCurrentWeek) {
-                    mealDao.delete(meal.getId());
+            University persistedUniversity = universityDao.findByName(university.getName());
+            if(persistedUniversity == null) {
+                Log.i(App.TAG, "Inserting university: " + university.toString());
+                long id = universityDao.insert(university);
+                university.setId(id);
+                persistedUniversity = university;
+            }
+
+            List<Meal> meals = university.getMeals();
+            for (Meal meal : meals) {
+                meal.setUniversity(persistedUniversity);
+            }
+
+            List<Meal> mealsCurrentWeek = mealDao.mealsOfTheWeek(Calendar.getInstance(), persistedUniversity);
+            Collections.sort(meals);
+
+            if (!meals.equals(mealsCurrentWeek)) {
+                mealDao.beginTransaction();
+                try {
+                    Log.i(App.TAG, "Deleting " + meals.size() + " meals in the database: " + mealsCurrentWeek);
+
+                    for (Meal meal : mealsCurrentWeek) {
+                        mealDao.delete(meal.getId());
+                    }
+                    mealDao.insert(meals);
+
+                    Log.i(App.TAG, "Inserting " + meals.size() + " new meals in the database: " + meals);
+                    mealDao.setTransactionSuccess();
+
+                    // Updating UI
+                    NetworkEvent event = new NetworkEvent(NetworkEvent.Type.SUCCESS);
+                    eventBus.post(event);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e(App.TAG, "Error in new meals persistence " + e.getMessage());
+                } finally {
+                    mealDao.endTransaction();
                 }
-                mealDao.insert(meals);
-
-                Log.i(App.TAG, "Inserting " + meals.size() + " new meals in the database: " + meals);
-                mealDao.setTransactionSuccess();
-
-                // Updating UI
-                NetworkEvent event = new NetworkEvent(NetworkEvent.Type.SUCCESS);
-                eventBus.post(event);
-            } catch (Exception e) {
-                Log.e(App.TAG, "Error in new meals persistence " + e.getMessage());
-            } finally {
-                mealDao.endTransaction();
             }
         }
     }

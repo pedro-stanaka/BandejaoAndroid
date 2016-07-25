@@ -116,11 +116,11 @@ public class TestDaoMeal {
 
         mealDao.insert(meals);
 
-        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-07"));
+        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-07"), null);
         assertThat(queryMeals.size(), equalTo(1));
         assertThat(queryMeals.get(0).getDate(), equalTo(meals.get(0).getDate()));
 
-        List<Meal> newMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-14"));
+        List<Meal> newMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-14"), null);
         assertThat(newMeals.size(), equalTo(2));
         assertThat(newMeals.get(0).getDate(), equalTo(meals.get(1).getDate()));
     }
@@ -130,7 +130,7 @@ public class TestDaoMeal {
         List<Meal> meals = createMeals("2013-02-10", "2014-02-11", "2015-02-12");
         mealDao.insert(meals);
 
-        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-10"));
+        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-10"), null);
         assertThat(queryMeals.size(), equalTo(1));
         assertThat(queryMeals.get(0).getDate(), equalTo(meals.get(1).getDate()));
     }
@@ -140,7 +140,7 @@ public class TestDaoMeal {
         List<Meal> meals = createMeals("2014-02-10", "2014-02-10", "2014-02-10");
         mealDao.insert(meals);
 
-        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-12"));
+        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-12"), null);
         assertThat(queryMeals.size(), equalTo(1));
         assertThat(queryMeals.get(0).getDate(), equalTo(meals.get(0).getDate()));
     }
@@ -150,11 +150,11 @@ public class TestDaoMeal {
         List<Meal> meals = createMeals("2014-12-27", "2014-12-31", "2015-01-01", "2015-01-02", "2015-01-04", "2016-01-01");
         mealDao.insert(meals);
 
-        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2015-01-02"));
+        List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2015-01-02"), null);
         assertThat(queryMeals.size(), equalTo(3));
         assertThat(queryMeals.get(0).getDate(), equalTo(meals.get(1).getDate()));
 
-        queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-12-30"));
+        queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-12-30"), null);
         assertThat(queryMeals.size(), equalTo(3));
         assertThat(queryMeals.get(1).getDate(), equalTo(meals.get(2).getDate()));
     }

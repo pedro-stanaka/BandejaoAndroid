@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import java.util.List;
+
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.model.University;
 import br.uel.easymenu.tables.UniversityTable;
@@ -15,21 +17,6 @@ public class SqliteUniversityDao extends SqliteDao<University> implements Univer
     public SqliteUniversityDao(Context context) {
         super(context, UniversityTable.NAME);
         this.context = context;
-    }
-
-    @Override
-    public long insert(University university) {
-        long id = super.insert(university);
-        university.setId(id);
-
-        SqliteMealDao mealDao = new SqliteMealDao(context);
-        for(Meal meal : university.getMeals()) {
-            meal.setUniversity(university);
-            long mealId = mealDao.insert(meal);
-            meal.setId(mealId);
-        }
-
-        return id;
     }
 
     @Override
@@ -48,5 +35,17 @@ public class SqliteUniversityDao extends SqliteDao<University> implements Univer
         university.setFullName(getStringFromColumn(UniversityTable.FULL_NAME, cursor));
         university.setName(getStringFromColumn(UniversityTable.UNIVERSITY_NAME, cursor));
         return university;
+    }
+
+    @Override
+    public University findByName(String name) {
+        String sql = "SELECT * FROM " + UniversityTable.NAME +
+                " WHERE " + UniversityTable.UNIVERSITY_NAME + " = ?";
+
+        String[] params = new String[]{name};
+
+        Cursor cursor = database.rawQuery(sql, params);
+        List<University> universities = fetchObjectsFromCursor(cursor);
+        return (universities.size() > 0) ? universities.get(0) : null;
     }
 }

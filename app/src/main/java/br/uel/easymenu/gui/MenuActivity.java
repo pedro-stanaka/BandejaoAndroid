@@ -21,9 +21,12 @@ import br.uel.easymenu.R;
 import br.uel.easymenu.adapter.MealsPagerAdapter;
 import br.uel.easymenu.adapter.MissingMealAdapter;
 import br.uel.easymenu.dao.MealDao;
+import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.model.GroupedMeals;
+import br.uel.easymenu.model.University;
 import br.uel.easymenu.service.NetworkEvent;
 import br.uel.easymenu.service.NetworkService;
+import br.uel.easymenu.service.UniversityService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -31,6 +34,12 @@ public class MenuActivity extends AppCompatActivity {
 
     @Inject
     MealDao mealDao;
+
+    @Inject
+    UniversityDao universityDao;
+
+    @Inject
+    UniversityService universityService;
 
     @Inject
     NetworkService networkService;
@@ -91,7 +100,17 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void setGuiWithMeals() {
-        GroupedMeals groupedMeals = mealDao.mealsOfTheWeekGroupedByDay(Calendar.getInstance());
+
+        if (universityDao.count() > 1) {
+            // Add the university in the drawer
+            // If it is null don't insert
+            // Select the university
+        }
+
+//        University university = universityService.selectUniversity();
+        University university = universityDao.findByName("PU");
+
+        GroupedMeals groupedMeals = mealDao.mealsOfTheWeekGroupedByDay(Calendar.getInstance(), university);
 
         FragmentStatePagerAdapter mealsPagerAdapter = (groupedMeals.size() > 0) ?
                 new MealsPagerAdapter(getSupportFragmentManager(), groupedMeals) :

@@ -4,12 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.model.University;
 import br.uel.easymenu.tables.MealTable;
 import br.uel.easymenu.utils.CalendarUtils;
 
@@ -46,15 +48,20 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     }
 
     @Override
-    public List<Meal> mealsOfTheWeek(java.util.Calendar calendar) {
+    public List<Meal> mealsOfTheWeek(java.util.Calendar calendar, University university) {
+        // Avoid propagating null
+        if(university == null) {
+            return new ArrayList<>();
+        }
 
         String calendarQueryString = CalendarUtils.fromCalendarToString(calendar);
 
         String sql = "SELECT * FROM " + MealTable.NAME +
                 " WHERE (" + SAME_WEEK + ") AND ( " + SAME_YEAR + ")" +
+                " AND " + MealTable.UNIVERSITY_ID + " = ? " +
                 " GROUP BY " + MealTable.DATE_MEAL + ", " + MealTable.PERIOD;
 
-        String[] params = new String[]{calendarQueryString, calendarQueryString};
+        String[] params = new String[]{calendarQueryString, calendarQueryString, university.getId()+""};
 
         Cursor cursor = database.rawQuery(sql, params);
         List<Meal> meals = fetchObjectsFromCursor(cursor);
@@ -68,8 +75,8 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     }
 
     @Override
-    public GroupedMeals mealsOfTheWeekGroupedByDay(java.util.Calendar calendar) {
-        List<Meal> weeklyMeals = mealsOfTheWeek(calendar);
+    public GroupedMeals mealsOfTheWeekGroupedByDay(java.util.Calendar calendar, University university) {
+        List<Meal> weeklyMeals = mealsOfTheWeek(calendar, university);
         return new GroupedMeals(weeklyMeals);
     }
 
@@ -83,6 +90,7 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
         values.put(MealTable.DATE_MEAL, dateString);
 
         values.put(MealTable.PERIOD, meal.getPeriod());
+        values.put(MealTable.UNIVERSITY_ID, meal.getUniversity().getId());
     }
 
     @Override
@@ -98,6 +106,7 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
         List<Dish> dishes = dishDao.findDishesByMealId(meal.getId());
         meal.setDishes(dishes);
 
+        // Watch out! Don't call meal.getUniversity because it will be null
         return meal;
     }
 }
