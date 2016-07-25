@@ -54,7 +54,7 @@ public class Meal implements Parcelable {
     public Meal(Parcel in) {
         id = in.readLong();
         date = (java.util.Calendar) in.readSerializable();
-        period = in.readString();
+        setPeriod(in.readString());
         in.readTypedList(dishes, Dish.CREATOR);
     }
 
@@ -102,6 +102,12 @@ public class Meal implements Parcelable {
     }
 
     public void setPeriod(String period) {
+        if (!(period.equals(Meal.LUNCH) ||
+                period.equals(Meal.BOTH) ||
+                period.equals(Meal.DINNER) ||
+                period.equals(Meal.BREAKFAST))) {
+           throw new IllegalArgumentException("Period can't have the value " + period);
+        }
         this.period = period;
     }
 
