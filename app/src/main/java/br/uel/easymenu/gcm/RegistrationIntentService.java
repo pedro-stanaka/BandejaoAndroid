@@ -24,7 +24,7 @@ public class RegistrationIntentService extends IntentService {
             String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
-            String universityName = this.getString(R.string.university_name);
+            String universityName = this.getString(R.string.university_name).toLowerCase();
             GcmPubSub pubSub = GcmPubSub.getInstance(this);
             pubSub.subscribe(token, "/topics/" + universityName, null);
 
