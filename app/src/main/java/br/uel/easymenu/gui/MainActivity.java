@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
         setupPollerAlarm();
         setupGcm();
 
+        finish();
     }
 
     private void setupPollerAlarm() {

@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.SimpleTimeZone;
-import java.util.TimeZone;
 
 public class CalendarUtils {
 
@@ -29,7 +28,6 @@ public class CalendarUtils {
     }
 
     public static String fromCalendarToString(java.util.Calendar calendar) {
-        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         SDF.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
         return SDF.format(calendar.getTime());
     }

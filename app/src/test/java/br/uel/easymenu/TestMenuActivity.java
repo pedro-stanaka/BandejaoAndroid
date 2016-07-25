@@ -52,8 +52,7 @@ public class TestMenuActivity {
 
     @After
     public void closeDatabase() {
-        DbHelper helper = DbHelper.getInstance(RuntimeEnvironment.application);
-        helper.close();
+        DbHelper.getInstance(RuntimeEnvironment.application).getWritableDatabase().close();
     }
 
     @Test
@@ -66,7 +65,7 @@ public class TestMenuActivity {
     }
 
     @Test
-    public void updatedMealsRefreshTheUI() throws Exception {
+    public void updatedMealsRefreshTheUI() {
         createFakeMealsAndUpdateUI();
         TabLayout layout = (TabLayout) menuActivity.findViewById(R.id.tabs);
         assertTrue(layout != null);

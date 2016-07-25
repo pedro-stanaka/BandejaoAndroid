@@ -81,9 +81,7 @@ public class TestDaoMeal {
 
         Meal newMeal = mealDao.findById(id);
 
-        assertThat(newMeal.getDate().get(Calendar.DAY_OF_YEAR), equalTo(meal.getDate().get(Calendar.DAY_OF_YEAR)));
-        assertThat(newMeal.getDate().get(Calendar.MONTH), equalTo(meal.getDate().get(Calendar.MONTH)));
-        assertThat(newMeal.getDate().get(Calendar.YEAR), equalTo(meal.getDate().get(Calendar.YEAR)));
+        assertThat(newMeal.getStringDate(), equalTo(newMeal.getStringDate()));
         assertTrue(newMeal.isLunch());
     }
 
