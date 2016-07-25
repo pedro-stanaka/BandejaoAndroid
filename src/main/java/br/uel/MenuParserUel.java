@@ -1,11 +1,13 @@
 package br.uel;
 
+import android.webkit.URLUtil;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,12 +71,16 @@ public class MenuParserUel implements MenuParser {
         Document menuPage = null;
         try {
             // Try to get the page or the file in a maximum time of REQUEST_TIMEOUT
-            menuPage = Jsoup.parse(new URL(url), REQUEST_TIMEOUT);
+            if (URLUtil.isFileUrl(url)){
+                menuPage = Jsoup.parse(new File(url), null);
+            }
+            else{
+                menuPage = Jsoup.connect(url).get();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return menuPage;
     }
-
 
 }
