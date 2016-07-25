@@ -18,12 +18,13 @@ import com.google.inject.Inject;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
-import static br.uel.easymenu.service.NetworkEvent.NetworkErrorType;
 
 import br.uel.easymenu.App;
 import br.uel.easymenu.R;
 import br.uel.easymenu.model.Meal;
 import roboguice.inject.InjectResource;
+
+import static br.uel.easymenu.service.NetworkEvent.NetworkErrorType;
 
 public class NetworkService {
 
@@ -59,15 +60,14 @@ public class NetworkService {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // TODO: Show custom message from server too
                 NetworkErrorType errorType = errorMessage(error);
 
-                if(listener != null) {
+                if (listener != null) {
                     listener.onError(errorType);
                 }
                 NetworkEvent event = new NetworkEvent(errorType);
                 eventBus.post(event);
-                Log.e(App.TAG, "Error: " + errorType+"");
+                Log.e(App.TAG, "Error: " + errorType + "");
             }
         });
 
@@ -78,7 +78,7 @@ public class NetworkService {
     private NetworkErrorType errorMessage(VolleyError error) {
         NetworkErrorType errorType;
         if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-           errorType = NetworkErrorType.NO_CONNECTION;
+            errorType = NetworkErrorType.NO_CONNECTION;
         } else if (error instanceof AuthFailureError) {
             errorType = NetworkErrorType.AUTH_ERROR;
         } else if (error instanceof ServerError) {

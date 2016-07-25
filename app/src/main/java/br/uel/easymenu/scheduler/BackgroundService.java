@@ -16,6 +16,5 @@ public class BackgroundService extends WakefulIntentService {
     protected void doWakefulWork(Intent intent) {
         NetworkService service = new NetworkService();
         service.persistCurrentMealsFromServer();
-
     }
 }

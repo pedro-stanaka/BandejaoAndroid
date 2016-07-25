@@ -38,7 +38,7 @@ public class GroupedMeals {
         return CalendarUtils.fromStringToCalendar(calendar);
     }
 
-    public boolean hasDay(Calendar calendar) {
+    public boolean hasDate(Calendar calendar) {
         String dateString = CalendarUtils.fromCalendarToString(calendar);
         return mealsMap.containsKey(dateString);
     }

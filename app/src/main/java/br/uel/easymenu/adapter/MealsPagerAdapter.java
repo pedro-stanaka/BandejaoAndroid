@@ -26,13 +26,12 @@ public class MealsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment mealFragment = new MealFragment();
-
         Bundle bundle = new Bundle();
         ArrayList<Meal> meals = groupedMeals.getMealsByIndex(position);
         bundle.putParcelableArrayList(MealFragment.MEAL_ARGS, meals);
-        mealFragment.setArguments(bundle);
 
+        Fragment mealFragment = new MealFragment();
+        mealFragment.setArguments(bundle);
         return mealFragment;
     }
 

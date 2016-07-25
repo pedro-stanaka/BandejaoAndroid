@@ -4,34 +4,13 @@ import br.uel.easymenu.R;
 
 public class NetworkEvent {
 
-    public enum Type {
-        ERROR, SUCCESS
-    }
-
-    public enum NetworkErrorType {
-        NO_CONNECTION(R.string.connection_error),
-        AUTH_ERROR(R.string.permission_error),
-        SERVER_ERROR(R.string.server_error),
-        GENERIC_ERROR(R.string.network_error),
-        PARSE_ERROR(R.string.parse_error),
-        UNKNOWN_ERROR(R.string.unknown_network_error);
-
-        public final int resourceId;
-
-        NetworkErrorType(int resourceId) {
-            this.resourceId = resourceId;
-        }
-    }
-
     private String message;
     private Type eventType;
     private NetworkErrorType errorType;
-
     public NetworkEvent(NetworkErrorType errorType) {
         this.eventType = Type.ERROR;
         this.errorType = errorType;
     }
-
     public NetworkEvent(NetworkErrorType errorType, String message) {
         this(errorType);
         this.message = message;
@@ -60,5 +39,24 @@ public class NetworkEvent {
 
     public NetworkErrorType getError() {
         return errorType;
+    }
+
+    public enum Type {
+        ERROR, SUCCESS
+    }
+
+    public enum NetworkErrorType {
+        NO_CONNECTION(R.string.connection_error),
+        AUTH_ERROR(R.string.permission_error),
+        SERVER_ERROR(R.string.server_error),
+        GENERIC_ERROR(R.string.network_error),
+        PARSE_ERROR(R.string.parse_error),
+        UNKNOWN_ERROR(R.string.unknown_network_error);
+
+        public final int resourceId;
+
+        NetworkErrorType(int resourceId) {
+            this.resourceId = resourceId;
+        }
     }
 }

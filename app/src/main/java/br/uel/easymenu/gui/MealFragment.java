@@ -30,10 +30,9 @@ public class MealFragment extends Fragment {
             LinearLayout periodLayout = (LinearLayout) inflaterTextView.inflate(R.layout.period_layout, null);
             TextView periodTextView = (TextView) periodLayout.findViewById(R.id.period_text);
 
-            if(meal.getPeriod().equals(Meal.BOTH) && meals.size() == 1) {
+            if (meal.getPeriod().equals(Meal.BOTH) && meals.size() == 1) {
                 periodLayout.removeView(periodTextView);
-            }
-            else {
+            } else {
                 int resourceId = getPeriodResource(meal.getPeriod());
                 String period = this.getResources().getString(resourceId);
                 periodTextView.setText(period);
@@ -61,7 +60,7 @@ public class MealFragment extends Fragment {
     }
 
     public int getPeriodResource(String period) {
-        switch(period) {
+        switch (period) {
             case Meal.LUNCH:
                 return R.string.lunch;
             case Meal.BREAKFAST:

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:id="@+id/layout_period"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="32dp"
     android:gravity="center"
-    android:layout_marginBottom="32dp" >
+    android:orientation="vertical">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
         android:id="@+id/period_text"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:textSize="32sp"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:textSize="32sp" />
 
 </LinearLayout>

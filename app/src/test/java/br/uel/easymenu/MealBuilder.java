@@ -1,7 +1,5 @@
 package br.uel.easymenu;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -16,12 +14,29 @@ public class MealBuilder {
     String period = Meal.LUNCH;
     List<Dish> dishes = new ArrayList<Dish>();
 
+    public static List<Meal> createFakeMeals() {
+        return createFakeMeals(Calendar.getInstance());
+    }
+
+    public static List<Meal> createFakeMeals(Calendar... calendars) {
+        ArrayList<Meal> fakeMeals = new ArrayList<>();
+        for (final Calendar calendar : calendars) {
+            fakeMeals.addAll(
+                    new ArrayList<Meal>() {{
+                        add(new MealBuilder().withCalendar(calendar).withDishes("Rice", "Pizza").withPeriod(Meal.LUNCH).build());
+                        add(new MealBuilder().withCalendar(calendar).withDishes("Beans").withPeriod(Meal.BOTH).build());
+                        add(new MealBuilder().withCalendar(calendar).withDishes("Burger").withPeriod(Meal.BREAKFAST).build());
+                    }});
+        }
+        return fakeMeals;
+    }
+
     public MealBuilder withPeriod(String period) {
         this.period = period;
         return this;
     }
 
-    public MealBuilder withDate(String date)  {
+    public MealBuilder withDate(String date) {
         Calendar calendar = CalendarUtils.fromStringToCalendar(date);
         calendar.setTime(calendar.getTime());
         return this;
@@ -37,9 +52,9 @@ public class MealBuilder {
         return this;
     }
 
-    public MealBuilder withDishes(String...dishNames) {
+    public MealBuilder withDishes(String... dishNames) {
         List<Dish> dishes = new ArrayList<>();
-        for(String dishName : dishNames) {
+        for (String dishName : dishNames) {
             dishes.add(new Dish(dishName));
         }
         this.dishes = dishes;
@@ -54,22 +69,5 @@ public class MealBuilder {
 
     public Meal build() {
         return new Meal(calendar, period, dishes);
-    }
-
-    public static List<Meal> createFakeMeals() {
-        return createFakeMeals(Calendar.getInstance());
-    }
-
-    public static List<Meal> createFakeMeals(Calendar ... calendars) {
-        ArrayList<Meal> fakeMeals = new ArrayList<>();
-        for(final Calendar calendar : calendars) {
-            fakeMeals.addAll(
-                    new ArrayList<Meal>() {{
-                        add(new MealBuilder().withCalendar(calendar).withDishes("Rice", "Pizza").withPeriod(Meal.LUNCH).build());
-                        add(new MealBuilder().withCalendar(calendar).withDishes("Beans").withPeriod(Meal.BOTH).build());
-                        add(new MealBuilder().withCalendar(calendar).withDishes("Burger").withPeriod(Meal.BREAKFAST).build());
-                    }});
-        }
-        return fakeMeals;
     }
 }

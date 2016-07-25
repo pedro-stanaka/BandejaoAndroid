@@ -1,7 +1,6 @@
 <resources>
 
-    <style name="Theme.EasyMenuTheme" parent="Base.Theme.EasyMenuTheme">
-    </style>
+    <style name="Theme.EasyMenuTheme" parent="Base.Theme.EasyMenuTheme"></style>
 
     <style name="Base.Theme.EasyMenuTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#673AB7</item>

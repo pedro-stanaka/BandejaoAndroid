@@ -31,9 +31,10 @@ import roboguice.util.RoboContext;
 public class RoboAppCompatActivity extends AppCompatActivity implements RoboContext {
 
     protected EventManager eventManager;
-    protected HashMap<Key<?>,Object> scopedObjects = new HashMap<Key<?>, Object>();
+    protected HashMap<Key<?>, Object> scopedObjects = new HashMap<Key<?>, Object>();
 
-    @Inject ContentViewListener ignored; // BUG find a better place to put this
+    @Inject
+    ContentViewListener ignored; // BUG find a better place to put this
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class RoboAppCompatActivity extends AppCompatActivity implements RoboCont
     }
 
     @Override
-    protected void onNewIntent( Intent intent ) {
+    protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         eventManager.fire(new OnNewIntentEvent());
     }

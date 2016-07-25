@@ -61,13 +61,6 @@ public class MenuActivity extends RoboAppCompatActivity {
         bus.register(this);
     }
 
-
-    @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-        RoboGuice.getInjector(this).injectViewMembers(this);
-    }
-
     @Override
     protected void onDestroy() {
         bus.unregister(this);
@@ -77,16 +70,14 @@ public class MenuActivity extends RoboAppCompatActivity {
     @Subscribe
     public void updatedMeals(NetworkEvent event) {
         String message;
-        if(!(event.hasMessage()) && event.getEventType() == NetworkEvent.Type.ERROR) {
+        if (!(event.hasMessage()) && event.getEventType() == NetworkEvent.Type.ERROR) {
             message = getResources().getString(event.getError().resourceId);
-        }
-        else if (event.getEventType() == NetworkEvent.Type.SUCCESS){
-            message = getResources().getString(R.string.network_sucess);
-        }
-        else {
+        } else if (event.getEventType() == NetworkEvent.Type.SUCCESS) {
+            message = getResources().getString(R.string.new_meals);
+            setGuiWithMeals();
+        } else {
             message = event.getMessage();
         }
-
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
@@ -95,13 +86,13 @@ public class MenuActivity extends RoboAppCompatActivity {
 
         FragmentStatePagerAdapter mealsPagerAdapter = (groupedMeals.size() > 0) ?
                 new MealsPagerAdapter(getSupportFragmentManager(), groupedMeals) :
-                new MissingMealAdapter(getSupportFragmentManager());
+                new MissingMealAdapter(getSupportFragmentManager(), this);
 
         viewPager.setAdapter(mealsPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
         // Setting today's tab
-        if (groupedMeals.hasDay(Calendar.getInstance())) {
+        if (groupedMeals.hasDate(Calendar.getInstance())) {
             int index = groupedMeals.getPositionByDay(Calendar.getInstance());
             TabLayout.Tab tab = tabLayout.getTabAt(index);
             if (tab != null) {

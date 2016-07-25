@@ -11,11 +11,9 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -23,7 +21,6 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowToast;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
-import java.util.Calendar;
 import java.util.List;
 
 import br.uel.easymenu.dao.MealDao;
@@ -175,18 +172,17 @@ public class TestMenuActivity {
     }
 
     private boolean viewContainsText(View view, String testString) {
-        if(view instanceof TextView) {
+        if (view instanceof TextView) {
             String txtViewString = ((TextView) view).getText().toString();
-            if(testString.equals(txtViewString)) {
+            if (testString.equals(txtViewString)) {
                 return true;
             }
-        }
-        else if (view instanceof ViewGroup) {
+        } else if (view instanceof ViewGroup) {
             ViewGroup viewGroup = (ViewGroup) view;
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
                 View childView = viewGroup.getChildAt(i);
                 boolean found = viewContainsText(childView, testString);
-                if(found) return true;
+                if (found) return true;
             }
         }
         return false;
