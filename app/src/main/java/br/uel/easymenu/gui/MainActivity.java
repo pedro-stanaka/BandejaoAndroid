@@ -11,6 +11,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.inject.Inject;
 
 import br.uel.easymenu.App;
+import br.uel.easymenu.R;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.gcm.RegistrationIntentService;
 import br.uel.easymenu.scheduler.DailyListener;
@@ -86,13 +87,8 @@ public class MainActivity extends RoboActivity {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
-            } else {
-                Log.i(App.TAG, "This device is not supported.");
-                finish();
-            }
+            Log.i(App.TAG, getResources().getString(R.string.playservices_not_supported));
+            finish();
             return false;
         }
         return true;
