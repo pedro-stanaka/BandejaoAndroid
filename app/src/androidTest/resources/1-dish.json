@@ -1,0 +1,13 @@
+[
+  {
+    "long_name": "Programming University",
+    "name": "PU",
+    "meals": [
+      {
+        "date": "{{ monday }}",
+        "period": "BREAKFAST",
+        "dishes": ["Rice"]
+      }
+    ]
+  }
+]

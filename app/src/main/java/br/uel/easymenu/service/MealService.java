@@ -53,6 +53,9 @@ public class MealService {
         handler.makeRequest(url, Meal.class, new Action<Meal>() {
             @Override
             public boolean makeBusiness(List<Meal> meals) {
+                for(Meal meal : meals) {
+                    meal.setUniversity(university);
+                }
                 return matchMeals(meals, university);
             }
         });
@@ -90,6 +93,7 @@ public class MealService {
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(App.TAG, "Error in new meals persistence " + e.getMessage());
+                throw new RuntimeException(e);
             } finally {
                 mealDao.endTransaction();
             }
