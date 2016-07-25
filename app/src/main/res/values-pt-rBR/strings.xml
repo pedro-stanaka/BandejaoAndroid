@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bandejao</string>
+    <string name="title">Cardápio - %1$s</string>
+    <string name="title_without_university">Cardápio</string>
+    <string name="playservices_not_supported">Play services não encontrado.</string>
+    <string name="nonexistent_meals">Ainda não há refeições para essa semana! =(</string>
+    <string name="nonexistent_meals_title">Sem refeições</string>
+
+    <string name="connection_error">Não foi possível se conectar ao servidor</string>
+    <string name="permission_error">Sem permissões de acesso</string>
+    <string name="server_error">Desculpe-nos. O servidor retornou um error</string>
+    <string name="network_error">Erro de rede</string>
+    <string name="parse_error">O servidor não retornou um formato válido</string>
+    <string name="unknown_network_error">Ocorreu um erro no servidor</string>
+    <string name="invalid_json">O servidor retornou um format inválido</string>
+    <string name="new_meals">Cardápio foi atualizado. =)</string>
+    <string name="no_change">Sem novos dados</string>
+
+    <string name="breakfast">Café da manhã</string>
+    <string name="lunch">Almoço</string>
+    <string name="vegetarian_lunch">Almoço Vegetariano</string>
+    <string name="dinner">Jantar</string>
+    <string name="vegetarian_dinner">Jantar Vegetariano</string>
+    <string name="both">Almoço e Jantar</string>
+
+    <string name="empty_dishes">Sem pratos</string>
+    <string name="rate_app">Avalie esse aplicativo</string>
+    <string name="visit_website">Visitar website</string>
+    <string name="no_university_website">Sem universidades</string>
+    <string name="university_no_website">Essa universidade não tem website</string>
+    <string name="campus">Campus</string>
+    <string name="refresh_all">Atualize todas as universidades</string>
+    <string name="refresh_meal">Atualize o cardápio</string>
+</resources>

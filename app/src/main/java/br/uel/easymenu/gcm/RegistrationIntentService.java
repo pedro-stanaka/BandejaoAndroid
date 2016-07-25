@@ -8,6 +8,7 @@ import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+import br.uel.easymenu.App;
 import br.uel.easymenu.R;
 
 public class RegistrationIntentService extends IntentService {
@@ -24,7 +25,7 @@ public class RegistrationIntentService extends IntentService {
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-
+            Log.d(App.TAG, "GCM" + token);
             String universityName = this.getString(R.string.university_name).toLowerCase();
             GcmPubSub pubSub = GcmPubSub.getInstance(this);
             pubSub.subscribe(token, "/topics/" + universityName, null);

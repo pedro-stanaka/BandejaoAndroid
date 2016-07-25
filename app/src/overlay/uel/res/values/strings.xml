@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RU - UEL</string>
-    <string name="university_name">UEL</string>
+    <string name="app_name">Menu - UEL</string>
+    <string name="university_name" translatable="false">UEL</string>
 </resources>
