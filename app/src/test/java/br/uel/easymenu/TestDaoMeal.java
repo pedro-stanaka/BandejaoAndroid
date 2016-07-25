@@ -42,6 +42,7 @@ public class TestDaoMeal {
 
     @Before
     public void setupTests() {
+        DbHelper.resetConnection();
         TestApp.component().inject(this);
     }
 

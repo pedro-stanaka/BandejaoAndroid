@@ -23,6 +23,10 @@ public class DbHelper extends SQLiteOpenHelper {
         return instance;
     }
 
+    public static void resetConnection() {
+        instance = null;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DishTable.onCreate());

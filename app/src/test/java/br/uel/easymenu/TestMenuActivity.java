@@ -45,6 +45,7 @@ public class TestMenuActivity {
 
     @Before
     public void setupTests() {
+        DbHelper.resetConnection();
         menuActivity = Robolectric.buildActivity(MenuActivity.class).create().get();
         TestApp.component().inject(this);
     }

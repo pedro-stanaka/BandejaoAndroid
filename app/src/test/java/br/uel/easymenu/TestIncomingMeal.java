@@ -37,6 +37,7 @@ public class TestIncomingMeal {
 
     @Before
     public void setupTests() {
+        DbHelper.resetConnection();
         TestApp.component().inject(this);
     }
 
