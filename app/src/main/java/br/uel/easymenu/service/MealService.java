@@ -1,9 +1,7 @@
 package br.uel.easymenu.service;
 
 import android.util.Log;
-import br.uel.easymenu.App;
-import br.uel.easymenu.dao.MealDao;
-import br.uel.easymenu.model.Meal;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.inject.Inject;
@@ -11,6 +9,10 @@ import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+
+import br.uel.easymenu.App;
+import br.uel.easymenu.dao.MealDao;
+import br.uel.easymenu.model.Meal;
 
 public class MealService {
 
@@ -38,16 +40,27 @@ public class MealService {
         return meals;
     }
 
-    public void replaceMealsFromCurrentWeak(List<Meal> meals) {
+    public void replaceMealsFromCurrentWeek(List<Meal> meals) {
         List<Meal> mealsCurrentWeek = mealDao.mealsOfTheWeek(Calendar.getInstance());
 
-        Log.d(App.TAG, "Deleting " + meals.size() + " meals in the database: " + mealsCurrentWeek);
+        if (mealsCurrentWeek != meals) {
 
-        for (Meal meal : mealsCurrentWeek) {
-            mealDao.delete(meal.getId());
+            mealDao.beginTransaction();
+            try {
+                Log.i(App.TAG, "Deleting " + meals.size() + " meals in the database: " + mealsCurrentWeek);
+
+                for (Meal meal : mealsCurrentWeek) {
+                    mealDao.delete(meal.getId());
+                }
+                mealDao.insert(meals);
+
+                Log.i(App.TAG, "Inserting " + meals.size() + " new meals in the database: " + meals);
+                mealDao.setTransactionSuccess();
+            } catch (Exception e) {
+                Log.e(App.TAG, "Error in new meals persistence " + e.getMessage());
+            } finally {
+                mealDao.endTransaction();
+            }
         }
-
-        Log.d(App.TAG, "Inserting " + meals.size() + " new meals in the database: " + meals);
-        mealDao.insert(meals);
     }
 }

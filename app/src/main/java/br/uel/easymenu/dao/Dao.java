@@ -17,4 +17,9 @@ public interface Dao<T> {
 
     public int count();
 
+    public void beginTransaction();
+
+    public void setTransactionSuccess();
+
+    public void endTransaction();
 }
