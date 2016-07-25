@@ -11,8 +11,6 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -91,7 +89,7 @@ public class TestIncomingMeal {
         universityDao.insertWithMeals(university);
         List<Meal> firstMeals = university.getMeals();
 
-        List<Meal> secondMeals =  MealBuilder.createFakeMeals();
+        List<Meal> secondMeals = MealBuilder.createFakeMeals();
 
         mealService.matchMeals(secondMeals, university);
         // It shouldn't remove the first meals and insert the new swapped one

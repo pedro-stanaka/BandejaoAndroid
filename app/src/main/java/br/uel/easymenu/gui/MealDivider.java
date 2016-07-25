@@ -26,11 +26,11 @@ public class MealDivider extends RecyclerView.ItemDecoration {
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
 
-        if(parent.getChildCount() == 1) {
+        if (parent.getChildCount() == 1) {
             drawLine(parent.getChildAt(0), c, right, left);
         }
 
-        for(int i = 0, j = 1; j < parent.getChildCount(); i++, j++) {
+        for (int i = 0, j = 1; j < parent.getChildCount(); i++, j++) {
             View firstView = parent.getChildAt(i);
             View secondView = parent.getChildAt(j);
 
@@ -43,13 +43,13 @@ public class MealDivider extends RecyclerView.ItemDecoration {
             boolean lastMeal = secondView.getTag().equals(MealListAdapter.MEAL_TAG)
                     && j == (parent.getChildCount() - 1);
 
-            if(dishBeforeMeal || mealWithoutDishes || lastDish || lastMeal) {
+            if (dishBeforeMeal || mealWithoutDishes || lastDish || lastMeal) {
 
-                if(dishBeforeMeal || mealWithoutDishes) {
+                if (dishBeforeMeal || mealWithoutDishes) {
                     drawLine(firstView, c, right, left);
                 }
 
-                if(lastDish || lastMeal) {
+                if (lastDish || lastMeal) {
                     drawLine(secondView, c, right, left);
                 }
             }

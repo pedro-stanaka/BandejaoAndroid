@@ -14,17 +14,6 @@ import dagger.Component;
 
 public class RobolectricApp {
 
-    @Component(modules = AppModule.class)
-    public interface RobolectricComponent {
-        void inject(TestJsonResponse testJsonResponse);
-        void inject(TestIncomingMeal testIncomingMeal);
-        void inject(TestDaoMeal testDaoMeal);
-        void inject(TestDaoUniversity testDaoUniversity);
-        void inject(TestMealByHour testMealByHour);
-        void inject(TestDate testDate);
-        void inject(TestIncomingUniversity testIncomingUniversity);
-    }
-
     public static RobolectricComponent component() {
         return DaggerRobolectricApp_RobolectricComponent
                 .builder()
@@ -39,5 +28,22 @@ public class RobolectricApp {
                 .builder()
                 .appModule(new MockModule(RuntimeEnvironment.application, mockDao))
                 .build();
+    }
+
+    @Component(modules = AppModule.class)
+    public interface RobolectricComponent {
+        void inject(TestJsonResponse testJsonResponse);
+
+        void inject(TestIncomingMeal testIncomingMeal);
+
+        void inject(TestDaoMeal testDaoMeal);
+
+        void inject(TestDaoUniversity testDaoUniversity);
+
+        void inject(TestMealByHour testMealByHour);
+
+        void inject(TestDate testDate);
+
+        void inject(TestIncomingUniversity testIncomingUniversity);
     }
 }

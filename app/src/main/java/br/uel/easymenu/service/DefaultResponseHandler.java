@@ -24,10 +24,6 @@ public class DefaultResponseHandler<T> {
         this.networkRequest = networkRequest;
     }
 
-    public interface Action<T> {
-        boolean makeBusiness(List<T> objects);
-    }
-
     public void makeRequest(String url, final Class<T> clazz, final Action<T> action) {
         NetworkEvent event = new NetworkEvent(NetworkEvent.Type.START);
         this.eventBus.post(event);
@@ -38,18 +34,16 @@ public class DefaultResponseHandler<T> {
 
                 List<T> objects = serializer.deserialize(response, clazz);
 
-                if(objects != null) {
+                if (objects != null) {
                     boolean updateUi = action.makeBusiness(objects);
-                    if(updateUi) {
+                    if (updateUi) {
                         NetworkEvent event = new NetworkEvent(NetworkEvent.Type.SUCCESS);
                         eventBus.post(event);
-                    }
-                    else {
+                    } else {
                         NetworkEvent event = new NetworkEvent(NetworkEvent.Type.NO_CHANGE);
                         eventBus.post(event);
                     }
-                }
-                else {
+                } else {
                     NetworkEvent event = new NetworkEvent(NetworkErrorType.INVALID_JSON);
                     eventBus.post(event);
                 }
@@ -62,5 +56,9 @@ public class DefaultResponseHandler<T> {
                 Log.e(App.TAG, "Error: " + error + "");
             }
         });
+    }
+
+    public interface Action<T> {
+        boolean makeBusiness(List<T> objects);
     }
 }

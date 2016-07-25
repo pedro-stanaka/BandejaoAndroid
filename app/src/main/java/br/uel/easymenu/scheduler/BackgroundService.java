@@ -1,7 +1,6 @@
 package br.uel.easymenu.scheduler;
 
 import android.content.Intent;
-import android.renderscript.Element;
 import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
@@ -15,12 +14,12 @@ import static br.uel.easymenu.utils.CalendarUtils.today;
 
 public class BackgroundService extends WakefulIntentService {
 
+    @Inject
+    UniversityService universityService;
+
     public BackgroundService() {
         super("BackgroundService");
     }
-
-    @Inject
-    UniversityService universityService;
 
     @Override
     protected void doWakefulWork(Intent intent) {

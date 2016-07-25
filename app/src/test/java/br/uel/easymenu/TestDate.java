@@ -12,10 +12,8 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import br.uel.easymenu.dao.MealDao;
-import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.ioc.RobolectricApp;
 import br.uel.easymenu.model.Meal;
-import br.uel.easymenu.utils.CalendarUtils;
 
 import static br.uel.easymenu.CalendarFactory.monday;
 import static br.uel.easymenu.utils.CalendarUtils.dayOfWeekName;

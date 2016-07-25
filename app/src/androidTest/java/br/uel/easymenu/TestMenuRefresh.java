@@ -23,8 +23,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @LargeTest
 public class TestMenuRefresh {
 
-    private static final String ONE_MEAL_FILE= "1-dish.json";
-    private static final String TWO_MEAL_FILE= "2-dishes.json";
+    private static final String ONE_MEAL_FILE = "1-dish.json";
+    private static final String TWO_MEAL_FILE = "2-dishes.json";
 
     @Rule
     public ActivityTestRule<MenuActivity> activityRule =

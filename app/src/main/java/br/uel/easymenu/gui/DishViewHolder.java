@@ -24,8 +24,8 @@ public class DishViewHolder extends ChildViewHolder {
 
     public void bind(Dish dish) {
         String dishName = (dish.getDishName().equals(MealItem.EMPTY_DISH)) ?
-            this.context.getString(R.string.empty_dishes) :
-            dish.getDishName();
+                this.context.getString(R.string.empty_dishes) :
+                dish.getDishName();
 
         this.dishNameTextView.setText(dishName);
     }

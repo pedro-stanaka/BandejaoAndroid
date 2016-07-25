@@ -12,6 +12,10 @@ public class UniversityBuilder {
     String fullName = "Full Name";
     List<Meal> meals = new ArrayList<>();
 
+    public static University createFakeUniversty() {
+        return new UniversityBuilder().withMeals(MealBuilder.createFakeMeals()).build();
+    }
+
     public UniversityBuilder withName(String name) {
         this.name = name;
         return this;
@@ -25,10 +29,6 @@ public class UniversityBuilder {
     public UniversityBuilder withMeals(List<Meal> meals) {
         this.meals = meals;
         return this;
-    }
-
-    public static University createFakeUniversty() {
-        return new UniversityBuilder().withMeals(MealBuilder.createFakeMeals()).build();
     }
 
     public University build() {

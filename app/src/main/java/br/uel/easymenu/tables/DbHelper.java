@@ -37,7 +37,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
-        if(!db.isReadOnly()) {
+        if (!db.isReadOnly()) {
             db.execSQL("PRAGMA foreign_keys=ON;");
         }
     }

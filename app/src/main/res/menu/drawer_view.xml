@@ -10,15 +10,13 @@
 
     <item
         android:id="@+id/refresh_all"
-        android:title="@string/refresh_all"/>
+        android:title="@string/refresh_all" />
 
     <item
         android:id="@+id/campus"
         android:title="@string/campus">
         <menu>
-            <group
-                android:id="@+id/campus_names">
-            </group>
+            <group android:id="@+id/campus_names"></group>
         </menu>
 
     </item>

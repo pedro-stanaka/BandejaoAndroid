@@ -7,10 +7,12 @@ public class NetworkEvent {
     private String message;
     private Type eventType;
     private NetworkErrorType errorType;
+
     public NetworkEvent(NetworkErrorType errorType) {
         this.eventType = Type.ERROR;
         this.errorType = errorType;
     }
+
     public NetworkEvent(NetworkErrorType errorType, String message) {
         this(errorType);
         this.message = message;

@@ -4,12 +4,13 @@ import android.app.Application;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import br.uel.easymenu.ioc.AppComponent;
 import br.uel.easymenu.ioc.AppModule;
 import br.uel.easymenu.ioc.DaggerAppComponent;
+import io.fabric.sdk.android.Fabric;
 
 public class App extends Application {
 

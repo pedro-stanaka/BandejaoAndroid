@@ -54,7 +54,7 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     @Override
     public List<Meal> mealsOfTheWeek(DateTime dateTime, University university) {
         // Avoid propagating null
-        if(university == null) {
+        if (university == null) {
             return new ArrayList<>();
         }
 
@@ -65,7 +65,7 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
                 " AND " + MealTable.UNIVERSITY_ID + " = ? " +
                 " GROUP BY " + MealTable.DATE_MEAL + ", " + MealTable.PERIOD;
 
-        String[] params = new String[]{calendarQueryString, calendarQueryString, university.getId()+""};
+        String[] params = new String[]{calendarQueryString, calendarQueryString, university.getId() + ""};
 
         Cursor cursor = database.rawQuery(sql, params);
         List<Meal> meals = fetchObjectsFromCursor(cursor);
@@ -96,7 +96,7 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
         values.put(MealTable.PERIOD, meal.getPeriod());
 
         // Non persisted university
-        if(meal.getUniversity().getId() != 0)
+        if (meal.getUniversity().getId() != 0)
             values.put(MealTable.UNIVERSITY_ID, meal.getUniversity().getId());
         else
             Log.w(App.TAG, "Non persisted university " + meal.getUniversity());

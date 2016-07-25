@@ -46,7 +46,7 @@ public class VolleyNetworkRequest implements NetworkRequest {
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<>();
+                Map<String, String> params = new HashMap<>();
                 params.put("Accept", "application/json");
                 return params;
             }

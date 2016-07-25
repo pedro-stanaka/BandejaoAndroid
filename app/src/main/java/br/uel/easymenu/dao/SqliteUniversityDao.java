@@ -50,7 +50,7 @@ public class SqliteUniversityDao extends SqliteDao<University> implements Univer
         String placeHolder = TextUtils.join(",", placeHolderList);
 
         String query = isInQuery ? " IN " : " NOT IN";
-        String sql = "SELECT * FROM " + UniversityTable.NAME + " WHERE NAME " + query +  "( " + placeHolder + ")";
+        String sql = "SELECT * FROM " + UniversityTable.NAME + " WHERE NAME " + query + "( " + placeHolder + ")";
 
         String[] params = universityNames.toArray(new String[universityNames.size()]);
 
@@ -60,7 +60,7 @@ public class SqliteUniversityDao extends SqliteDao<University> implements Univer
 
     @Override
     protected void populateValues(ContentValues values, University object) {
-        if(object.getId() != 0)
+        if (object.getId() != 0)
             values.put(UniversityTable.ID_UNIVERSITY, object.getId());
 
         values.put(UniversityTable.FULL_NAME, object.getFullName());

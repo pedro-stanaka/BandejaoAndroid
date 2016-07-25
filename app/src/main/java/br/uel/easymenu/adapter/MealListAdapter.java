@@ -3,7 +3,6 @@ package br.uel.easymenu.adapter;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import com.bignerdranch.expandablerecyclerview.Model.ParentWrapper;
 
 import java.util.List;
 
-import br.uel.easymenu.App;
 import br.uel.easymenu.R;
 import br.uel.easymenu.gui.DishViewHolder;
 import br.uel.easymenu.gui.MealViewHolder;
@@ -57,7 +55,8 @@ public class MealListAdapter extends ExpandableRecyclerAdapter<MealViewHolder, D
             }
 
             @Override
-            public void onListItemCollapsed(int position) { }
+            public void onListItemCollapsed(int position) {
+            }
         });
     }
 

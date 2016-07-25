@@ -29,10 +29,10 @@ import static org.hamcrest.Matchers.equalTo;
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class TestIncomingUniversity {
-    
+
     @Inject
     UniversityDao universityDao;
-    
+
     @Inject
     UniversityService universityService;
 
@@ -49,10 +49,11 @@ public class TestIncomingUniversity {
     public void closeDatabase() {
         DbHelper.getInstance(RuntimeEnvironment.application).getWritableDatabase().close();
     }
+
     @Test
     public void universityInsertion() throws Exception {
         University university = UniversityBuilder.createFakeUniversty();
-        boolean updateUi = universityService. matchUniversity(singletonList(university));
+        boolean updateUi = universityService.matchUniversity(singletonList(university));
         assertThat(universityDao.count(), equalTo(1));
         assertThat(mealDao.count(), equalTo(university.getMeals().size()));
         assertThat(updateUi, equalTo(true));

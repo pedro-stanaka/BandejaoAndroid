@@ -2,6 +2,9 @@
   {
     "date": "{{ monday }}",
     "period": "BOTH",
-    "dishes": ["Rice"," Beans"]
+    "dishes": [
+      "Rice",
+      " Beans"
+    ]
   }
 ]

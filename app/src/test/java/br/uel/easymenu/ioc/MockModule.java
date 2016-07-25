@@ -2,14 +2,9 @@ package br.uel.easymenu.ioc;
 
 import android.content.Context;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.greenrobot.eventbus.EventBus;
-
 import javax.inject.Named;
 
 import br.uel.easymenu.dao.MealDao;
-import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.service.DefaultResponseHandler;
 import br.uel.easymenu.service.MealService;
 

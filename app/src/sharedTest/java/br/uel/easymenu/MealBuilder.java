@@ -21,7 +21,7 @@ public class MealBuilder {
         return createFakeMeals(DateTime.now());
     }
 
-    public static List<Meal> createFakeMeals(DateTime ... dateTimes) {
+    public static List<Meal> createFakeMeals(DateTime... dateTimes) {
         ArrayList<Meal> fakeMeals = new ArrayList<>();
         final University university = new UniversityBuilder().withName("Name").build();
         for (final DateTime dateTime : dateTimes) {

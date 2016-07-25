@@ -19,8 +19,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Calendar;
-
 import br.uel.easymenu.adapter.MealListAdapter;
 import br.uel.easymenu.gui.MenuActivity;
 import br.uel.easymenu.model.Meal;
@@ -43,7 +41,7 @@ import static org.hamcrest.core.StringStartsWith.startsWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class TestMenuActivityEspresso {
+public class TestMenuActivity {
 
     private static final String SUCCESS_RESPONSE_FILE = "3-days.json";
 
@@ -137,8 +135,8 @@ public class TestMenuActivityEspresso {
         return withText(startsWith(dateString));
     }
 
-    private void assertAllDishes(int tabPosition, int position, String...dishes) {
-        for(String dishName : dishes) {
+    private void assertAllDishes(int tabPosition, int position, String... dishes) {
+        for (String dishName : dishes) {
             // Scrolling to view
             onView(recyclerViewMatcher(tabPosition)).perform(RecyclerViewActions.scrollToPosition(position));
             onView(recyclerViewMatcher(tabPosition)).check(matches(atPosition(position++, withText(dishName))));

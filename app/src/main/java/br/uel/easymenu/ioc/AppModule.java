@@ -42,36 +42,46 @@ public class AppModule {
         this.context = context;
     }
 
-    @Provides public MealDao provideMealDao() {
-       return new SqliteMealDao(this.context);
+    @Provides
+    public MealDao provideMealDao() {
+        return new SqliteMealDao(this.context);
     }
 
-    @Provides public DishDao provideDishDao() {
-       return new SqliteDishDao(this.context);
+    @Provides
+    public DishDao provideDishDao() {
+        return new SqliteDishDao(this.context);
     }
 
-    @Provides public UniversityDao provideUniversityDao() {
+    @Provides
+    public UniversityDao provideUniversityDao() {
         return new SqliteUniversityDao(this.context);
     }
 
-    @Provides public GoogleCloudMessaging provideGcm() {
+    @Provides
+    public GoogleCloudMessaging provideGcm() {
         return GoogleCloudMessaging.getInstance(this.context);
     }
 
-    @Provides public RequestQueue provideRequestQueue() {
+    @Provides
+    public RequestQueue provideRequestQueue() {
         return Volley.newRequestQueue(context);
     }
 
-    @Provides public EventBus provideEventBus() {
+    @Provides
+    public EventBus provideEventBus() {
         return EventBus.getDefault();
     }
 
-    @Provides @Named("url.weekly_meals") public String provideWeeklyUrl() {
+    @Provides
+    @Named("url.weekly_meals")
+    public String provideWeeklyUrl() {
         String url = context.getString(R.string.url_weekly_meal);
         return returnUrl(url);
     }
 
-    @Provides @Named("url.weekly_universities") public String provideUniversitiesUrl() {
+    @Provides
+    @Named("url.weekly_universities")
+    public String provideUniversitiesUrl() {
         String url = context.getString(R.string.url_weekly_university);
         String university_name = context.getString(R.string.university_name);
         String uri = String.format(url, university_name);
@@ -83,34 +93,40 @@ public class AppModule {
         return ip + url;
     }
 
-    @Provides public MealService provideMealService(@Named("url.weekly_meals") String mealsUrl,
-                                                    MealDao mealDao,
-                                                    DefaultResponseHandler handler) {
+    @Provides
+    public MealService provideMealService(@Named("url.weekly_meals") String mealsUrl,
+                                          MealDao mealDao,
+                                          DefaultResponseHandler handler) {
         return new MealService(mealsUrl, mealDao, handler);
     }
 
-    @Provides public UniversityService provideUniversityService(@Named("url.weekly_universities") String universitiesUrl,
-                                                                UniversityDao universityDao,
-                                                                MealService mealService,
-                                                                DefaultResponseHandler handler) {
+    @Provides
+    public UniversityService provideUniversityService(@Named("url.weekly_universities") String universitiesUrl,
+                                                      UniversityDao universityDao,
+                                                      MealService mealService,
+                                                      DefaultResponseHandler handler) {
         return new UniversityService(universitiesUrl, universityDao, mealService, handler);
     }
 
-    @Provides public SharedPreferences provideSharedPreferences() {
+    @Provides
+    public SharedPreferences provideSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    @Provides public DefaultResponseHandler provideDefaultResponseHandler(Serializer serializer,
-                                                                          EventBus eventBus,
-                                                                          NetworkRequest networkRequest) {
+    @Provides
+    public DefaultResponseHandler provideDefaultResponseHandler(Serializer serializer,
+                                                                EventBus eventBus,
+                                                                NetworkRequest networkRequest) {
         return new DefaultResponseHandler(serializer, eventBus, networkRequest);
     }
 
-    @Provides public NetworkRequest provideNetworkRequest(RequestQueue requestQueue) {
+    @Provides
+    public NetworkRequest provideNetworkRequest(RequestQueue requestQueue) {
         return new VolleyNetworkRequest(requestQueue);
     }
 
-    @Provides public Serializer provideSerializer() {
+    @Provides
+    public Serializer provideSerializer() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setDateFormat(CalendarUtils.SDF);
         mapper.registerModule(new JodaModule());

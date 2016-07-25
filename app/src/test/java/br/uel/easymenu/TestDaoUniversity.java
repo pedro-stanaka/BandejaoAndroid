@@ -8,9 +8,6 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import br.uel.easymenu.dao.DishDao;
@@ -77,7 +74,7 @@ public class TestDaoUniversity {
         assertThat(1, equalTo(universityDao.count()));
         assertThat(university.getMeals().size(), equalTo(mealDao.count()));
         int dishesCount = 0;
-        for(Meal meal : university.getMeals()) {
+        for (Meal meal : university.getMeals()) {
             dishesCount += meal.getDishes().size();
         }
         assertThat(dishesCount, equalTo(dishesCount));

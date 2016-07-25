@@ -11,8 +11,6 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.uel.easymenu.utils.CalendarUtils;
-
 import static br.uel.easymenu.utils.CalendarUtils.fromCalendarToString;
 import static br.uel.easymenu.utils.CalendarUtils.fromStringToCalendar;
 
@@ -40,7 +38,7 @@ public class Meal implements Parcelable, Comparable<Meal> {
 
     private long id;
 
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private DateTime date;
 
     private List<Dish> dishes = new ArrayList<Dish>();
@@ -116,7 +114,7 @@ public class Meal implements Parcelable, Comparable<Meal> {
                 period.equals(Meal.BREAKFAST) ||
                 period.equals(Meal.VEGETARIAN_DINNER) ||
                 period.equals(Meal.VEGETARIAN_LUNCH))) {
-           throw new IllegalArgumentException("Period can't have the value " + period);
+            throw new IllegalArgumentException("Period can't have the value " + period);
         }
         this.period = period;
     }
@@ -191,27 +189,23 @@ public class Meal implements Parcelable, Comparable<Meal> {
 
     @Override
     public int compareTo(Meal another) {
-        if(this.date.isAfter(another.date)) {
+        if (this.date.isAfter(another.date)) {
             return 1;
-        }
-        else if(this.date.isBefore(another.date)) {
+        } else if (this.date.isBefore(another.date)) {
             return -1;
-        }
-        else {
-           if(rankMeal(this.period) > rankMeal(another.period)) {
-               return 1;
-           }
-           else if(rankMeal(this.period) < rankMeal(another.period)) {
-               return -1;
-           }
-           else {
-               return 0;
-           }
+        } else {
+            if (rankMeal(this.period) > rankMeal(another.period)) {
+                return 1;
+            } else if (rankMeal(this.period) < rankMeal(another.period)) {
+                return -1;
+            } else {
+                return 0;
+            }
         }
     }
 
     private int rankMeal(String period) {
-        switch(period) {
+        switch (period) {
             case Meal.BOTH:
                 return 0;
             case Meal.BREAKFAST:

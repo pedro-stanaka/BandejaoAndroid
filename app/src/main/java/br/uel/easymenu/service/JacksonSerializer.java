@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import java.io.IOException;
 import java.util.List;
 
-public class JacksonSerializer implements Serializer{
+public class JacksonSerializer implements Serializer {
 
     private ObjectMapper mapper;
 

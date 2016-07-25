@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import br.uel.easymenu.gui.MultiMealFragment;
 import br.uel.easymenu.gui.SingleMealFragment;

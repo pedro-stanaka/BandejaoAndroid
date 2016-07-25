@@ -16,16 +16,13 @@ import br.uel.easymenu.ioc.EspressoApp;
 
 public class TestAppRule extends ExternalResource {
 
-    private MockWebServer webServer;
-
     @Inject
     UniversityDao universityDao;
-
     @Inject
     MealDao mealDao;
-
     @Inject
     SharedPreferences sharedPreferences;
+    private MockWebServer webServer;
 
     @Override
     protected void before() throws Throwable {
@@ -43,7 +40,7 @@ public class TestAppRule extends ExternalResource {
         webServer.start();
     }
 
-    public void enqueueRequest(String file) throws Exception{
+    public void enqueueRequest(String file) throws Exception {
         enqueueRequest(200, file);
     }
 

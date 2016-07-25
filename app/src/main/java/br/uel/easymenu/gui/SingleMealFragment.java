@@ -25,12 +25,12 @@ public class SingleMealFragment extends Fragment {
 
         Meal meal = getArguments().getParcelable(MEAL_BUNDLE);
 
-        if(meal.getDishes().size() == 0) {
+        if (meal.getDishes().size() == 0) {
             String emptyDishes = this.getResources().getString(R.string.empty_dishes);
             addTextViewToLayout(inflater, periodLayout, emptyDishes);
         }
 
-        for(Dish dish : meal.getDishes()) {
+        for (Dish dish : meal.getDishes()) {
             addTextViewToLayout(inflater, periodLayout, dish.getDishName());
         }
 

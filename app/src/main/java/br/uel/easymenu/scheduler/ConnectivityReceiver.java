@@ -32,7 +32,7 @@ public class ConnectivityReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-            if(ConnectivityUtils.isConnected(context, true)) {
+            if (ConnectivityUtils.isConnected(context, true)) {
                 Log.d(App.TAG, "We have internet, start update check and disable receiver!");
                 Intent backgroundIntent = new Intent(context, BackgroundService.class);
                 WakefulIntentService.sendWakefulWork(context, backgroundIntent);

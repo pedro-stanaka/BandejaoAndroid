@@ -53,7 +53,7 @@ public class MealService {
         handler.makeRequest(url, Meal.class, new Action<Meal>() {
             @Override
             public boolean makeBusiness(List<Meal> meals) {
-                for(Meal meal : meals) {
+                for (Meal meal : meals) {
                     meal.setUniversity(university);
                 }
                 return matchMeals(meals, university);
@@ -63,7 +63,7 @@ public class MealService {
 
     public boolean matchMeals(List<Meal> meals, University university) {
 
-        if(university.getId() == 0) {
+        if (university.getId() == 0) {
             throw new IllegalArgumentException("Don't pass a non-persisted university to this method " + university);
         }
 
@@ -109,11 +109,11 @@ public class MealService {
                 int hourDifferenceA = periodTime.get(mealA.getPeriod()) - hour;
                 int hourDifferenceB = periodTime.get(mealB.getPeriod()) - hour;
 
-                if(hourDifferenceA <= 0 && hourDifferenceB > 0) {
+                if (hourDifferenceA <= 0 && hourDifferenceB > 0) {
                     return +1;
                 }
 
-                if(hourDifferenceB <= 0 && hourDifferenceA > 0) {
+                if (hourDifferenceB <= 0 && hourDifferenceA > 0) {
                     return -1;
                 }
                 return hourDifferenceA - hourDifferenceB;

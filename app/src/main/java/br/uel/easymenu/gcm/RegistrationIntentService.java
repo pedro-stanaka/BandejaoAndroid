@@ -13,6 +13,7 @@ import br.uel.easymenu.R;
 public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
+
     public RegistrationIntentService() {
         super(TAG);
     }

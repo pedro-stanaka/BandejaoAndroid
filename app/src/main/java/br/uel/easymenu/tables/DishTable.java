@@ -12,7 +12,7 @@ public class DishTable {
             ID_DISH + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             DISH_NAME + " TEXT, " +
             MEAL_ID + " INTEGER, " +
-            " FOREIGN KEY ( " + DishTable.MEAL_ID  + ") REFERENCES " + MealTable.NAME + "( " + MealTable.ID_MEAL + ") ON DELETE CASCADE)";
+            " FOREIGN KEY ( " + DishTable.MEAL_ID + ") REFERENCES " + MealTable.NAME + "( " + MealTable.ID_MEAL + ") ON DELETE CASCADE)";
 
     public static String onCreate() {
         return CREATE_TABLE_DISHES;

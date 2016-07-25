@@ -26,7 +26,7 @@ public class DailyListener implements WakefulIntentService.AlarmListener {
 
         DateTime dateTime = DateTime.now();
 
-        if(dateTime.getHourOfDay() >= HOUR_ALARM) {
+        if (dateTime.getHourOfDay() >= HOUR_ALARM) {
             dateTime = dateTime.plusDays(1);
         }
         dateTime = dateTime

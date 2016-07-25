@@ -20,10 +20,10 @@ public class MealItem implements ParentListItem {
 
     public static List<MealItem> buildMealItem(List<Meal> meals) {
         List<MealItem> mealItems = new ArrayList<>(meals.size());
-        for(Meal meal: meals) {
+        for (Meal meal : meals) {
 
             // Add empty dish because it will be hard to add this special case with the way ExpandableRecyclerView works
-            if(meal.getDishes().size() == 0) {
+            if (meal.getDishes().size() == 0) {
                 meal.addDish(new Dish(EMPTY_DISH));
             }
 
