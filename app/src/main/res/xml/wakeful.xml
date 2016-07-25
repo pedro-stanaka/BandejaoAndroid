@@ -1,0 +1,1 @@
+<WakefulIntentService listener="br.uel.easymenu.scheduler.DailyListener" />
