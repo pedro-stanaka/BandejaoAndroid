@@ -3,6 +3,7 @@ package br.uel.easymenu.ioc;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -13,6 +14,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Named;
 
+import br.uel.easymenu.App;
 import br.uel.easymenu.R;
 import br.uel.easymenu.dao.DishDao;
 import br.uel.easymenu.dao.MealDao;

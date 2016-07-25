@@ -18,7 +18,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import br.uel.easymenu.dao.MealDao;
-import br.uel.easymenu.ioc.TestApp;
+import br.uel.easymenu.ioc.RobolectricApp;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.service.MealService;
 import br.uel.easymenu.tables.DbHelper;
@@ -43,7 +43,7 @@ public class TestIncomingMeal {
     @Before
     public void setupTests() {
         DbHelper.resetConnection();
-        TestApp.component().inject(this);
+        RobolectricApp.component().inject(this);
     }
 
     @After
@@ -101,7 +101,7 @@ public class TestIncomingMeal {
         MealDao mealDaoMock = mock(MealDao.class);
         doThrow(new SQLiteException()).when(mealDaoMock).insert(anyList());
 
-        TestApp.mockComponent(mealDaoMock).inject(this);
+        RobolectricApp.mockComponent(mealDaoMock).inject(this);
 
         List<Meal> exceptionMeals = MealBuilder.createFakeMeals();
         // Removing to confirm the rollback

@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.dao.UniversityDao;
-import br.uel.easymenu.ioc.TestApp;
+import br.uel.easymenu.ioc.RobolectricApp;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.model.University;
 import br.uel.easymenu.tables.DbHelper;
@@ -35,7 +35,7 @@ public class TestDaoUniversity {
     @Before
     public void setup() {
         DbHelper.resetConnection();
-        TestApp.component().inject(this);
+        RobolectricApp.component().inject(this);
     }
 
     @After

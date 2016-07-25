@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import br.uel.easymenu.ioc.TestApp;
+import br.uel.easymenu.ioc.RobolectricApp;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.service.MealService;
 
@@ -28,7 +28,7 @@ public class TestJsonResponse {
 
     @Before
     public void injectVariables() throws Exception {
-        TestApp.component().inject(this);
+        RobolectricApp.component().inject(this);
         String mealsJson = JsonUtils.convertJsonToString("success.json");
 //      TODO: Fix this
 //        meals = mealService.deserializeMeal(mealsJson);

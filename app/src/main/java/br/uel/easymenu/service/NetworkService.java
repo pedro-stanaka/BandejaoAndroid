@@ -1,6 +1,7 @@
 package br.uel.easymenu.service;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
@@ -56,6 +57,7 @@ public class NetworkService {
             public void onResponse(String response) {
                 response = response.replaceAll("\\\\", "");
 
+                Log.d(App.TAG, response);
                 List<University> universities = mealService.deserializeMeal(response);
 
                 if(universities != null) {

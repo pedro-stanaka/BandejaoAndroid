@@ -91,6 +91,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setDisplayHomeAsUpEnabled(true);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Log.e(App.TAG, getApplicationContext()+"");
         bus.register(this);
         // TODO: Check if it has Internet
         networkService.persistCurrentMealsFromServer();

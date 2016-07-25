@@ -33,10 +33,6 @@ import javax.inject.Inject;
 import br.uel.easymenu.adapter.MealListAdapter;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.gui.MenuActivity;
-import br.uel.easymenu.ioc.AppComponent;
-import br.uel.easymenu.ioc.DaggerTestApp_MockHttpComponent;
-import br.uel.easymenu.ioc.MockHttpModule;
-import br.uel.easymenu.ioc.TestApp;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.service.NetworkEvent;
 import br.uel.easymenu.tables.DbHelper;
@@ -58,17 +54,17 @@ public class TestMenuActivity {
 
     @Before
     public void setupTests() throws Exception {
-        DbHelper.resetConnection();
-        TestApp.component().inject(this);
+        /*DbHelper.resetConnection();
+        RobolectricApp.component(RuntimeEnvironment.application).inject(this);
 
         webServer = new MockWebServer();
         webServer.start();
-
-        AppComponent component = DaggerTestApp_MockHttpComponent
+*/
+        /*AppComponent component = DaggerTestApp_MockHttpComponent
                 .builder()
                 .appModule(new MockHttpModule(RuntimeEnvironment.application, webServer))
                 .build();
-        ((App) RuntimeEnvironment.application).setComponent(component);
+        ((App) RuntimeEnvironment.application).setComponent(component);*/
     }
 
     public void closeDatabase() {

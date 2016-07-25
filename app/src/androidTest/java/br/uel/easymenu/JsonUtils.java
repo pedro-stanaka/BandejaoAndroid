@@ -22,9 +22,9 @@ public class JsonUtils {
         is.close();
 
         HashMap<String, Object> scopes = new HashMap<String, Object>() {{
-            put("monday", fromCalendarToString(monday()));
-            put("tuesday", fromCalendarToString(mondayPlusDays(1)));
-            put("wednesday", fromCalendarToString(mondayPlusDays(2)));
+            put("monday", fromCalendarToString(CalendarFactory.monday()));
+            put("tuesday", fromCalendarToString(CalendarFactory.mondayPlusDays(1)));
+            put("wednesday", fromCalendarToString(CalendarFactory.mondayPlusDays(2)));
         }};
 
         Template tmpl = Mustache.compiler().compile(rawJson);

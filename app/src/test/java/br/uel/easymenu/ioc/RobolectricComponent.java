@@ -8,7 +8,7 @@ import br.uel.easymenu.TestDaoUniversity;
 import dagger.Component;
 
 @Component(modules = AppModule.class)
-public interface TestComponent {
+public interface RobolectricComponent {
 
     public void inject(TestMenuActivity testMenuActivity);
 
