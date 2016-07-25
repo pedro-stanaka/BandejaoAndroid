@@ -65,6 +65,7 @@ public class SqliteUniversityDao extends SqliteDao<University> implements Univer
 
         values.put(UniversityTable.FULL_NAME, object.getFullName());
         values.put(UniversityTable.UNIVERSITY_NAME, object.getName());
+        values.put(UniversityTable.WEBSITE, object.getWebsite());
     }
 
     @Override
@@ -73,6 +74,7 @@ public class SqliteUniversityDao extends SqliteDao<University> implements Univer
         university.setId(getLongFromColumn(UniversityTable.ID_UNIVERSITY, cursor));
         university.setFullName(getStringFromColumn(UniversityTable.FULL_NAME, cursor));
         university.setName(getStringFromColumn(UniversityTable.UNIVERSITY_NAME, cursor));
+        university.setWebsite(getStringFromColumn(UniversityTable.WEBSITE, cursor));
         return university;
     }
 

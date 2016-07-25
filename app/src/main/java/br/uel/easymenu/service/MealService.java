@@ -56,12 +56,20 @@ public class MealService {
                 for (Meal meal : meals) {
                     meal.setUniversity(university);
                 }
-                return matchMeals(meals, university);
+                return syncMeals(meals, university);
             }
         });
     }
 
-    public boolean matchMeals(List<Meal> meals, University university) {
+    /**
+     * Persists the meals of the parameter with the weekly meals of the database
+     * If they are equals, nothing is done
+     *
+     * The comparison is done with {@link #replaceMeals(List, List)}
+     *
+     * @return an update occurred
+     */
+    public boolean syncMeals(List<Meal> meals, University university) {
 
         if (university.getId() == 0) {
             throw new IllegalArgumentException("Don't pass a non-persisted university to this method " + university);
@@ -73,6 +81,11 @@ public class MealService {
         return replaceMeals(meals, mealsCurrentWeek);
     }
 
+    /**
+     * If the newMeals are different from the oldMeals, we erase the oldMeals from the database and insert the newMeals
+     *
+     * The comparison is done with {@link Object#equals(Object)} we override {@link Meal#equals(Object)}
+     */
     private boolean replaceMeals(List<Meal> newMeals, List<Meal> oldMeals) {
         boolean changed = false;
         if (!newMeals.equals(oldMeals)) {

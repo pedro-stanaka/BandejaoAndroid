@@ -67,7 +67,7 @@ public class TestIncomingMeal {
         universityDao.insertWithMeals(university);
         meals.remove(0);
 
-        mealService.matchMeals(meals, university);
+        mealService.syncMeals(meals, university);
         assertThat(mealDao.count(), equalTo(meals.size()));
     }
 
@@ -79,7 +79,7 @@ public class TestIncomingMeal {
         DateTime dateTime = meals.get(0).getDate().plusDays(1);
         meals.add(new MealBuilder().withDate(fromCalendarToString(dateTime)).build());
 
-        mealService.matchMeals(meals, university);
+        mealService.syncMeals(meals, university);
         assertThat(mealDao.count(), equalTo(meals.size()));
     }
 
@@ -91,7 +91,7 @@ public class TestIncomingMeal {
 
         List<Meal> secondMeals = MealBuilder.createFakeMeals();
 
-        mealService.matchMeals(secondMeals, university);
+        mealService.syncMeals(secondMeals, university);
         // It shouldn't remove the first meals and insert the new swapped one
         assertThat(firstMeals.get(0).getId(), equalTo(mealDao.fetchAll().get(0).getId()));
     }
@@ -106,7 +106,7 @@ public class TestIncomingMeal {
         Collections.swap(swappedMeals, 0, 2);
         Collections.swap(swappedMeals, 1, 2);
 
-        mealService.matchMeals(swappedMeals, university);
+        mealService.syncMeals(swappedMeals, university);
         assertThat(firstMeals.get(0).getId(), equalTo(mealDao.fetchAll().get(0).getId()));
     }
 
@@ -125,7 +125,7 @@ public class TestIncomingMeal {
         List<Meal> exceptionMeals = MealBuilder.createFakeMeals();
         // Removing to confirm the rollback
         exceptionMeals.remove(0);
-        mealService.matchMeals(exceptionMeals, university);
+        mealService.syncMeals(exceptionMeals, university);
 
         assertEquals(initialMealsSize, university.getMeals().size());
     }

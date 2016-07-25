@@ -1,5 +1,7 @@
 package br.uel.easymenu;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,8 +68,9 @@ public class TestDaoMeal {
     @Test
     public void testReplaceSameDateAndPeriod() throws Exception {
         MealBuilder builder = new MealBuilder();
-
-        mealDao.insert(builder.withPeriod(Meal.LUNCH).build());
+        Meal meal = builder.withPeriod(Meal.LUNCH).build();
+        universityDao.insert(meal.getUniversity());
+        mealDao.insert(meal);
         mealDao.insert(builder.withPeriod(Meal.LUNCH).build());
         mealDao.insert(builder.withPeriod(Meal.LUNCH).build());
 

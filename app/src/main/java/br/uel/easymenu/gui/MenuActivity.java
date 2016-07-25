@@ -1,6 +1,9 @@
 package br.uel.easymenu.gui;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -272,9 +275,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.rate_app) {
-            Log.d(App.TAG, "Rate this app <3");
+            rateApp();
         } else if (item.getItemId() == R.id.visit_website) {
-            Log.d(App.TAG, "Visit website");
+            visitSourceWebSite();
         } else if (item.getGroupId() == R.id.campus_names) {
             currentUniversity = universityDao.findByName(item.getTitle() + "");
             setGuiWithMeals();
@@ -286,5 +289,34 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawers();
         return false;
     }
+
+    private void rateApp() {
+        Uri uri = Uri.parse("market://details?id=" + getPackageName());
+        Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+            startActivity(myAppLinkToMarket);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, " unable to find market app", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void visitSourceWebSite() {
+        if(currentUniversity == null) {
+            Toast.makeText(this.getApplicationContext(), getString(R.string.no_university_website), Toast.LENGTH_LONG).show();
+            return;
+        }
+        String url = currentUniversity.getWebsite();
+        if(url == null) {
+            Toast.makeText(this, getString(R.string.university_no_website), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            url = "http://" + url;
+        }
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
+    }
+
 }
 

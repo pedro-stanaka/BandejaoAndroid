@@ -16,6 +16,8 @@ public class University {
 
     private List<Meal> meals = new ArrayList<>();
 
+    private String website;
+
     public long getId() {
         return id;
     }
@@ -42,6 +44,14 @@ public class University {
 
     public List<Meal> getMeals() {
         return meals;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
     public void setMeals(List<Meal> meals) {

@@ -15,8 +15,8 @@ public class MealTable {
             PERIOD + " TEXT ," +
             UNIVERSITY_ID + " INTEGER, " +
             "FOREIGN KEY (" + MealTable.UNIVERSITY_ID + ") REFERENCES " + UniversityTable.NAME +
-            " ( " + UniversityTable.ID_UNIVERSITY + " ) ON DELETE CASCADE)";
-//            "UNIQUE(" + DATE_MEAL + ", " + PERIOD +  ", " + UNIVERSITY_ID + ") ON CONFLICT REPLACE)";
+            " ( " + UniversityTable.ID_UNIVERSITY + " ) ON DELETE CASCADE, " +
+            "UNIQUE(" + DATE_MEAL + ", " + PERIOD +  ", " + UNIVERSITY_ID + ") ON CONFLICT REPLACE)";
 
     public static String onCreate() {
         return CREATE_TABLE_MEALS;

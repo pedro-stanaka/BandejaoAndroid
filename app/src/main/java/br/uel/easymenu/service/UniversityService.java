@@ -34,14 +34,33 @@ public class UniversityService {
         handler.makeRequest(urlWeeklyUniversities, University.class, new DefaultResponseHandler.Action<University>() {
             @Override
             public boolean makeBusiness(List<University> universities) {
-                return matchUniversity(universities);
+                return syncUniversities(universities);
             }
         });
     }
 
-    // TODO: Documentation
-    // We don't override equals
-    public boolean matchUniversity(List<University> serverUniversities) {
+    /**
+     * Compares the universities and meals from the server with the device's database
+     * The purpose is that the local database to be a mirror to the state of the server
+     * <p/>
+     * <p>This method performs three main tasks:
+     * <ul>
+     * <li>
+     * Persist universities that are not in our DB.
+     * </li>
+     * <li>
+     * Compare the meals of each university. Refer to {@link MealService#syncMeals(List, University)}
+     * </li>
+     * <li>
+     * Delete any university that is in our DB, but not in the server
+     * </li>
+     * </ul>
+     * <p/>
+     * <p/>
+     *
+     * @return if any change that occurred in one of these three stesp
+     */
+    public boolean syncUniversities(List<University> serverUniversities) {
         List<String> serverUniversityNames = listOfUniversityNames(serverUniversities);
         List<University> mealsInDbAndServer = universityDao.inNamesList(serverUniversityNames);
 
@@ -77,7 +96,7 @@ public class UniversityService {
         }
 
         for (University university : incomingUniversities) {
-            boolean changedMeal = mealService.matchMeals(university.getMeals(), university);
+            boolean changedMeal = mealService.syncMeals(university.getMeals(), university);
             if (changedMeal) changed = true;
         }
         return changed;
@@ -101,7 +120,6 @@ public class UniversityService {
         return listUniversityNames;
     }
 
-    // TODO: Documentation
     public University selectUniversity(University currentUniversity) {
         if (universityDao.count() == 1) {
             currentUniversity = universityDao.fetchAll().get(0);

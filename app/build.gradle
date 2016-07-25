@@ -33,10 +33,10 @@ android {
     signingConfigs {
         release {
             try {
-                storeFile file(STORE_FILE)
-                storePassword STORE_PASSWORD
-                keyAlias KEY_ALIAS
-                keyPassword KEY_PASSWORD
+                storeFile file(EASYMENU_STORE_FILE)
+                storePassword EASYMENU_STORE_PASSWORD
+                keyAlias EASYMENU_KEY_ALIAS
+                keyPassword EASYMENU_KEY_PASSWORD
             }
             catch (ex) {
                 throw new InvalidUserDataException("You should define these properties in ~/.gradle/gradle.properties.")

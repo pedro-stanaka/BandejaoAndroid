@@ -21,7 +21,15 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        setupFabric();
+        setupJodaTime();;
+    }
+
+    protected void setupFabric() {
         Fabric.with(this, new Crashlytics());
+    }
+
+    protected void setupJodaTime() {
         JodaTimeAndroid.init(this);
     }
 

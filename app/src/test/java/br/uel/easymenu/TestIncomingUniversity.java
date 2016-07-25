@@ -53,7 +53,7 @@ public class TestIncomingUniversity {
     @Test
     public void universityInsertion() throws Exception {
         University university = UniversityBuilder.createFakeUniversty();
-        boolean updateUi = universityService.matchUniversity(singletonList(university));
+        boolean updateUi = universityService.syncUniversities(singletonList(university));
         assertThat(universityDao.count(), equalTo(1));
         assertThat(mealDao.count(), equalTo(university.getMeals().size()));
         assertThat(updateUi, equalTo(true));
@@ -66,7 +66,7 @@ public class TestIncomingUniversity {
         List<Meal> meals = university.getMeals();
         meals.remove(0);
 
-        boolean updateUi = universityService.matchUniversity(singletonList(university));
+        boolean updateUi = universityService.syncUniversities(singletonList(university));
         assertThat(mealDao.count(), equalTo(meals.size()));
         assertThat(updateUi, equalTo(updateUi));
     }
@@ -78,7 +78,7 @@ public class TestIncomingUniversity {
         University university3 = new UniversityBuilder().withName("University3").build();
 
         universityDao.insert(Arrays.asList(university1, university2));
-        boolean updateUi = universityService.matchUniversity(singletonList(university3));
+        boolean updateUi = universityService.syncUniversities(singletonList(university3));
 
         assertThat(universityDao.count(), equalTo(1));
         assertThat(universityDao.fetchAll().get(0).getName(), equalTo(university3.getName()));
@@ -89,7 +89,7 @@ public class TestIncomingUniversity {
     public void sameUniversityShouldNotUpdateAnything() throws Exception {
         University university = UniversityBuilder.createFakeUniversty();
         universityDao.insertWithMeals(university);
-        boolean updateUi = universityService.matchUniversity(singletonList(university));
+        boolean updateUi = universityService.syncUniversities(singletonList(university));
         assertThat(updateUi, equalTo(false));
         assertThat(universityDao.count(), equalTo(1));
     }
@@ -106,7 +106,7 @@ public class TestIncomingUniversity {
 
         databaseServerUniversity.getMeals().remove(0);
 
-        boolean updateUi = universityService.matchUniversity(Arrays.asList(databaseServerUniversity, serverUniversity));
+        boolean updateUi = universityService.syncUniversities(Arrays.asList(databaseServerUniversity, serverUniversity));
         assertThat(updateUi, equalTo(updateUi));
 
         assertThat(universityDao.count(), equalTo(2));
