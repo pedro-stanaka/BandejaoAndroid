@@ -3,6 +3,8 @@ package br.uel.easymenu;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import br.uel.easymenu.ioc.AppComponent;
@@ -18,6 +20,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         JodaTimeAndroid.init(this);
     }
 

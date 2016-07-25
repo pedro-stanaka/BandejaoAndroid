@@ -17,6 +17,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+
+
     <application
         android:name="br.uel.easymenu.App"
         android:allowBackup="true"
@@ -80,9 +82,16 @@
             android:name=".scheduler.ConnectivityReceiver"
             android:enabled="false">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+             <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="97249d0ce2ea7934f916723f5c69202c06793878" />
+           <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="97249d0ce2ea7934f916723f5c69202c06793878" />
     </application>
+
 </manifest>
