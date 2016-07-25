@@ -13,6 +13,20 @@ import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 public class ConnectivityReceiver extends BroadcastReceiver {
 
+    public static void enableReceiver(Context context) {
+        ComponentName component = new ComponentName(context, ConnectivityReceiver.class);
+
+        context.getPackageManager().setComponentEnabledSetting(component,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+    }
+
+    public static void disableReceiver(Context context) {
+        ComponentName component = new ComponentName(context, ConnectivityReceiver.class);
+
+        context.getPackageManager().setComponentEnabledSetting(component,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -45,19 +59,5 @@ public class ConnectivityReceiver extends BroadcastReceiver {
                 }
             }
         }
-    }
-
-    public static void enableReceiver(Context context) {
-        ComponentName component = new ComponentName(context, ConnectivityReceiver.class);
-
-        context.getPackageManager().setComponentEnabledSetting(component,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-    }
-
-    public static void disableReceiver(Context context) {
-        ComponentName component = new ComponentName(context, ConnectivityReceiver.class);
-
-        context.getPackageManager().setComponentEnabledSetting(component,
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 }

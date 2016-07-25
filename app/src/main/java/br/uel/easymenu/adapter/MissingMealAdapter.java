@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import br.uel.easymenu.R;
 
 public class MissingMealAdapter extends FragmentStatePagerAdapter {

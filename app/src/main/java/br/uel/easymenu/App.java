@@ -1,6 +1,7 @@
 package br.uel.easymenu;
 
 import android.app.Application;
+
 import br.uel.easymenu.dao.AppModule;
 import roboguice.RoboGuice;
 

@@ -1,18 +1,20 @@
 package br.uel.easymenu.service;
 
 import android.util.Log;
-import br.uel.easymenu.App;
-import br.uel.easymenu.R;
-import br.uel.easymenu.model.Meal;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.inject.Inject;
-import roboguice.inject.InjectResource;
 
 import java.util.List;
+
+import br.uel.easymenu.App;
+import br.uel.easymenu.R;
+import br.uel.easymenu.model.Meal;
+import roboguice.inject.InjectResource;
 
 public class NetworkService {
 

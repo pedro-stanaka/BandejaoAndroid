@@ -33,7 +33,7 @@ public class MealService {
             e.printStackTrace();
         }
 
-        if(meals == null) {
+        if (meals == null) {
             throw new RuntimeException("Json not valid: " + json);
         }
 

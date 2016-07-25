@@ -4,11 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import br.uel.easymenu.tables.DbHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import br.uel.easymenu.tables.DbHelper;
 
 public abstract class SqliteDao<T> implements Dao<T> {
 
@@ -33,7 +34,7 @@ public abstract class SqliteDao<T> implements Dao<T> {
     public Collection<Long> insert(Collection<T> objects) {
         List<Long> idsList = new ArrayList<Long>();
 
-        for(T object : objects) {
+        for (T object : objects) {
             long id = this.insert(object);
             idsList.add(id);
         }

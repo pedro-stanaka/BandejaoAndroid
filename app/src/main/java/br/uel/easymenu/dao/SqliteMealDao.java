@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 
 import java.util.List;
-import java.util.Map;
 
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.GroupedMeals;
@@ -18,9 +17,9 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     private static String DEFAULT_FILTER = "'+1 day',  'weekday 0', '-7 day'";
 
     private static String SAME_YEAR = "strftime('%Y', date(?, " + DEFAULT_FILTER + ")) = " +
-            "strftime('%Y', date(" + MealTable.DATE_MEAL + ", " +DEFAULT_FILTER + "))";
+            "strftime('%Y', date(" + MealTable.DATE_MEAL + ", " + DEFAULT_FILTER + "))";
 
-    private static String SAME_WEEK ="strftime('%W', date(?, " + DEFAULT_FILTER + ")) = " +
+    private static String SAME_WEEK = "strftime('%W', date(?, " + DEFAULT_FILTER + ")) = " +
             "strftime('%W', date(" + MealTable.DATE_MEAL + ", " + DEFAULT_FILTER + "))";
 
     private Context context;

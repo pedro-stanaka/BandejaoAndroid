@@ -3,10 +3,11 @@ package br.uel.easymenu.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import br.uel.easymenu.model.Dish;
-import br.uel.easymenu.tables.DishTable;
 
 import java.util.List;
+
+import br.uel.easymenu.model.Dish;
+import br.uel.easymenu.tables.DishTable;
 
 public class SqliteDishDao extends SqliteDao<Dish> implements DishDao {
 

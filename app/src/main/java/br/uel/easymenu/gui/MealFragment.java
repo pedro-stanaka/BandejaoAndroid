@@ -2,18 +2,14 @@ package br.uel.easymenu.gui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
-import br.uel.easymenu.App;
 import br.uel.easymenu.R;
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
@@ -31,11 +27,11 @@ public class MealFragment extends Fragment {
         List<Meal> meals = getArguments().getParcelableArrayList(MEAL_ARGS);
 
         // TODO: Don't display BOTH
-        for(Meal meal: meals) {
+        for (Meal meal : meals) {
             LinearLayout periodLayout = (LinearLayout) inflaterTextView.inflate(R.layout.period_layout, null);
 
             TextView periodText = (TextView) periodLayout.findViewById(R.id.period_text);
-             periodText.setText(meal.getPeriod());
+            periodText.setText(meal.getPeriod());
 
             for (Dish dish : meal.getDishes()) {
                 TextView dishTxtView = (TextView) inflaterTextView.inflate(R.layout.dish_text, null);

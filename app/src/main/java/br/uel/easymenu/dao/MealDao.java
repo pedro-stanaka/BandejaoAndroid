@@ -1,11 +1,10 @@
 package br.uel.easymenu.dao;
 
-import br.uel.easymenu.model.GroupedMeals;
-import br.uel.easymenu.model.Meal;
-
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
+
+import br.uel.easymenu.model.GroupedMeals;
+import br.uel.easymenu.model.Meal;
 
 public interface MealDao extends Dao<Meal> {
 

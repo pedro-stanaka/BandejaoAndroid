@@ -36,7 +36,7 @@ public class Meal implements Parcelable {
 
     private List<Dish> dishes = new ArrayList<Dish>();
 
-   private String period;
+    private String period;
 
     public Meal() {
     }
@@ -149,8 +149,8 @@ public class Meal implements Parcelable {
         Meal meal = (Meal) o;
 
         // Compare the Date without Time
-        if(date != null ? !this.compareDate(meal.date) : meal.date != null) return false;
-        if(period != null ? !period.equals(meal.period) : meal.period != null) return false;
+        if (date != null ? !this.compareDate(meal.date) : meal.date != null) return false;
+        if (period != null ? !period.equals(meal.period) : meal.period != null) return false;
         return !(dishes != null ? !dishes.equals(meal.dishes) : meal.dishes != null);
     }
 

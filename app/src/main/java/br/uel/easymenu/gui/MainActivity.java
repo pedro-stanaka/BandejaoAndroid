@@ -4,22 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.inject.Inject;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import br.uel.easymenu.App;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.gcm.RegistrationIntentService;
-import br.uel.easymenu.model.Dish;
-import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.scheduler.DailyListener;
 import br.uel.easymenu.service.NetworkService;
 import roboguice.RoboGuice;
@@ -50,14 +43,14 @@ public class MainActivity extends RoboActivity {
         startActivity(intent);
 
         boolean firstRunAlarm = sharedPreferences.getBoolean(FIRST_RUN_ALARM, false);
-        if(!firstRunAlarm) {
+        if (!firstRunAlarm) {
             WakefulIntentService.scheduleAlarms(new DailyListener(), this, false);
 
             setKeyPreferenceToTrue(FIRST_RUN_ALARM);
         }
 
         boolean firstRunNetwork = sharedPreferences.getBoolean(MENU_WTIH_MEALS, false);
-        if(!firstRunNetwork) {
+        if (!firstRunNetwork) {
             setupNewMeals();
         }
 

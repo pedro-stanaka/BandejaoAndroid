@@ -2,14 +2,25 @@ package br.uel.easymenu.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Dish implements Parcelable {
 
+    public static final Parcelable.Creator<Dish> CREATOR = new Parcelable.Creator<Dish>() {
+
+        @Override
+        public Dish createFromParcel(Parcel source) {
+            return new Dish(source);
+        }
+
+        @Override
+        public Dish[] newArray(int size) {
+            return new Dish[size];
+        }
+    };
     private long id;
-
     private String dishName;
-
     @JsonIgnore
     private Meal meal;
 
@@ -68,19 +79,6 @@ public class Dish implements Parcelable {
         dest.writeLong(id);
         dest.writeString(dishName);
     }
-
-    public static final Parcelable.Creator<Dish> CREATOR = new Parcelable.Creator<Dish>() {
-
-        @Override
-        public Dish createFromParcel(Parcel source) {
-            return new Dish(source);
-        }
-
-        @Override
-        public Dish[] newArray(int size) {
-            return new Dish[size];
-        }
-    };
 
     @Override
     public boolean equals(Object o) {
