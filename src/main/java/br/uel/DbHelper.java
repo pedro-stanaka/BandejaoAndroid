@@ -6,9 +6,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
 
+    private static DbHelper instance = null;
+
     private static final String DATABASE_NAME = "cardapio.db";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     //  Table Names
     public static final String TABLE_MEAL = "meals";
@@ -16,7 +18,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     //  Meal Columns
     public static final String ID_MEAL = "_id";
-    public static final String DATE = "date";
+    public static final String DATE_MEAL = "date";
 
     //  Dishes Columns
     public static final String ID_DISH = "_id";
@@ -24,13 +26,22 @@ public class DbHelper extends SQLiteOpenHelper {
 
     //  Table creation
     private static final String CREATE_TABLE_MEALS = "CREATE TABLE " + TABLE_MEAL + " (" +
-            ID_MEAL + " INTEGER PRIMARY KEY AUTOINCREMENT, " + DATE + " DATETIME )";
+            ID_MEAL + " INTEGER PRIMARY KEY AUTOINCREMENT, " + DATE_MEAL + " INTEGER )";
 
     private static final String CREATE_TABLE_DISHES = "CREATE TABLE " + TABLE_DISH + " (" +
             ID_DISH + " INTEGER PRIMARY KEY AUTOINCREMENT, " + DISH_NAME + " TEXT )";
 
-    public DbHelper(Context context) {
+    private DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static DbHelper getInstance(Context context) {
+
+        if(instance == null) {
+            instance = new DbHelper(context.getApplicationContext());
+        }
+
+        return instance;
     }
 
     @Override

@@ -8,7 +8,14 @@ public class Meal {
 
     private Calendar date;
 
-    private List<String> dishes = new ArrayList<String>();
+    private List<Dish> dishes = new ArrayList<Dish>();
+
+    public Meal() { }
+
+    public Meal(long id, Calendar date) {
+        this.id = id;
+        this.date = date;
+    }
 
     public Calendar getDate() {
         return date;
@@ -26,17 +33,20 @@ public class Meal {
         this.date = date;
     }
 
-    public List<String> getDishes() {
+    public List<Dish> getDishes() {
         return dishes;
     }
 
-    public void setDishes(List<String> dishes) {
-        this.dishes = dishes;
-    }
-
-    public void addDish(String dish) {
+    public void addDish(Dish dish) {
         dishes.add(dish);
     }
 
-
+    @Override
+    public String toString() {
+        return "Meal{" +
+                "id=" + id +
+                ", date=" + date +
+                ", dishes=" + dishes +
+                '}';
+    }
 }

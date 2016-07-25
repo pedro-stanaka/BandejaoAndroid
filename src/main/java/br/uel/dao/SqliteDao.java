@@ -7,27 +7,40 @@ import android.database.sqlite.SQLiteDatabase;
 import br.uel.DbHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public abstract class SqliteDao<T> implements Dao<T> {
 
     private SQLiteDatabase database;
 
-    public SqliteDao(Context context) {
-        DbHelper helper = new DbHelper(context);
+    private String tableName;
+
+    public SqliteDao(Context context, String tableName) {
+        DbHelper helper = DbHelper.getInstance(context);
         database = helper.getWritableDatabase();
+        this.tableName = tableName;
     }
 
     @Override
-    public void create(T object) {
+    public void insert(T object) {
         ContentValues values = new ContentValues();
         populateValues(values, object);
-        database.insert(getTableName(), null, values);
+        database.insert(tableName, null, values);
     }
 
     @Override
-    public T read(long id) {
-        Cursor cursor = database.rawQuery("SELECT * FROM " + getTableName() + " WHERE _id = ?", new String[]{id + ""});
+    public void insert(Collection<T> objects) {
+        for(T object : objects) {
+            this.insert(object);
+        }
+    }
+
+    @Override
+    public T findById(long id) {
+        Cursor cursor = database.rawQuery("SELECT * FROM " + tableName + " WHERE _id = ?", new String[]{id + ""});
+        cursor.moveToFirst();
         return (isCursorNotEmpty(cursor)) ? buildObject(cursor) : null;
     }
 
@@ -35,26 +48,39 @@ public abstract class SqliteDao<T> implements Dao<T> {
     public void delete(long id) {
         String selection = "_id = ?";
         String[] args = {String.valueOf(id)};
-        database.delete(getTableName(), selection, args);
+        database.delete(tableName, selection, args);
     }
 
     @Override
-    public List<T> list() {
-        Cursor cursor = database.rawQuery("SELECT * FROM " + getTableName(), null);
+    public List<T> fetchAll() {
+        Cursor cursor = database.rawQuery("SELECT * FROM " + tableName, null);
         List<T> objects = new ArrayList<T>();
-        while(cursor.moveToNext()) {
-           objects.add(buildObject(cursor));
+        while (cursor.moveToNext()) {
+            objects.add(buildObject(cursor));
         }
         return objects;
     }
 
     private boolean isCursorNotEmpty(Cursor cursor) {
-        return (cursor!=null && cursor.getCount()>0);
+        return (cursor != null && cursor.getCount() > 0);
     }
 
     protected abstract void populateValues(ContentValues values, T object);
 
-    protected abstract String getTableName();
-
     protected abstract T buildObject(Cursor cursor);
+
+    protected long getLongFromColumn(String column, Cursor cursor) {
+        int index = cursor.getColumnIndex(column);
+        return cursor.getLong(index);
+    }
+
+    protected int getIntFromColumn(String column, Cursor cursor) {
+        int index = cursor.getColumnIndex(column);
+        return cursor.getInt(index);
+    }
+
+    protected String getStringFromColumn(String column, Cursor cursor) {
+        int index = cursor.getColumnIndex(column);
+        return cursor.getString(index);
+    }
 }

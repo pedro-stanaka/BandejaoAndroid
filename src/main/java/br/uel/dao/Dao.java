@@ -1,14 +1,17 @@
 package br.uel.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface Dao<T> {
 
-    public void create(T object);
+    public void insert(T object);
+    public void insert(Collection<T> objects);
 
-    public T read(long id);
+    public T findById(long id);
 
     public void delete(long id);
 
-    public List<T> list();
+    public List<T> fetchAll();
+
 }

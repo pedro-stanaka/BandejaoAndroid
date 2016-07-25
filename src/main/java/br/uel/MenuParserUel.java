@@ -2,6 +2,7 @@ package br.uel;
 
 import android.webkit.URLUtil;
 
+import br.uel.model.Dish;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -54,7 +55,9 @@ public class MenuParserUel implements MenuParser {
                 meal.setDate(parseDate(info));
             } else {
                 if (!info.equals("")) {
-                    meal.addDish(info);
+                    Dish dish = new Dish();
+                    dish.setDishName(info);
+                    meal.addDish(dish);
                 }
             }
 

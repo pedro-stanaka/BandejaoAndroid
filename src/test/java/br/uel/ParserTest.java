@@ -3,6 +3,7 @@ package br.uel;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import br.uel.model.Dish;
 import br.uel.model.Meal;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,9 +58,9 @@ public class ParserTest {
 
     @Test
     public void shouldReturnCorrectDishes() {
-        List<String> dishes = meals.get(0).getDishes();
+        List<Dish> dishes = meals.get(0).getDishes();
 
-        assertEquals(dishes.get(0), "Arroz");
-        assertEquals(dishes.get(1), "Feijão");
+        assertEquals(dishes.get(0).getDishName(), "Arroz");
+        assertEquals(dishes.get(1).getDishName(), "Feijão");
     }
 }
