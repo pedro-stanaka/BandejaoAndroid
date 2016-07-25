@@ -15,6 +15,10 @@ public class ResourceUtils {
                 return R.string.both;
             case Meal.DINNER:
                 return R.string.dinner;
+             case Meal.VEGETARIAN_LUNCH:
+                 return R.string.vegetarian_lunch;
+             case Meal.VEGETARIAN_DINNER:
+                 return R.string.vegetarian_dinner;
             default:
                 throw new IllegalArgumentException(period + " is not a valid period");
         }

@@ -30,7 +30,9 @@ public class Meal implements Parcelable, Comparable<Meal> {
 
     public final static String BREAKFAST = "BREAKFAST";
     public final static String LUNCH = "LUNCH";
+    public final static String VEGETARIAN_LUNCH = "VEGETARIAN LUNCH";
     public final static String DINNER = "DINNER";
+    public final static String VEGETARIAN_DINNER = "VEGETARIAN DINNER";
     public final static String BOTH = "BOTH";
 
     private long id;
@@ -108,7 +110,9 @@ public class Meal implements Parcelable, Comparable<Meal> {
         if (!(period.equals(Meal.LUNCH) ||
                 period.equals(Meal.BOTH) ||
                 period.equals(Meal.DINNER) ||
-                period.equals(Meal.BREAKFAST))) {
+                period.equals(Meal.BREAKFAST) ||
+                period.equals(Meal.VEGETARIAN_DINNER) ||
+                period.equals(Meal.VEGETARIAN_LUNCH))) {
            throw new IllegalArgumentException("Period can't have the value " + period);
         }
         this.period = period;
@@ -211,8 +215,12 @@ public class Meal implements Parcelable, Comparable<Meal> {
                 return 1;
             case Meal.LUNCH:
                 return 2;
-            case Meal.DINNER:
+            case Meal.VEGETARIAN_LUNCH:
                 return 3;
+            case Meal.DINNER:
+                return 4;
+            case Meal.VEGETARIAN_DINNER:
+                return 5;
         }
         return -1;
     }

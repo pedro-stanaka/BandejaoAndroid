@@ -26,8 +26,10 @@ public class MealService {
     private final static Map<String, Integer> periodTime = new HashMap<String, Integer>() {{
         put(Meal.BREAKFAST, 10);
         put(Meal.LUNCH, 15);
+        put(Meal.VEGETARIAN_LUNCH, 15);
         put(Meal.DINNER, 23);
-        put(Meal.BOTH, 23);
+        put(Meal.VEGETARIAN_DINNER, 23);
+        put(Meal.BOTH, 24);
     }};
 
     private String urlWeeklyMeals;
