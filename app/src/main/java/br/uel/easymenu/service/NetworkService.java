@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.uel.easymenu.App;
-import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.model.University;
 
 import static br.uel.easymenu.service.NetworkEvent.NetworkErrorType;

@@ -48,4 +48,12 @@ public class SqliteUniversityDao extends SqliteDao<University> implements Univer
         List<University> universities = fetchObjectsFromCursor(cursor);
         return (universities.size() > 0) ? universities.get(0) : null;
     }
+
+    @Override
+    public List<University> orderByName() {
+        String sql = "SELECT * FROM " + UniversityTable.NAME +
+                " ORDER BY " + UniversityTable.UNIVERSITY_NAME;
+        Cursor cursor = database.rawQuery(sql, null);
+        return fetchObjectsFromCursor(cursor);
+    }
 }

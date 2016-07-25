@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu_drawer">
+    <item
+        android:id="@+id/rate_app"
+        android:title="@string/rate_app" />
+    <item
+        android:id="@+id/visit_website"
+        android:title="@string/visit_website" />
+
+    <item
+        android:id="@+id/campus"
+        android:title="@string/campus">
+        <menu>
+            <group
+                android:id="@+id/campus_names">
+            </group>
+        </menu>
+
+    </item>
+
+</menu>

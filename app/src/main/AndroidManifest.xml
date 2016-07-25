@@ -24,7 +24,9 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.EasyMenuTheme">
 
-        <activity android:name=".gui.MainActivity">
+        <activity
+            android:name=".gui.MainActivity"
+            android:theme="@style/Theme.EasyMenuTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -2,11 +2,19 @@ package br.uel.easymenu.gui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,7 +38,9 @@ import br.uel.easymenu.service.UniversityService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MenuActivity extends AppCompatActivity {
+public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private final static String UNIVERSITY_NAME = "university_name";
 
     @Inject
     MealDao mealDao;
@@ -59,6 +69,14 @@ public class MenuActivity extends AppCompatActivity {
     @Bind(R.id.tabs)
     TabLayout tabLayout;
 
+    @Bind(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+
+    @Bind(R.id.nav_view)
+    NavigationView navigationView;
+
+    private University currentUniversity;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,11 +84,30 @@ public class MenuActivity extends AppCompatActivity {
         ((App) getApplicationContext()).component().inject(this);
         ButterKnife.bind(this);
 
+        String universityName = sharedPreferences.getString(UNIVERSITY_NAME, null);
+        if(universityName != null) {
+            currentUniversity = universityDao.findByName(universityName);
+        }
+
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_camera);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        navigationView.setNavigationItemSelectedListener(this);
 
         bus.register(this);
         // TODO: Check if it has Internet
         networkService.persistCurrentMealsFromServer();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -100,17 +137,11 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void setGuiWithMeals() {
+        getSelectedUniversity();
+        setUniversityMenu();
 
-        if (universityDao.count() > 1) {
-            // Add the university in the drawer
-            // If it is null don't insert
-            // Select the university
-        }
-
-//        University university = universityService.selectUniversity();
-        University university = universityDao.findByName("PU");
-
-        GroupedMeals groupedMeals = mealDao.mealsOfTheWeekGroupedByDay(Calendar.getInstance(), university);
+        // currentUniversity may be null, but we don't care
+        GroupedMeals groupedMeals = mealDao.mealsOfTheWeekGroupedByDay(Calendar.getInstance(), currentUniversity);
 
         FragmentStatePagerAdapter mealsPagerAdapter = (groupedMeals.size() > 0) ?
                 new MealsPagerAdapter(getSupportFragmentManager(), groupedMeals) :
@@ -127,6 +158,72 @@ public class MenuActivity extends AppCompatActivity {
                 tab.select();
             }
         }
+    }
+
+    private void setUniversityMenu() {
+        Menu menu = navigationView.getMenu();
+
+        // Set university menu
+        boolean showCampusMenu = universityDao.count() > 1;
+        menu.findItem(R.id.campus).setVisible(showCampusMenu);
+
+        if(universityDao.count() > 1) {
+            // Remove if exists and add the campuses everytime
+            SubMenu subMenu = menu.findItem(R.id.campus).getSubMenu();
+            if (subMenu == null)
+                subMenu = menu.addSubMenu(R.id.campus, Menu.NONE, Menu.NONE, R.string.campus);
+
+            subMenu.clear();
+
+            int count = 0;
+            for (University university : universityDao.orderByName()) {
+                 MenuItem item = subMenu.add(R.id.campus_names, Menu.NONE, count++, university.getName());
+
+                if(currentUniversity != null && currentUniversity.getName().equals(university.getName())) {
+                    item.setChecked(true);
+                }
+            }
+        }
+    }
+
+    private University getSelectedUniversity () {
+        if (universityDao.count() == 1) {
+            currentUniversity =  universityDao.fetchAll().get(0);
+        }
+        else if (universityDao.count() > 1) {
+            if(currentUniversity == null) {
+                currentUniversity = universityDao.orderByName().get(0);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(currentUniversity != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(UNIVERSITY_NAME, currentUniversity.getName());
+            editor.commit();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.rate_app) {
+            Log.d(App.TAG, "Rate this app <3");
+        }
+        else if (item.getItemId() == R.id.visit_website) {
+            Log.d(App.TAG, "Visit website");
+        }
+        else if(item.getGroupId() == R.id.campus_names) {
+            currentUniversity = universityDao.findByName(item.getTitle()+"");
+            setGuiWithMeals();
+        }
+
+        drawerLayout.closeDrawers();
+        return false;
     }
 }
 

@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
         startActivity(intent);
 
         setupPollerAlarm();
-        setupGcm();
+//        setupGcm();
 
         finish();
     }

@@ -14,13 +14,8 @@ public class UniversityService {
         this.universityDao = universityDao;
     }
 
-    public University selectUniversity() {
-        if(universityDao.count() == 0) {
-            return null;
-        }
+    public University getUniversity() {
 
-        // Pega dos SharedPreferences
-        // Se não tiver, pega o primeiro que encontrar
 
         return null;
     }

@@ -27,6 +27,10 @@
 
     <string name="empty_dishes">This meal does not have any dishes</string>
 
+    <string name="rate_app">Rate this app</string>
+    <string name="visit_website">Visit Website</string>
+    <string name="campus">Campus</string>
+
     <string name="gcm_defaultSenderId" translatable="false"></string>
     <string name="google_app_id" translatable="false"></string>
 </resources>
