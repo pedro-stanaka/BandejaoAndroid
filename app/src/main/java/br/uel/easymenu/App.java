@@ -1,6 +1,7 @@
 package br.uel.easymenu;
 
 import android.app.Application;
+import android.content.Context;
 
 import br.uel.easymenu.ioc.AppComponent;
 import br.uel.easymenu.ioc.AppModule;
@@ -10,19 +11,25 @@ public class App extends Application {
 
     public static final String TAG = "meals_app";
 
-    private static AppComponent appComponent;
+    private AppComponent component = defaultComponent(this);
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        appComponent = DaggerAppComponent
-                .builder()
-                .appModule(new AppModule(this))
-                .build();
     }
 
-    public static AppComponent component() {
-        return appComponent;
+    public void setComponent(AppComponent component) {
+        this.component = component;
+    }
+
+    public AppComponent component() {
+        return component;
+    }
+
+    private AppComponent defaultComponent(Context context) {
+        return DaggerAppComponent
+                .builder()
+                .appModule(new AppModule(context))
+                .build();
     }
 }

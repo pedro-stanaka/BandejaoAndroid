@@ -54,7 +54,7 @@ public class MenuActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        App.component().inject(this);
+        ((App) getApplicationContext()).component().inject(this);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);

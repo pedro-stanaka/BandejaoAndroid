@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        App.component().inject(this);
+        ((App) getApplicationContext()).component().inject(this);
 
         super.onCreate(savedInstanceState);
         Intent intent = new Intent(this, MenuActivity.class);
