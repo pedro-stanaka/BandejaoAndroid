@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -14,13 +15,16 @@ import com.google.inject.Key;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import br.uel.easymenu.App;
 import br.uel.easymenu.R;
 import br.uel.easymenu.adapter.MealsPagerAdapter;
 import br.uel.easymenu.adapter.MissingMealAdapter;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.model.GroupedMeals;
+import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.service.NetworkService;
 import roboguice.RoboGuice;
 import roboguice.util.RoboContext;

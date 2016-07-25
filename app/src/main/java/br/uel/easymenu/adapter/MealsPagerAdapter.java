@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import java.lang.reflect.Array;
 import java.text.DateFormat;
@@ -13,6 +14,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import br.uel.easymenu.App;
 import br.uel.easymenu.gui.MealFragment;
 import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.model.Meal;

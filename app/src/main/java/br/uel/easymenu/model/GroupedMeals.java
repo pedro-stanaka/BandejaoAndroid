@@ -1,10 +1,13 @@
 package br.uel.easymenu.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import br.uel.easymenu.App;
 import br.uel.easymenu.utils.CalendarUtils;
 
 // We don't use Calendar as a key because the same day could have different hashCode because of the seconds, etc.

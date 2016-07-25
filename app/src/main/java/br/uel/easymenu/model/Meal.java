@@ -121,7 +121,7 @@ public class Meal implements Parcelable {
     public String toString() {
         return "Meal{" +
                 "id=" + id +
-                ", date=" + date +
+                ", date=" + CalendarUtils.fromCalendarToString(date) +
                 ", dishes=" + dishes +
                 ", period='" + period + '\'' +
                 '}';

@@ -2,15 +2,18 @@ package br.uel.easymenu.gui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import org.w3c.dom.Text;
+
 import java.util.List;
 
+import br.uel.easymenu.App;
 import br.uel.easymenu.R;
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
@@ -22,19 +25,25 @@ public class MealFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.meal_fragment, container, false);
-        Bundle bundle = getArguments();
-
-        ViewGroup group = (ViewGroup) rootView.findViewById(R.id.layout_dishes);
-
-        List<Meal> meals = bundle.getParcelableArrayList(MEAL_ARGS);
-
         LayoutInflater inflaterTextView = LayoutInflater.from(this.getActivity());
+        ViewGroup group = (ViewGroup) rootView.findViewById(R.id.layout_meals);
 
-        // TODO: Fix this
-        for (Dish dish : meals.get(0).getDishes()) {
-            TextView dishTxtView = (TextView) inflaterTextView.inflate(R.layout.dish_text, null);
-            dishTxtView.setText(dish.getDishName());
-            group.addView(dishTxtView);
+        List<Meal> meals = getArguments().getParcelableArrayList(MEAL_ARGS);
+
+        // TODO: Don't display BOTH
+        for(Meal meal: meals) {
+            LinearLayout periodLayout = (LinearLayout) inflaterTextView.inflate(R.layout.period_layout, null);
+
+            TextView periodText = (TextView) periodLayout.findViewById(R.id.period_text);
+             periodText.setText(meal.getPeriod());
+
+            for (Dish dish : meal.getDishes()) {
+                TextView dishTxtView = (TextView) inflaterTextView.inflate(R.layout.dish_text, null);
+                dishTxtView.setText(dish.getDishName());
+                periodLayout.addView(dishTxtView);
+            }
+
+            group.addView(periodLayout);
         }
 
         return rootView;

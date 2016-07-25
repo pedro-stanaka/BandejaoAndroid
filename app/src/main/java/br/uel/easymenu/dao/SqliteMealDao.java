@@ -52,7 +52,7 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
 
         String sql = "SELECT * FROM " + MealTable.NAME +
                 " WHERE (" + SAME_WEEK + ") AND ( " + SAME_YEAR + ")" +
-                " GROUP BY " + MealTable.DATE_MEAL +
+                " GROUP BY " + MealTable.DATE_MEAL + ", " + MealTable.PERIOD +
                 " ORDER BY " + MealTable.DATE_MEAL;
 
         String[] params = new String[]{calendarQueryString, calendarQueryString};

@@ -74,8 +74,8 @@ public class MainActivity extends RoboActivity {
         Meal meal = new Meal(Calendar.getInstance(), Meal.LUNCH, dishes);
 
         Calendar calendar2 = Calendar.getInstance();
-        calendar2.add(Calendar.DAY_OF_MONTH, 1);
-        Meal meal2 = new Meal(calendar2, Meal.LUNCH, dishes2);
+//        calendar2.add(Calendar.DAY_OF_MONTH, 1);
+        Meal meal2 = new Meal(calendar2, Meal.DINNER, dishes2);
 
         mealDao.insert(meal);
         mealDao.insert(meal2);
