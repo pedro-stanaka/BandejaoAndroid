@@ -42,27 +42,27 @@ public class MainActivity extends RoboActivity {
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
 
+        setupPollerAlarm();
+        setupNewMeals();
+        setupGcm();
+
+    }
+
+    private void setupPollerAlarm() {
         boolean firstRunAlarm = sharedPreferences.getBoolean(FIRST_RUN_ALARM, false);
         if (!firstRunAlarm) {
             WakefulIntentService.scheduleAlarms(new DailyListener(), this, false);
 
-            setKeyPreferenceToTrue(FIRST_RUN_ALARM);
-        }
-
-        boolean firstRunNetwork = sharedPreferences.getBoolean(MENU_WTIH_MEALS, false);
-        if (!firstRunNetwork) {
-            setupNewMeals();
-        }
-
-        if (checkPlayServices()) {
-            Intent intentGcm = new Intent(this, RegistrationIntentService.class);
-            startService(intentGcm);
-        } else {
-            Log.e(App.TAG, "No valid Google Play Services APK found");
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(FIRST_RUN_ALARM, true);
+            editor.apply();
         }
     }
 
     private void setupNewMeals() {
+
+        // TODO: Only fetch in Wifi
+        /*networkService.persistCurrentMealsFromServer();
         networkService.persistCurrentMealsFromServer(new NetworkService.NetworkServiceListener() {
             @Override
             public void onSuccess() {
@@ -72,13 +72,16 @@ public class MainActivity extends RoboActivity {
             @Override
             public void onError(NetworkEvent.NetworkErrorType errorMessage) {
             }
-        });
+        });*/
     }
 
-    private void setKeyPreferenceToTrue(String key) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(key, true);
-        editor.apply();
+    private void setupGcm() {
+        if (checkPlayServices()) {
+            Intent intentGcm = new Intent(this, RegistrationIntentService.class);
+            startService(intentGcm);
+        } else {
+            Log.e(App.TAG, "No valid Google Play Services APK found");
+        }
     }
 
     private boolean checkPlayServices() {
