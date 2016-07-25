@@ -3,6 +3,7 @@ package br.uel.gui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import br.uel.App;
 import br.uel.service.GcmService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -31,11 +32,15 @@ public class MainActivity extends RoboActivity {
 
             if (regId == null) {
                 gcmService.registerInBackground();
+            } else {
+                Log.d(App.TAG, "User registered with id : " + regId);
             }
+
         } else {
-            Log.e("Meal", "No valid Google Play Services APK found");
+            Log.e(App.TAG, "No valid Google Play Services APK found");
         }
 
+        finish();
     }
 
     @Override

@@ -96,7 +96,7 @@ public class TestDaoMeal {
 
     @Test
     public void testMealGetByDate() {
-        List<Meal> meals = createMeals("2014-02-05", "2014-02-09", "2014-02-10", "2014-02-12");
+        List<Meal> meals = createMeals("2014-02-05", "2014-02-10", "2014-02-12");
         mealDao.insert(meals);
 
         List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-07"));

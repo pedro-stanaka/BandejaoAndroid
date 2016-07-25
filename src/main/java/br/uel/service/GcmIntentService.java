@@ -15,12 +15,17 @@ import br.uel.model.Meal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.inject.Inject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import roboguice.service.RoboIntentService;
 
 import java.util.List;
 
-public class GcmIntentService extends IntentService {
+public class GcmIntentService extends RoboIntentService {
 
     private static final int NOTIFICATION_ID = 1;
+
     @Inject
     private ObjectMapper mapper;
 
@@ -45,7 +50,10 @@ public class GcmIntentService extends IntentService {
             }
             else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 Log.i(App.TAG, "Received message: " + extras.toString());
-                persistNewMeals(extras.toString());
+
+                String mealsJson = extras.getString("meals");
+
+                persistNewMeals(mealsJson);
                 sendNotification();
             }
         }
@@ -53,10 +61,11 @@ public class GcmIntentService extends IntentService {
 
     private void persistNewMeals(String json) {
         List<Meal> meals = mealService.deserializeMeal(json);
-        mealService.persistMeals(meals);
+        mealService.replaceMealsFromCurrentWeak(meals);
     }
 
     private void sendNotification() {
+//        TODO: Improve notification
         NotificationManager notificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 

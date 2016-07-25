@@ -51,13 +51,6 @@ public class MenuActivity extends ActionBarActivity implements RoboContext, Acti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.remove(MENU_WITHOUT_MEALS);
-        edit.commit();
-
-        for(Meal meal : mealDao.fetchAll())
-            mealDao.delete(meal.getId());
-
         actionBar = getSupportActionBar();
 
         if(menuWithMeals())

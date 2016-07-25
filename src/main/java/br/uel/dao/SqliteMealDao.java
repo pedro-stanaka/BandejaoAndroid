@@ -18,9 +18,12 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     //    The date is stored as a string with this format in the database
     private static String DATE_FORMAT = "yyyy-MM-dd";
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+
     /**
      * Most common case.
      * Checks if the date in database in the same week number and the same year of the date query
+     * IMPORTANT: Sqlite considers sunday as the last day of week.
+     * Therefore, sunday will not have the same week number as the week number of the current week
      */
     private static String QUERY_MIDDLE_OF_YEAR = "strftime('%W'," + MealTable.DATE_MEAL + ") = strftime('%W', ?) " +
             " AND strftime('%Y'," + MealTable.DATE_MEAL + ") = ?";

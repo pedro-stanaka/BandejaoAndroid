@@ -31,7 +31,6 @@ public class Meal implements Parcelable {
 
     private long id;
 
-    //    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
     private Calendar date;
 
     private List<Dish> dishes = new ArrayList<Dish>();

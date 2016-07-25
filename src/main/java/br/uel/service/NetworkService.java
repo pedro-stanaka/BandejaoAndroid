@@ -36,7 +36,7 @@ public class NetworkService {
             public void onResponse(String response) {
 
                 List<Meal> meals = mealService.deserializeMeal(response);
-                mealService.persistMeals(meals);
+                mealService.replaceMealsFromCurrentWeak(meals);
 
                 if (listener != null) {
                     listener.onSuccess();
