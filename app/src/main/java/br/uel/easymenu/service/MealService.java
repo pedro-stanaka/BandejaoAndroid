@@ -8,19 +8,28 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 
 import javax.inject.Inject;
 
 import br.uel.easymenu.App;
 import br.uel.easymenu.dao.MealDao;
-import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
 
 public class MealService {
+
+    private final static Map<String, Integer> periodTime = new HashMap<String, Integer>() {{
+        put(Meal.BREAKFAST, 10);
+        put(Meal.LUNCH, 15);
+        put(Meal.DINNER, 23);
+        put(Meal.BOTH, 23);
+    }};
 
     private ObjectMapper mapper;
 
@@ -75,5 +84,32 @@ public class MealService {
                 mealDao.endTransaction();
             }
         }
+    }
+
+    public Meal selectMealByTime(List<Meal> meals, Calendar calendar) {
+        final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        PriorityQueue<Meal> queue = new PriorityQueue<>(meals.size(), new Comparator<Meal>() {
+            @Override
+            public int compare(Meal mealA, Meal mealB) {
+                int hourDifferenceA = periodTime.get(mealA.getPeriod()) - hour;
+                int hourDifferenceB = periodTime.get(mealB.getPeriod()) - hour;
+
+                if(hourDifferenceA <= 0 && hourDifferenceB > 0) {
+                    return +1;
+                }
+
+                if(hourDifferenceB <= 0 && hourDifferenceA > 0) {
+                    return -1;
+                }
+                return hourDifferenceA - hourDifferenceB;
+            }
+        });
+        queue.addAll(meals);
+        return queue.remove();
+    }
+
+    public int selectMealByTimeIndex(List<Meal> meals, Calendar calendar) {
+        Meal meal = selectMealByTime(meals, calendar);
+        return meals.indexOf(meal);
     }
 }
