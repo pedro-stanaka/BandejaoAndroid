@@ -1,8 +1,7 @@
 package br.uel;
 
-import android.webkit.URLUtil;
-
 import br.uel.model.Dish;
+import br.uel.model.Meal;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,23 +15,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import br.uel.model.Meal;
-
 public class MenuParserUel implements MenuParser {
 
-//    private final static String URL = ";
+    //    private final static String URL = ";
     private final static int REQUEST_TIMEOUT = 5000;
 
     static final String FILE_BASE = "file:";
+
     @Override
     public List<Meal> parseHtml(URL url) {
 
-
         Document menuPage = createNewDocument(url);
 
-        List<Meal> meals = iterateMeals(menuPage);
-
-        return meals;
+        return iterateMeals(menuPage);
     }
 
     private List<Meal> iterateMeals(Document menuPage) {
@@ -66,7 +61,7 @@ public class MenuParserUel implements MenuParser {
     }
 
     private Calendar parseDate(String rawDate) {
-        String [] dates = rawDate.split(" ");
+        String[] dates = rawDate.split(" ");
         String dateString = dates[dates.length - 1];
 
         Calendar cal = Calendar.getInstance();
@@ -86,8 +81,7 @@ public class MenuParserUel implements MenuParser {
             // Try to get the page or the file in a maximum time of REQUEST_TIMEOUT
             if (isFileURl(url.toString())) {
                 menuPage = Jsoup.parse(new File(url.getPath()), null);
-            }
-            else{
+            } else {
                 menuPage = Jsoup.connect(url.toString()).get();
             }
         } catch (IOException e) {

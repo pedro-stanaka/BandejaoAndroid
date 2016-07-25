@@ -3,17 +3,30 @@ package br.uel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class Meal implements Parcelable {
 
+    public static final Meal.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
+
+        @Override
+        public Meal createFromParcel(Parcel source) {
+            return new Meal(source);
+        }
+
+        @Override
+        public Meal[] newArray(int size) {
+            return new Meal[size];
+        }
+    };
     private long id;
-
     private Calendar date;
-
     private List<Dish> dishes = new ArrayList<Dish>();
 
-    public Meal() { }
+    public Meal() {
+    }
 
     public Meal(Calendar date) {
         this.date = date;
@@ -25,10 +38,14 @@ public class Meal implements Parcelable {
         in.readTypedList(dishes, Dish.CREATOR);
 
     }
+
     public Calendar getDate() {
         return date;
     }
 
+    public void setDate(Calendar date) {
+        this.date = date;
+    }
 
     public long getId() {
         return id;
@@ -36,10 +53,6 @@ public class Meal implements Parcelable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public void setDate(Calendar date) {
-        this.date = date;
     }
 
     public List<Dish> getDishes() {
@@ -75,17 +88,4 @@ public class Meal implements Parcelable {
 
         dest.writeTypedList(dishes);
     }
-
-    public static final Meal.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
-
-        @Override
-        public Meal createFromParcel(Parcel source) {
-            return new Meal(source);
-        }
-
-        @Override
-        public Meal[] newArray(int size) {
-            return new Meal[size];
-        }
-    };
 }

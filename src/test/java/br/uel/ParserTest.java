@@ -1,21 +1,20 @@
 package br.uel;
 
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import br.uel.model.Dish;
 import br.uel.model.Meal;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
-
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class ParserTest {
 

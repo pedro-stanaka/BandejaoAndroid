@@ -6,6 +6,7 @@ import java.util.List;
 public interface Dao<T> {
 
     public long insert(T object);
+
     public Collection<Long> insert(Collection<T> objects);
 
     public T findById(long id);
