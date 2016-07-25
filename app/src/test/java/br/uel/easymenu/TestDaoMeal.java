@@ -1,6 +1,7 @@
 package br.uel.easymenu;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -14,10 +15,13 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import br.uel.easymenu.dao.DishDao;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.dao.SqliteDishDao;
 import br.uel.easymenu.dao.SqliteMealDao;
+import br.uel.easymenu.ioc.TestApp;
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.tables.DbHelper;
@@ -30,9 +34,16 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricGradleTestRunner.class)
 public class TestDaoMeal {
 
-    private MealDao mealDao = new SqliteMealDao(RuntimeEnvironment.application);
+    @Inject
+    MealDao mealDao;
 
-    private DishDao dishDao = new SqliteDishDao(RuntimeEnvironment.application);
+    @Inject
+    DishDao dishDao;
+
+    @Before
+    public void setupTests() {
+        TestApp.component().inject(this);
+    }
 
     @After
     public void closeDatabase() {

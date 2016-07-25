@@ -14,7 +14,9 @@ import org.greenrobot.eventbus.EventBus;
 import javax.inject.Named;
 
 import br.uel.easymenu.R;
+import br.uel.easymenu.dao.DishDao;
 import br.uel.easymenu.dao.MealDao;
+import br.uel.easymenu.dao.SqliteDishDao;
 import br.uel.easymenu.dao.SqliteMealDao;
 import br.uel.easymenu.service.MealService;
 import br.uel.easymenu.service.NetworkService;
@@ -33,6 +35,10 @@ public class AppModule {
 
     @Provides public MealDao provideMealDao() {
        return new SqliteMealDao(this.context);
+    }
+
+    @Provides public DishDao provideDishDao() {
+       return new SqliteDishDao(this.context);
     }
 
     @Provides public GoogleCloudMessaging provideGcm() {
