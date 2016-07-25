@@ -34,6 +34,7 @@ public class MealsPagerAdapter extends FragmentStatePagerAdapter {
             fragment = new SingleMealFragment();
         } else {
             bundle.putParcelableArrayList(MultiMealFragment.MEAL_BUNDLE, meals);
+            bundle.putInt(MultiMealFragment.TAB_POSITION, position);
             fragment = new MultiMealFragment();
         }
 

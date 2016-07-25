@@ -15,8 +15,8 @@
         "date": "{{ monday }}",
         "period": "LUNCH",
         "dishes": [
-          "Pig",
-          "Olive Oil"
+          "Fish",
+          "Carrot"
         ]
       },
       {
@@ -54,11 +54,7 @@
       {
         "date": "{{ wednesday }}",
         "period": "LUNCH",
-        "dishes": [
-          "Rice",
-          "Burger",
-          "Beans"
-        ]
+        "dishes": []
       },
       {
         "date": "{{ wednesday }}",

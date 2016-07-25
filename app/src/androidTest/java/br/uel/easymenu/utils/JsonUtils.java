@@ -1,4 +1,4 @@
-package br.uel.easymenu;
+package br.uel.easymenu.utils;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
@@ -6,10 +6,8 @@ import com.samskivert.mustache.Template;
 import java.io.InputStream;
 import java.util.HashMap;
 
-import br.uel.easymenu.utils.CalendarUtils;
+import br.uel.easymenu.CalendarFactory;
 
-import static br.uel.easymenu.CalendarFactory.monday;
-import static br.uel.easymenu.CalendarFactory.mondayPlusDays;
 import static br.uel.easymenu.utils.CalendarUtils.fromCalendarToString;
 
 public class JsonUtils {

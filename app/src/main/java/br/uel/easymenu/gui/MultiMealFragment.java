@@ -22,6 +22,7 @@ import br.uel.easymenu.service.MealService;
 public class MultiMealFragment extends Fragment {
 
     public static final String MEAL_BUNDLE = "meal_args";
+    public static final String TAB_POSITION = "tab_position";
 
     @Inject
     protected MealService mealService;
@@ -31,11 +32,14 @@ public class MultiMealFragment extends Fragment {
         ((App) this.getContext().getApplicationContext()).component().inject(this);
 
         List<Meal> meals = getArguments().getParcelableArrayList(MEAL_BUNDLE);
+        int tabPosition = getArguments().getInt(TAB_POSITION);
 
         View expandableListLayout = inflater.inflate(R.layout.expandable_listview, container, false);
         RecyclerView recyclerView = (RecyclerView) expandableListLayout.findViewById(R.id.meals_list);
         MealListAdapter listAdapter = new MealListAdapter(this.getContext(), meals);
         recyclerView.setAdapter(listAdapter);
+        // We set the tag for the espresso tests
+        recyclerView.setTag(tabPosition);
         recyclerView.addItemDecoration(new MealDivider(this.getContext()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 

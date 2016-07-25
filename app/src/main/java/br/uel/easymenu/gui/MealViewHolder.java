@@ -9,6 +9,7 @@ import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
 
 import br.uel.easymenu.R;
 import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.utils.ResourceUtils;
 
 public class MealViewHolder extends ParentViewHolder {
 
@@ -26,7 +27,7 @@ public class MealViewHolder extends ParentViewHolder {
     }
 
     public void bind(Meal meal) {
-        int resourceId = getPeriodResource(meal.getPeriod());
+        int resourceId = ResourceUtils.getPeriodResourceId(meal.getPeriod());
         String periodText = periodTextView.getContext().getString(resourceId);
         this.periodTextView.setText(periodText);
     }
@@ -63,18 +64,5 @@ public class MealViewHolder extends ParentViewHolder {
         periodView.startAnimation(rotateAnimation);
     }
 
-    private int getPeriodResource(String period) {
-        switch (period) {
-            case Meal.LUNCH:
-                return R.string.lunch;
-            case Meal.BREAKFAST:
-                return R.string.breakfast;
-            case Meal.BOTH:
-                return R.string.both;
-            case Meal.DINNER:
-                return R.string.dinner;
-            default:
-                throw new IllegalArgumentException(period + " is not a valid period");
-        }
-    }
+
 }

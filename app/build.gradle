@@ -96,5 +96,11 @@ dependencies {
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+        exclude module: 'support-v13'
+        exclude module: 'recyclerview-v7'
+    }
     androidTestCompile 'com.samskivert:jmustache:1.12'
 }

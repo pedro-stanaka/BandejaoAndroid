@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.ioc.EspressoApp;
+import br.uel.easymenu.utils.JsonUtils;
 
 public class TestAppRule extends ExternalResource {
 
@@ -43,9 +44,11 @@ public class TestAppRule extends ExternalResource {
         webServer.start();
     }
 
-    public void enqueueRequestFile(String file) throws Exception{
-        String jsonResponse = JsonUtils.convertJsonToString(file);
-        webServer.enqueue(new MockResponse().setBody(jsonResponse));
+    public void enqueueRequest(String file) throws Exception{
+        enqueueRequest(200, file);
+    }
 
+    public void enqueueRequest(int code, String request) {
+        webServer.enqueue(new MockResponse().setResponseCode(code).setBody(request));
     }
 }
