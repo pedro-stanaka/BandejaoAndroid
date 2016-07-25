@@ -22,4 +22,6 @@ public interface Dao<T> {
     public void setTransactionSuccess();
 
     public void endTransaction();
+
+    public void deleteAll();
 }

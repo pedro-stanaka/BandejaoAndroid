@@ -5,26 +5,26 @@
     "meals": [
       {
         "date": "{{ monday }}",
-        "period": "LUNCH",
+        "period": "BREAKFAST",
         "dishes": [
-          "Rice",
-          "Burger",
-          "Beans"
+          "Bacon",
+          "Scrambled Eggs"
         ]
       },
       {
         "date": "{{ monday }}",
-        "period": "BREAKFAST",
+        "period": "LUNCH",
         "dishes": [
-          "Pizza",
-          "Lettuce"
+          "Pig",
+          "Olive Oil"
         ]
       },
       {
         "date": "{{ monday }}",
         "period": "DINNER",
         "dishes": [
-          "Rice"
+          "Pasta",
+          "Chicken"
         ]
       },
       {
@@ -40,8 +40,8 @@
         "date": "{{ tuesday }}",
         "period": "BREAKFAST",
         "dishes": [
-          "Pizza",
-          "Lettuce"
+          "Cereal",
+          "Omelette"
         ]
       },
       {
@@ -76,10 +76,5 @@
         ]
       }
     ]
-  },
-  {
-    "long_name": "Design University",
-    "name": "DU",
-    "meals": []
   }
 ]

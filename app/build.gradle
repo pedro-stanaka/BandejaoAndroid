@@ -97,5 +97,4 @@ dependencies {
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.samskivert:jmustache:1.12'
-    androidTestCompile 'com.jayway.awaitility:awaitility:1.7.0'
 }
