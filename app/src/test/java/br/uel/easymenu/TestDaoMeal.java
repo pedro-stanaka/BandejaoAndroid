@@ -19,8 +19,6 @@ import javax.inject.Inject;
 
 import br.uel.easymenu.dao.DishDao;
 import br.uel.easymenu.dao.MealDao;
-import br.uel.easymenu.dao.SqliteDishDao;
-import br.uel.easymenu.dao.SqliteMealDao;
 import br.uel.easymenu.ioc.TestApp;
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;

@@ -18,6 +18,8 @@ import br.uel.easymenu.dao.DishDao;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.dao.SqliteDishDao;
 import br.uel.easymenu.dao.SqliteMealDao;
+import br.uel.easymenu.dao.SqliteUniversityDao;
+import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.service.MealService;
 import br.uel.easymenu.service.NetworkService;
 import br.uel.easymenu.utils.CalendarUtils;
@@ -39,6 +41,10 @@ public class AppModule {
 
     @Provides public DishDao provideDishDao() {
        return new SqliteDishDao(this.context);
+    }
+
+    @Provides public UniversityDao provideUniversityDao() {
+        return new SqliteUniversityDao(this.context);
     }
 
     @Provides public GoogleCloudMessaging provideGcm() {

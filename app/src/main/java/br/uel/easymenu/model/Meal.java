@@ -41,6 +41,8 @@ public class Meal implements Parcelable, Comparable<Meal> {
 
     private String period;
 
+    private University university;
+
     public Meal() {
     }
 
@@ -108,6 +110,14 @@ public class Meal implements Parcelable, Comparable<Meal> {
            throw new IllegalArgumentException("Period can't have the value " + period);
         }
         this.period = period;
+    }
+
+    public University getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(University university) {
+        this.university = university;
     }
 
     public boolean isBreakfast() {

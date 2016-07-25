@@ -1,11 +1,10 @@
 package br.uel.easymenu.ioc;
 
-import org.robolectric.RuntimeEnvironment;
-
 import br.uel.easymenu.TestDaoMeal;
 import br.uel.easymenu.TestIncomingMeal;
 import br.uel.easymenu.TestJsonResponse;
 import br.uel.easymenu.TestMenuActivity;
+import br.uel.easymenu.TestDaoUniversity;
 import dagger.Component;
 
 @Component(modules = AppModule.class)
@@ -18,4 +17,6 @@ public interface TestComponent {
     public void inject(TestIncomingMeal testIncomingMeal);
 
     public void inject(TestDaoMeal testDaoMeal);
+
+    public void inject(TestDaoUniversity testDaoUniversity);
 }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import br.uel.easymenu.model.University;
+
 public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "cardapio.db";
@@ -31,12 +33,14 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DishTable.onCreate());
         db.execSQL(MealTable.onCreate());
+        db.execSQL(UniversityTable.onCreate());
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + MealTable.NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DishTable.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + UniversityTable.NAME);
 
         onCreate(db);
     }
