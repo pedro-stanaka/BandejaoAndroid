@@ -88,7 +88,7 @@ def buildOverlayUniversities(project) {
         def universities = []
 
         if (project.uni.equals("all")) {
-            new File("src/overlay").eachDir { dir ->
+            new File("src/overlay/universities").eachDir { dir ->
                 universities << dir.getName()
             }
         } else {
@@ -101,7 +101,7 @@ def buildOverlayUniversities(project) {
                     "$name" {
                         applicationId "br.uel.easymenu.$name"
                     }
-                    sourceSets[name].setRoot("src/overlay/${name}")
+                    sourceSets[name].setRoot("src/overlay/universities/${name}")
                     copyUniversityFolderToSourceFolder(project, name)
                 }
             }
@@ -115,7 +115,7 @@ def copyUniversityFolderToSourceFolder(project, name) {
     def deleteFolderName = "deletePlayFolder${flavorName}Release"
 
     def copyPlayFolderTask = project.tasks.create(name: copyFolderName, type: Copy, overwrite: true) {
-        from("src/overlay/${name}/play") {
+        from("src/overlay/universities/${name}/play") {
             include "**/*"
         }
         into "src/${name}/play"

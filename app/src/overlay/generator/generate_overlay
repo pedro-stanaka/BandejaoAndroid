@@ -1,16 +1,19 @@
 #!/usr/bin/env ruby
 
+# gem install color-tools OptionParser mustache
+
 require 'fileutils'
 require 'yaml'
 require 'color'
 require 'optparse'
 require 'mustache'
 
-# gem install color-tools OptionParser mustache
-
 OVERLAY_FILES_PATH = File.dirname(__FILE__) + '/overlay_files'
-CONFIG_FILE = File.dirname(__FILE__) + '/universities.yml'
+CONFIG_FILE = File.dirname(__FILE__) + '/../universities.yml'
 LAUNCHER_FILE = File.dirname(__FILE__) + '/icon_launcher.xcf'
+FEATURE_GRAPHIC = File.dirname(__FILE__) + '/feature_graphic.xcf'
+FIRST_SCREENSHOT = File.dirname(__FILE__) + '/screenshot-1.xcf'
+SECOND_SCREENSHOT = File.dirname(__FILE__) + '/screenshot-2.xcf'
 LAUNCHER_BASELINE = 48
 
 DENSITIES = { 'xxxhdpi' => 4.0,
@@ -32,36 +35,57 @@ class University
   end
 
   def overlay_path
-    File.dirname(__FILE__) + "/../#{name.downcase}"
+    File.dirname(__FILE__) + "/../universities/#{name.downcase}"
   end
 end
 
 class Image
-  def initialize(base_image, path, resolution, university)
+  def initialize(base_image, university, options)
     @base_image = base_image
     @university = university
 
     # If the path does not exist, we create it
-    dir = File.dirname(path)
-    FileUtils.mkdir_p(dir) unless File.directory? dir
-    @path = path
+    options.keys.each do |path|
+      dir = File.dirname(path)
+      FileUtils.mkdir_p(dir) unless File.directory? dir
+    end
 
-    @resolution = if resolution.is_a? Numeric
-                    # Ruby does not provide a simple way to declare a array of size 2
-                    # The ideal was to declare [resolution resolution]
-                    [resolution].push resolution
-                  else
-                    resolution
-                  end
+    @paths = options.keys
+    @resolutions = options.values
   end
 
-  def paint_image
-    gimp_primary_color = color_to_list @university.primary_color
-    gimp_secondary_color = color_to_list @university.secondary_color
+  def fix_resolution(resolution)
+    if resolution.is_a? Numeric
+      # Ruby does not provide a simple way to declare a array of size 2
+      # The ideal was to declare [resolution resolution]
+      [resolution].push resolution
+    else
+      resolution
+    end
+  end
 
-    gimp_resolution = "'(#{@resolution[0]} #{@resolution[1]})"
-    cmd = "gimp -i -b \"(process-image \\\"#{@base_image}\\\" #{gimp_primary_color} #{gimp_secondary_color} #{gimp_resolution} \\\"#{@path}\\\")\" -b '(gimp-quit 0)'"
-    puts "Resizing launcher of #{@resolution} resolution into #{@path}"
+  def paint_image(options = {})
+    gimp_path = @paths.map { |path| "\\\"#{path}\\\""}.join(' ')
+    gimp_path = "'(#{gimp_path})"
+
+    gimp_resolution = @resolutions.map do |dimension|
+      resolution = fix_resolution dimension
+      "(#{resolution[0]} #{resolution[1]})"
+    end.join(' ')
+    gimp_resolution = "'(#{gimp_resolution})"
+
+    gimp_primary_color = color_to_list @university.primary_color
+    if options[:consider_secondary_color]
+      gimp_secondary_color = color_to_list @university.secondary_color
+    else
+      gimp_secondary_color = "'()"
+    end
+
+    cmd = "gimp -i -b \"(process-image \\\"#{@base_image}\\\" #{gimp_primary_color} #{gimp_secondary_color} #{gimp_resolution} #{gimp_path})\" -b '(gimp-quit 0)'"
+
+    @paths.zip(@resolutions).each do |path, resolution|
+      puts "Resizing #{path} with dimension #{resolution}"
+    end
     `#{cmd}`
   end
 
@@ -77,20 +101,44 @@ class Image
 end
 
 def generate_launcher(university)
+  params = {}
+
+  play_store_icon = university.overlay_path + "/play/#{university.default_language}/listing/icon/icon.png"
+  params[play_store_icon] = 512
+
   DENSITIES.each do |name, factor|
-    resolution = factor * LAUNCHER_BASELINE
     path = university.overlay_path + "/res/mipmap-#{name}/ic_launcher.png"
-    image = Image.new(LAUNCHER_FILE, path, resolution, university)
-    image.paint_image
+    resolution = factor * LAUNCHER_BASELINE
+    params[path] = resolution
   end
+
+  image = Image.new(LAUNCHER_FILE, university, params)
+  image.paint_image(consider_secondary_color: true)
+end
+
+def generate_feature_graphic(university)
+  path = university.overlay_path + "/play/#{university.default_language}/listing/featureGraphic/cover.png"
+  resolution = [1024].push 500
+  Image.new(FEATURE_GRAPHIC, university, path => resolution).paint_image
+end
+
+def generate_screenshots(university)
+  path = university.overlay_path + "/play/#{university.default_language}/listing/phoneScreenshots/01 - menu.png"
+  resolution = [768].push 1136
+  Image.new(FIRST_SCREENSHOT, university, path => resolution).paint_image
+
+  path = university.overlay_path + "/play/#{university.default_language}/listing/phoneScreenshots/02 - drawer.png"
+  resolution = [768].push 1136
+  Image.new(SECOND_SCREENSHOT, university, path => resolution).paint_image
 end
 
 def generate_overlay_files(university)
+  # Getting the template files
   files = Dir.glob("#{OVERLAY_FILES_PATH}/**/*").reject { |file| File.directory? file }
 
   files.each do |file|
+    # Replacing the template with the university information
     template = File.read(file)
-
     replace_string = {
       primary_color: university.primary_color,
       secondary_color: university.secondary_color, name: university.name,
@@ -99,19 +147,18 @@ def generate_overlay_files(university)
     }
     final_text = Mustache.render template, replace_string
 
+    # Finding the right path
     path = file.gsub(OVERLAY_FILES_PATH, '')
     final_path = university.overlay_path + path
 
+    # Creating the directory if it does not exist
     dir = File.dirname(final_path)
     FileUtils.mkdir_p(dir) unless File.directory? dir
 
-    puts "Writing file #{final_path}"
+    # Finally, write the file into the final path
     File.write(final_path, final_text)
+    puts "Writing file #{final_path}"
   end
-end
-
-def generate_play_images(university)
-
 end
 
 def parse_command_line
@@ -145,7 +192,7 @@ else
                         else
                           uni = universities.find { |un| un.name.downcase == options[:uni].downcase }
                           if uni.nil?
-                            STDERR.puts "University not found. Available options #{universities.keys}"
+                            STDERR.puts "University not found. Available options #{universities.map(&:name)}"
                             exit -1
                           end
                           [uni]
@@ -154,6 +201,8 @@ else
   params_universities.each do |university|
     if options[:only_text].nil?
       generate_launcher university
+      generate_feature_graphic university
+      generate_screenshots university
     end
     generate_overlay_files university
   end
