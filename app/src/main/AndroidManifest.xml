@@ -26,7 +26,7 @@
 
         <activity
             android:name=".gui.MainActivity"
-            android:theme="@style/Theme.EasyMenuTheme">
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

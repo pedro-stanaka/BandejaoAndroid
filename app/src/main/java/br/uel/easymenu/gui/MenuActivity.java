@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -139,6 +141,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         currentUniversity = universityService.selectUniversity(currentUniversity);
         setUniversityMenu();
         setTitleActionBar();
+        setTitleDrawer();
 
         // currentUniversity may be null, but we don't care
         GroupedMeals groupedMeals = mealDao.mealsOfTheWeekGroupedByDay(today(), currentUniversity);
@@ -158,18 +161,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 tab.select();
             }
         }
-    }
-
-    private void setTitleActionBar() {
-        String title;
-        if (currentUniversity == null) {
-            title = getString(R.string.title_without_university);
-        }
-        else {
-            String rawTitle =  getString(R.string.title);
-            title = String.format(rawTitle, currentUniversity.getName());
-        }
-        getSupportActionBar().setTitle(title);
     }
 
     private void setUniversityMenu() {
@@ -195,6 +186,31 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
+    }
+
+    private void setTitleActionBar() {
+        String title;
+        if (currentUniversity == null) {
+            title = getString(R.string.title_without_university);
+        }
+        else {
+            String rawTitle =  getString(R.string.title);
+            title = String.format(rawTitle, currentUniversity.getName());
+        }
+        getSupportActionBar().setTitle(title);
+    }
+
+    private void setTitleDrawer() {
+        String title;
+        if (currentUniversity == null) {
+            title = getString(R.string.university_name);
+        }
+        else {
+            title = currentUniversity.getFullName();
+        }
+        View headerView = navigationView.getHeaderView(0);
+        TextView titleTextView = (TextView) headerView.findViewById(R.id.title_drawer);
+        titleTextView.setText(title);
     }
 
     @Override
