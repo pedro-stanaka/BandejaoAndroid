@@ -22,7 +22,6 @@ import br.uel.easymenu.dao.SqliteUniversityDao;
 import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.service.MealService;
 import br.uel.easymenu.service.NetworkService;
-import br.uel.easymenu.service.UniversityService;
 import br.uel.easymenu.utils.CalendarUtils;
 import dagger.Module;
 import dagger.Provides;
@@ -83,10 +82,6 @@ public class AppModule {
 
     @Provides public MealService provideMealService(ObjectMapper mapper, MealDao mealDao, EventBus eventBus, UniversityDao universityDao) {
         return new MealService(mapper, mealDao, eventBus, universityDao);
-    }
-
-    @Provides public UniversityService provideUniversityService(UniversityDao universityDao) {
-        return new UniversityService(universityDao);
     }
 
     @Provides public SharedPreferences provideSharedPreferences() {

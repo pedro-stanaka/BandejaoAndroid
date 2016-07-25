@@ -34,7 +34,6 @@ import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.model.University;
 import br.uel.easymenu.service.NetworkEvent;
 import br.uel.easymenu.service.NetworkService;
-import br.uel.easymenu.service.UniversityService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -47,9 +46,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
     @Inject
     UniversityDao universityDao;
-
-    @Inject
-    UniversityService universityService;
 
     @Inject
     NetworkService networkService;
@@ -91,7 +87,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_camera);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionBar.setDisplayHomeAsUpEnabled(true);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -137,7 +133,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setGuiWithMeals() {
-        getSelectedUniversity();
+        selectUniversity();
         setUniversityMenu();
 
         // currentUniversity may be null, but we don't care
@@ -160,6 +156,24 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void selectUniversity() {
+        if (universityDao.count() == 1) {
+            currentUniversity =  universityDao.fetchAll().get(0);
+        }
+        else if (universityDao.count() > 1) {
+            if(currentUniversity == null) {
+                currentUniversity = universityDao.orderByName().get(0);
+            }
+            else {
+                // Current University may not exist in the database if it was deleted
+                University university = universityDao.findByName(currentUniversity.getName());
+                if(university == null) {
+                    currentUniversity = universityDao.orderByName().get(0);
+                }
+            }
+        }
+    }
+
     private void setUniversityMenu() {
         Menu menu = navigationView.getMenu();
 
@@ -168,7 +182,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         menu.findItem(R.id.campus).setVisible(showCampusMenu);
 
         if(universityDao.count() > 1) {
-            // Remove if exists and add the campuses everytime
             SubMenu subMenu = menu.findItem(R.id.campus).getSubMenu();
             if (subMenu == null)
                 subMenu = menu.addSubMenu(R.id.campus, Menu.NONE, Menu.NONE, R.string.campus);
@@ -184,18 +197,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
-    }
-
-    private University getSelectedUniversity () {
-        if (universityDao.count() == 1) {
-            currentUniversity =  universityDao.fetchAll().get(0);
-        }
-        else if (universityDao.count() > 1) {
-            if(currentUniversity == null) {
-                currentUniversity = universityDao.orderByName().get(0);
-            }
-        }
-        return null;
     }
 
     @Override
