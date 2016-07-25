@@ -37,8 +37,7 @@ public class MealBuilder {
     }
 
     public MealBuilder withDate(String date) {
-        Calendar calendar = CalendarUtils.fromStringToCalendar(date);
-        calendar.setTime(calendar.getTime());
+        this.calendar = CalendarUtils.fromStringToCalendar(date);
         return this;
     }
 
