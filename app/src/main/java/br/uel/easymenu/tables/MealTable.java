@@ -10,8 +10,12 @@ public class MealTable {
     public static final String UNIVERSITY_ID = "university_id";
 
     private static final String CREATE_TABLE_MEALS = "CREATE TABLE " + NAME + " (" +
-            ID_MEAL + " INTEGER PRIMARY KEY AUTOINCREMENT, " + UNIVERSITY_ID + " INTEGER, " +
-            DATE_MEAL + " TEXT, " + PERIOD + " TEXT ," +
+            ID_MEAL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            DATE_MEAL + " TEXT, " +
+            PERIOD + " TEXT ," +
+            UNIVERSITY_ID + " INTEGER, " +
+            "FOREIGN KEY (" + MealTable.UNIVERSITY_ID + ") REFERENCES " + UniversityTable.NAME +
+            " ( " + UniversityTable.ID_UNIVERSITY + " ) ON DELETE CASCADE, " +
             "UNIQUE(" + DATE_MEAL + ", " + PERIOD + ") ON CONFLICT REPLACE)";
 
     public static String onCreate() {

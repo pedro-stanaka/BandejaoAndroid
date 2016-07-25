@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import br.uel.easymenu.dao.DishDao;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.ioc.RobolectricApp;
@@ -31,6 +32,9 @@ public class TestDaoUniversity {
 
     @Inject
     MealDao mealDao;
+
+    @Inject
+    DishDao dishDao;
 
     @Before
     public void setup() {
@@ -62,5 +66,25 @@ public class TestDaoUniversity {
         University universityDatabase = universityDao.findById(id);
         assertThat(university.getFullName(), equalTo(universityDatabase.getFullName()));
         assertThat(university.getName(), equalTo(universityDatabase.getName()));
+    }
+
+    @Test
+    public void testUniversityDeleteCascade() throws Exception {
+        University university = UniversityBuilder.createFakeUniversty();
+        universityDao.insertWithMeals(university);
+
+        assertThat(1, equalTo(universityDao.count()));
+        assertThat(university.getMeals().size(), equalTo(mealDao.count()));
+        int dishesCount = 0;
+        for(Meal meal : university.getMeals()) {
+            dishesCount += meal.getDishes().size();
+        }
+        assertThat(dishesCount, equalTo(dishesCount));
+
+        universityDao.delete(university.getId());
+
+        assertThat(0, equalTo(universityDao.count()));
+        assertThat(0, equalTo(mealDao.count()));
+        assertThat(0, equalTo(dishDao.count()));
     }
 }

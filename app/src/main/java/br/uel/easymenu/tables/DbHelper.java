@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import br.uel.easymenu.model.University;
-
 public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "cardapio.db";
@@ -34,6 +32,14 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DishTable.onCreate());
         db.execSQL(MealTable.onCreate());
         db.execSQL(UniversityTable.onCreate());
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if(!db.isReadOnly()) {
+            db.execSQL("PRAGMA foreign_keys=ON;");
+        }
     }
 
     @Override
