@@ -21,10 +21,13 @@ public class MealListAdapter extends ExpandableRecyclerAdapter<MealViewHolder, D
     public static final String MEAL_TAG = "MEAL";
     public static final String DISH_TAG = "DISH";
 
+    private Context context;
+
     private LayoutInflater inflater;
 
     public MealListAdapter(Context context, List<Meal> meals) {
         super(MealItem.buildMealItem(meals));
+        this.context = context;
         this.inflater = LayoutInflater.from(context);
     }
 
@@ -39,7 +42,7 @@ public class MealListAdapter extends ExpandableRecyclerAdapter<MealViewHolder, D
     public DishViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
         View dishView = inflater.inflate(R.layout.dish_text, childViewGroup, false);
         dishView.setTag(DISH_TAG);
-        return new DishViewHolder(dishView);
+        return new DishViewHolder(dishView, context);
     }
 
     @Override

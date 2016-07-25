@@ -96,8 +96,6 @@ public class TestMenuActivity {
         assertTrue(viewContainsText(view, "Beans"));
     }
 
-
-
     @Test
     public void viewPagerDisplaysTheRightPeriods() throws Exception {
         buildActivityWithJsonResponse("3-days.json");
@@ -163,6 +161,7 @@ public class TestMenuActivity {
     public void displayMessageWhenMealHasEmptyDishes() throws Exception {
         buildActivityWithJsonResponse("meal-without-dish.json");
         RecyclerView view = (RecyclerView) getViewFromViewPager(0);
+        expandParents(view);
 
         String emptyDishes = getStringFromResources(R.string.empty_dishes);
         assertTrue(viewContainsText(view, emptyDishes));
