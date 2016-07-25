@@ -34,6 +34,9 @@ public class MenuActivity extends ActionBarActivity implements RoboContext, Acti
     @Inject
     private NetworkService networkService;
 
+    @InjectResource(R.string.ip)
+    private String ip;
+
     @InjectResource(R.string.url_current_meal)
     private String currentMealUrl;
 
@@ -53,15 +56,6 @@ public class MenuActivity extends ActionBarActivity implements RoboContext, Acti
         RoboGuice.getInjector(this).injectMembers(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        TMP: Deleting all meals
-        List<Meal> meals = this.mealDao.fetchAll();
-        for (Meal meal : meals) {
-           mealDao.delete(meal.getId());
-        }
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.commit();
 
         actionBar = getSupportActionBar();
 
@@ -106,7 +100,8 @@ public class MenuActivity extends ActionBarActivity implements RoboContext, Acti
     }
 
     private void processNewMeals() {
-        networkService.persistCurrentMealsFromServer(currentMealUrl, new NetworkService.NetworkServiceListener() {
+        String url = ip + currentMealUrl;
+        networkService.persistCurrentMealsFromServer(url, new NetworkService.NetworkServiceListener() {
             @Override
             public void onSuccess() {
 //                There are the first meals in the database
