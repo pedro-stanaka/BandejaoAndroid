@@ -5,19 +5,15 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
-import com.google.inject.Key;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import br.uel.easymenu.R;
 import br.uel.easymenu.adapter.MealsPagerAdapter;
@@ -27,9 +23,11 @@ import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.service.NetworkEvent;
 import br.uel.easymenu.service.NetworkService;
 import roboguice.RoboGuice;
-import roboguice.util.RoboContext;
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 
-public class MenuActivity extends AppCompatActivity implements RoboContext {
+@ContentView(R.layout.activity_main)
+public class MenuActivity extends RoboAppCompatActivity {
 
     @Inject
     private MealDao mealDao;
@@ -40,29 +38,34 @@ public class MenuActivity extends AppCompatActivity implements RoboContext {
     @Inject
     private SharedPreferences sharedPreferences;
 
-    private EventBus bus = EventBus.getDefault();
+    @Inject
+    private EventBus bus;
 
-    // TODO: Use InjectView
+    @InjectView(R.id.viewpager)
     private ViewPager viewPager;
 
+    @InjectView(R.id.toolbar)
     private Toolbar toolbar;
 
+    @InjectView(R.id.tabs)
     private TabLayout tabLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        RoboGuice.getInjector(this).injectMembers(this);
+        RoboGuice.getInjector(this).injectMembersWithoutViews(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         setSupportActionBar(toolbar);
         setGuiWithMeals();
 
         bus.register(this);
+    }
+
+
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
+        RoboGuice.getInjector(this).injectViewMembers(this);
     }
 
     @Override
@@ -105,12 +108,6 @@ public class MenuActivity extends AppCompatActivity implements RoboContext {
                 tab.select();
             }
         }
-    }
-
-
-    @Override
-    public Map<Key<?>, Object> getScopedObjectMap() {
-        return new HashMap<>();
     }
 }
 
