@@ -21,7 +21,7 @@ public class UniversityService {
     private DefaultResponseHandler<University> handler;
 
     @Inject
-    public UniversityService(@Named("url.weekly_meals") String urlWeeklyUniversities,
+    public UniversityService(@Named("url.weekly_universities") String urlWeeklyUniversities,
                              UniversityDao universityDao,
                              MealService mealService,
                              DefaultResponseHandler<University> handler) {

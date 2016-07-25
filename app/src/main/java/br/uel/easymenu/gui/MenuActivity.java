@@ -93,17 +93,10 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setDisplayHomeAsUpEnabled(true);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Set the Actionbar title
-        String title = getString(R.string.title);
-        String universityTitle = getString(R.string.university_name);
-        String actionbarTitle = String.format(title, universityTitle);
-        actionBar.setTitle(actionbarTitle);
-
         bus.register(this);
 
         // TODO: Check if it has Internet
         universityService.syncUniversitiesWithServer();
-//        networkService.persistCurrentMealsFromServer();
     }
 
     @Override
@@ -145,6 +138,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     private void setGuiWithMeals() {
         currentUniversity = universityService.selectUniversity(currentUniversity);
         setUniversityMenu();
+        setTitleActionBar();
 
         // currentUniversity may be null, but we don't care
         GroupedMeals groupedMeals = mealDao.mealsOfTheWeekGroupedByDay(today(), currentUniversity);
@@ -164,6 +158,18 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 tab.select();
             }
         }
+    }
+
+    private void setTitleActionBar() {
+        String title;
+        if (currentUniversity == null) {
+            title = getString(R.string.title_without_university);
+        }
+        else {
+            String rawTitle =  getString(R.string.title);
+            title = String.format(rawTitle, currentUniversity.getName());
+        }
+        getSupportActionBar().setTitle(title);
     }
 
     private void setUniversityMenu() {

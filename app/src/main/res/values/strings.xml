@@ -7,8 +7,9 @@
     <string name="ip">http://easymenu.gjhenrique.com</string>
     <string name="url_weekly_meal">/weekly/%1$s</string>
     <string name="url_weekly_university">/university/weekly/%1$s</string>
-    <string name="university_name">All</string>
+    <string name="university_name">all</string>
     <string name="title">Menu - %1$s</string>
+    <string name="title_without_university">Menu</string>
     <string name="playservices_not_supported">Play services is not supported</string>
     <string name="nonexistent_meals">There are no meals this week yet! =(</string>
     <string name="nonexistent_meals_title">No meals</string>
