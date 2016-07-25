@@ -4,7 +4,7 @@
     <string name="hello">Hello cardapioru!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="ip">http://easymenu.gjhenrique.com</string>
+    <string name="ip">https://easymenu.gjhenrique.com</string>
     <string name="url_weekly_meal">/weekly/%1$s</string>
     <string name="url_weekly_university">/university/weekly/%1$s</string>
     <string name="university_name">all</string>
