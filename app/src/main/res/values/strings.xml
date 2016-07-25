@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Bandejao</string>
-    <string name="ip" translatable="false">https://bandejao.gjhenrique.com</string>
+    <string name="ip" translatable="false">http://192.168.1.51:9292</string>
     <string name="url_weekly_meal" translatable="false">/weekly/%1$s</string>
-    <string name="url_weekly_university" translatable="false">/university/weekly/%1$s</string>
+    <string name="url_weekly_university" translatable="false">/weekly/university/%1$s</string>
     <string name="university_name" translatable="false">all</string>
     <string name="title">Menu - %1$s</string>
     <string name="title_without_university">Menu</string>

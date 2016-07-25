@@ -74,7 +74,7 @@ android {
 
     play {
         jsonFile = file('keys.json')
-//        uploadImages = true
+        uploadImages = true
     }
 
     packagingOptions {
@@ -102,19 +102,20 @@ def buildOverlayUniversities(project) {
                         applicationId "br.uel.easymenu.$name"
                     }
                     sourceSets[name].setRoot("src/overlay/${name}")
-                    gambiarra(project, name)
+                    copyUniversityFolderToSourceFolder(project, name)
                 }
             }
         }
     }
 }
 
-def gambiarra(project, name) {
+def copyUniversityFolderToSourceFolder(project, name) {
     def flavorName = name.capitalize()
     def copyFolderName = "copyPlayFolder${flavorName}Release"
     def deleteFolderName = "deletePlayFolder${flavorName}Release"
+
     def copyPlayFolderTask = project.tasks.create(name: copyFolderName, type: Copy, overwrite: true) {
-        from("src/overlay/uel/play") {
+        from("src/overlay/${name}/play") {
             include "**/*"
         }
         into "src/${name}/play"

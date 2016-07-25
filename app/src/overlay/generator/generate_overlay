@@ -110,11 +110,19 @@ def generate_overlay_files(university)
   end
 end
 
+def generate_play_images(university)
+
+end
+
 def parse_command_line
   options = {}
   OptionParser.new do |opts|
     opts.on('--uni=NAME') do |v|
       options[:uni] = v
+    end
+
+    opts.on('--only-text') do |v|
+      options[:only_text] = v
     end
   end.parse!
   options
@@ -144,7 +152,9 @@ else
                         end
 
   params_universities.each do |university|
-    generate_launcher university
+    if options[:only_text].nil?
+      generate_launcher university
+    end
     generate_overlay_files university
   end
 end

@@ -256,6 +256,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         } else {
             title = currentUniversity.getFullName();
         }
+        title = "University of Cambridge";
         View headerView = navigationView.getHeaderView(0);
         TextView titleTextView = (TextView) headerView.findViewById(R.id.title_drawer);
         titleTextView.setText(title);

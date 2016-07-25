@@ -51,6 +51,7 @@ public class MealsPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         DateTime dateTime = groupedMeals.getDateByIndex(position);
-        return CalendarUtils.dayOfWeekName(dateTime) + "  " + CalendarUtils.simpleLocaleFormat(dateTime);
+//        return CalendarUtils.dayOfWeekName(dateTime) + "  " + CalendarUtils.simpleLocaleFormat(dateTime);
+        return CalendarUtils.dayOfWeekName(dateTime);
     }
 }

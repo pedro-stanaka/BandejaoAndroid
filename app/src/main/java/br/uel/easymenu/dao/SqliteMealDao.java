@@ -58,6 +58,7 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
             return new ArrayList<>();
         }
 
+        dateTime.minusDays(1);
         String calendarQueryString = CalendarUtils.fromCalendarToString(dateTime);
 
         String sql = "SELECT * FROM " + MealTable.NAME +
