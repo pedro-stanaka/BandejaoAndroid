@@ -32,6 +32,4 @@
     <string name="visit_website">Visit Website</string>
     <string name="campus">Campus</string>
 
-    <string name="gcm_defaultSenderId" translatable="false"></string>
-    <string name="google_app_id" translatable="false"></string>
 </resources>

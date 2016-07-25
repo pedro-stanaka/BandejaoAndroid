@@ -17,15 +17,11 @@ import br.uel.easymenu.R;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.gcm.RegistrationIntentService;
 import br.uel.easymenu.scheduler.DailyListener;
-import br.uel.easymenu.service.NetworkService;
 
 public class MainActivity extends Activity {
 
     private final static String MENU_WTIH_MEALS = "withoutMeals";
     private final static String FIRST_RUN_ALARM = "firstRunAlarm";
-
-    @Inject
-    NetworkService networkService;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -42,7 +38,7 @@ public class MainActivity extends Activity {
         startActivity(intent);
 
         setupPollerAlarm();
-//        setupGcm();
+        setupGcm();
 
         finish();
     }
@@ -71,7 +67,7 @@ public class MainActivity extends Activity {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
-            Log.i(App.TAG, getResources().getString(R.string.playservices_not_supported));
+            Log.i(App.TAG, getString(R.string.playservices_not_supported));
             finish();
             return false;
         }
