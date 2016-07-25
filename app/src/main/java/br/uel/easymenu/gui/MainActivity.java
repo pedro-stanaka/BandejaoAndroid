@@ -42,7 +42,6 @@ public class MainActivity extends Activity {
         startActivity(intent);
 
         setupPollerAlarm();
-        setupNewMeals();
         setupGcm();
 
     }
@@ -56,22 +55,6 @@ public class MainActivity extends Activity {
             editor.putBoolean(FIRST_RUN_ALARM, true);
             editor.apply();
         }
-    }
-
-    private void setupNewMeals() {
-
-        // TODO: Only fetch in Wifi
-        /*networkService.persistCurrentMealsFromServer();
-        networkService.persistCurrentMealsFromServer(new NetworkService.NetworkServiceListener() {
-            @Override
-            public void onSuccess() {
-                setKeyPreferenceToTrue(MENU_WTIH_MEALS);
-            }
-
-            @Override
-            public void onError(NetworkEvent.NetworkErrorType errorMessage) {
-            }
-        });*/
     }
 
     private void setupGcm() {

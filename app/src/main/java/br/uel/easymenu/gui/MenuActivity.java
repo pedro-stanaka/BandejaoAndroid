@@ -63,6 +63,8 @@ public class MenuActivity extends AppCompatActivity {
         setGuiWithMeals();
 
         bus.register(this);
+        // TODO: Check if it has Internet
+        networkService.persistCurrentMealsFromServer();
     }
 
     @Override
