@@ -20,7 +20,6 @@ import br.uel.easymenu.scheduler.DailyListener;
 
 public class MainActivity extends Activity {
 
-    private final static String MENU_WTIH_MEALS = "withoutMeals";
     private final static String FIRST_RUN_ALARM = "firstRunAlarm";
 
     @Inject

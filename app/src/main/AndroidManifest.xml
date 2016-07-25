@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".gui.MenuActivity"/>
+        <activity android:name=".gui.MenuActivity" />
 
         <!-- GCM Beginning -->
         <receiver
@@ -53,8 +53,9 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-        <service android:name=".gcm.RegistrationIntentService"
-            android:exported="false"/>
+        <service
+            android:name=".gcm.RegistrationIntentService"
+            android:exported="false" />
         <!-- GCM End -->
 
         <service android:name=".scheduler.BackgroundService" />
@@ -72,10 +73,7 @@
             android:name=".scheduler.ConnectivityReceiver"
             android:enabled="false">
             <intent-filter>
-             <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="97249d0ce2ea7934f916723f5c69202c06793878" />
-           <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
@@ -83,5 +81,4 @@
             android:name="io.fabric.ApiKey"
             android:value="97249d0ce2ea7934f916723f5c69202c06793878" />
     </application>
-
 </manifest>

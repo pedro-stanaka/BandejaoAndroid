@@ -35,6 +35,7 @@ import br.uel.easymenu.model.University;
 import br.uel.easymenu.service.MealService;
 import br.uel.easymenu.service.NetworkEvent;
 import br.uel.easymenu.service.UniversityService;
+import br.uel.easymenu.utils.ConnectivityUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -43,6 +44,7 @@ import static br.uel.easymenu.utils.CalendarUtils.today;
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private final static String UNIVERSITY_NAME = "university_name";
+    private final static String FIRST_UPDATE_ALREADY = "alreadyUpdated";
 
     @Inject
     MealDao mealDao;
@@ -106,8 +108,12 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             currentUniversity = universityDao.findByName(universityName);
         }
 
-        // TODO: Check if it has Internet
-        universityService.syncUniversitiesWithServer();
+        if (!sharedPreferences.getBoolean(FIRST_UPDATE_ALREADY, false)) {
+            Log.d(App.TAG, "Running the first update");
+            if (ConnectivityUtils.isConnected(this, false)) {
+                universityService.syncUniversitiesWithServer();
+            }
+        }
     }
 
     @Override
@@ -125,7 +131,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             case R.id.refresh_meals:
                 feedbackWithoutChange = true;
-                if(currentUniversity == null) {
+                if (currentUniversity == null) {
                     universityService.syncUniversitiesWithServer();
                 } else {
                     mealService.makeRequest(currentUniversity);
@@ -149,18 +155,23 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
     @Subscribe
     public void updatedMeals(NetworkEvent event) {
-        String message;
-
         if (event.getEventType() == NetworkEvent.Type.START) {
             swipeRefreshLayout.setRefreshing(true);
             return;
         }
 
+        String message;
         if (!(event.hasMessage()) && event.getEventType() == NetworkEvent.Type.ERROR) {
             message = getString(event.getError().resourceId);
         } else if (event.getEventType() == NetworkEvent.Type.SUCCESS) {
             message = getString(R.string.new_meals);
             setGuiWithMeals();
+
+            if (!sharedPreferences.getBoolean(FIRST_UPDATE_ALREADY, false)) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(FIRST_UPDATE_ALREADY, true);
+                editor.apply();
+            }
         } else if (event.getEventType() == NetworkEvent.Type.NO_CHANGE && feedbackWithoutChange) {
             message = getString(R.string.no_change);
         } else {
