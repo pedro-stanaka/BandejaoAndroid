@@ -36,7 +36,6 @@ public class SqliteDishDao extends SqliteDao<Dish> implements DishDao{
 
     @Override
     public List<Dish> findDishesByMealId(long mealId) {
-
         String sql = "SELECT * FROM " + DishTable.NAME + " WHERE " + DishTable.MEAL_ID + " = ?";
         Cursor cursor = database.rawQuery(sql, new String[]{mealId + ""});
         return fetchObjectsFromCursor(cursor);

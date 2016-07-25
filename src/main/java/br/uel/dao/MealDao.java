@@ -9,5 +9,4 @@ public interface MealDao extends Dao<Meal> {
 
     public List<Meal> mealsOfTheWeek(Calendar calendar);
 
-    public List<Meal> mealsOfThisWeek();
 }
