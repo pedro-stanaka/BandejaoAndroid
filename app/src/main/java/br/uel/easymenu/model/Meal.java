@@ -13,6 +13,9 @@ import java.util.List;
 
 import br.uel.easymenu.utils.CalendarUtils;
 
+import static br.uel.easymenu.utils.CalendarUtils.fromCalendarToString;
+import static br.uel.easymenu.utils.CalendarUtils.fromStringToCalendar;
+
 public class Meal implements Parcelable, Comparable<Meal> {
 
     public static final Meal.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
@@ -58,7 +61,7 @@ public class Meal implements Parcelable, Comparable<Meal> {
 
     public Meal(Parcel in) {
         id = in.readLong();
-        date = (DateTime) in.readSerializable();
+        date = fromStringToCalendar(in.readString());
         setPeriod(in.readString());
         in.readTypedList(dishes, Dish.CREATOR);
     }
@@ -72,13 +75,13 @@ public class Meal implements Parcelable, Comparable<Meal> {
     }
 
     public boolean compareDate(DateTime dateTime) {
-        String thisDate = CalendarUtils.fromCalendarToString(this.date);
-        String thatDate = CalendarUtils.fromCalendarToString(dateTime);
+        String thisDate = fromCalendarToString(this.date);
+        String thatDate = fromCalendarToString(dateTime);
         return thisDate.equals(thatDate);
     }
 
     public String getStringDate() {
-        return CalendarUtils.fromCalendarToString(this.date);
+        return fromCalendarToString(this.date);
     }
 
     public long getId() {
@@ -160,7 +163,7 @@ public class Meal implements Parcelable, Comparable<Meal> {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
-        dest.writeSerializable(date);
+        dest.writeString(fromCalendarToString(date));
         dest.writeString(period);
 
         dest.writeTypedList(dishes);

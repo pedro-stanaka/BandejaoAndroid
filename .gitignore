@@ -62,3 +62,4 @@ fabric.properties
 # GCM keys
 gcm.xml
 
+*.keystore
