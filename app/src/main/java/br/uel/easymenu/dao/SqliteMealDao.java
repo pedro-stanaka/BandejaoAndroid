@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,13 +50,13 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     }
 
     @Override
-    public List<Meal> mealsOfTheWeek(java.util.Calendar calendar, University university) {
+    public List<Meal> mealsOfTheWeek(DateTime dateTime, University university) {
         // Avoid propagating null
         if(university == null) {
             return new ArrayList<>();
         }
 
-        String calendarQueryString = CalendarUtils.fromCalendarToString(calendar);
+        String calendarQueryString = CalendarUtils.fromCalendarToString(dateTime);
 
         String sql = "SELECT * FROM " + MealTable.NAME +
                 " WHERE (" + SAME_WEEK + ") AND ( " + SAME_YEAR + ")" +
@@ -75,8 +77,8 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     }
 
     @Override
-    public GroupedMeals mealsOfTheWeekGroupedByDay(java.util.Calendar calendar, University university) {
-        List<Meal> weeklyMeals = mealsOfTheWeek(calendar, university);
+    public GroupedMeals mealsOfTheWeekGroupedByDay(DateTime dateTime, University university) {
+        List<Meal> weeklyMeals = mealsOfTheWeek(dateTime, university);
         return new GroupedMeals(weeklyMeals);
     }
 

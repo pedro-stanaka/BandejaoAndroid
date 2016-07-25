@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class Meal implements Parcelable, Comparable<Meal> {
     private long id;
 
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-    private java.util.Calendar date;
+    private DateTime date;
 
     private List<Dish> dishes = new ArrayList<Dish>();
 
@@ -45,7 +47,7 @@ public class Meal implements Parcelable, Comparable<Meal> {
     public Meal() {
     }
 
-    public Meal(java.util.Calendar date, String period, List<Dish> dishes, University university) {
+    public Meal(DateTime date, String period, List<Dish> dishes, University university) {
         this.date = date;
         this.period = period;
         this.dishes = dishes;
@@ -54,22 +56,22 @@ public class Meal implements Parcelable, Comparable<Meal> {
 
     public Meal(Parcel in) {
         id = in.readLong();
-        date = (java.util.Calendar) in.readSerializable();
+        date = (DateTime) in.readSerializable();
         setPeriod(in.readString());
         in.readTypedList(dishes, Dish.CREATOR);
     }
 
-    public java.util.Calendar getDate() {
+    public DateTime getDate() {
         return date;
     }
 
-    public void setDate(java.util.Calendar date) {
-        this.date = date;
+    public void setDate(DateTime dateTime) {
+        this.date = dateTime;
     }
 
-    public boolean compareDate(java.util.Calendar compareDate) {
+    public boolean compareDate(DateTime dateTime) {
         String thisDate = CalendarUtils.fromCalendarToString(this.date);
-        String thatDate = CalendarUtils.fromCalendarToString(compareDate);
+        String thatDate = CalendarUtils.fromCalendarToString(dateTime);
         return thisDate.equals(thatDate);
     }
 
@@ -140,7 +142,7 @@ public class Meal implements Parcelable, Comparable<Meal> {
     public String toString() {
         return "Meal{" +
                 "id=" + id +
-                ", date=" + CalendarUtils.fromCalendarToString(date) +
+                ", date=" + date +
                 ", dishes=" + dishes +
                 ", period='" + period + '\'' +
                 '}';
@@ -182,10 +184,10 @@ public class Meal implements Parcelable, Comparable<Meal> {
 
     @Override
     public int compareTo(Meal another) {
-        if(this.date.after(another.date)) {
+        if(this.date.isAfter(another.date)) {
             return 1;
         }
-        else if(this.date.before(another.date)) {
+        else if(this.date.isBefore(another.date)) {
             return -1;
         }
         else {

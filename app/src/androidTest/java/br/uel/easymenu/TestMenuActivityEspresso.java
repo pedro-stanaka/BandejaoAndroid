@@ -13,6 +13,7 @@ import android.view.View;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -131,8 +132,8 @@ public class TestMenuActivityEspresso {
         });
     }
 
-    private Matcher<View> selectTab(Calendar calendar) {
-        String dateString = dayOfWeekName(calendar);
+    private Matcher<View> selectTab(DateTime dateTime) {
+        String dateString = dayOfWeekName(dateTime);
         return withText(startsWith(dateString));
     }
 

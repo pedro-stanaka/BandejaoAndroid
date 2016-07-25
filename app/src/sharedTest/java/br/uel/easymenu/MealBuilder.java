@@ -1,7 +1,8 @@
 package br.uel.easymenu;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import br.uel.easymenu.model.Dish;
@@ -11,26 +12,26 @@ import br.uel.easymenu.utils.CalendarUtils;
 
 public class MealBuilder {
 
-    Calendar calendar = Calendar.getInstance();
+    DateTime dateTime = DateTime.now();
     String period = Meal.LUNCH;
     List<Dish> dishes = new ArrayList<Dish>();
     University university = new UniversityBuilder().build();
 
     public static List<Meal> createFakeMeals() {
-        return createFakeMeals(Calendar.getInstance());
+        return createFakeMeals(DateTime.now());
     }
 
-    public static List<Meal> createFakeMeals(Calendar... calendars) {
+    public static List<Meal> createFakeMeals(DateTime ... dateTimes) {
         ArrayList<Meal> fakeMeals = new ArrayList<>();
         final University university = new UniversityBuilder().withName("Name").build();
-        for (final Calendar calendar : calendars) {
+        for (final DateTime dateTime : dateTimes) {
             fakeMeals.addAll(
                     new ArrayList<Meal>() {{
-                        add(new MealBuilder().withCalendar(calendar).withUniversity(university)
+                        add(new MealBuilder().withCalendar(dateTime).withUniversity(university)
                                 .withDishes("Rice", "Pizza").withPeriod(Meal.LUNCH).build());
-                        add(new MealBuilder().withCalendar(calendar).withUniversity(university)
+                        add(new MealBuilder().withCalendar(dateTime).withUniversity(university)
                                 .withDishes("Beans").withPeriod(Meal.BOTH).build());
-                        add(new MealBuilder().withCalendar(calendar).withUniversity(university)
+                        add(new MealBuilder().withCalendar(dateTime).withUniversity(university)
                                 .withDishes("Burger").withPeriod(Meal.BREAKFAST).build());
                     }});
         }
@@ -43,17 +44,17 @@ public class MealBuilder {
     }
 
     public MealBuilder withDate(String date) {
-        this.calendar = CalendarUtils.fromStringToCalendar(date);
+        this.dateTime = CalendarUtils.fromStringToCalendar(date);
         return this;
     }
 
     public MealBuilder addSeconds(int seconds) {
-        calendar.add(Calendar.SECOND, seconds);
+        dateTime.plusSeconds(seconds);
         return this;
     }
 
     public MealBuilder addDays(int days) {
-        calendar.add(Calendar.DATE, days);
+        dateTime = dateTime.plusDays(days);
         return this;
     }
 
@@ -67,8 +68,8 @@ public class MealBuilder {
         return this;
     }
 
-    public MealBuilder withCalendar(Calendar calendar) {
-        this.calendar = calendar;
+    public MealBuilder withCalendar(DateTime dateTime) {
+        this.dateTime = dateTime;
         return this;
     }
 
@@ -78,6 +79,6 @@ public class MealBuilder {
     }
 
     public Meal build() {
-        return new Meal(calendar, period, dishes, university);
+        return new Meal(dateTime, period, dishes, university);
     }
 }

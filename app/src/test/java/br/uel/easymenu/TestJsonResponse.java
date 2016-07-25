@@ -12,13 +12,9 @@ import javax.inject.Inject;
 
 import br.uel.easymenu.ioc.RobolectricApp;
 import br.uel.easymenu.model.Meal;
-import br.uel.easymenu.service.MealService;
 import br.uel.easymenu.service.Serializer;
-import br.uel.easymenu.utils.CalendarUtils;
 
 import static br.uel.easymenu.CalendarFactory.monday;
-import static br.uel.easymenu.CalendarFactory.mondayPlusDays;
-import static br.uel.easymenu.utils.CalendarUtils.dayOfWeekName;
 import static br.uel.easymenu.utils.CalendarUtils.fromCalendarToString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;

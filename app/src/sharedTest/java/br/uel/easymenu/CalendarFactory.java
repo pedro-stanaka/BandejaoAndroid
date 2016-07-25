@@ -1,19 +1,16 @@
 package br.uel.easymenu;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 
 public class CalendarFactory {
 
-    public static Calendar monday() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        return calendar;
+    public static DateTime monday() {
+        return new DateTime().withDayOfWeek(DateTimeConstants.MONDAY);
     }
 
-    public static Calendar mondayPlusDays(int numberOfDays) {
-        Calendar calendar = monday();
-        calendar.add(Calendar.DAY_OF_MONTH, numberOfDays);
-        return calendar;
+    public static DateTime mondayPlusDays(int numberOfDays) {
+        return monday().plusDays(numberOfDays);
     }
 
 }

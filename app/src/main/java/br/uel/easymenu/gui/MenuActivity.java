@@ -37,6 +37,8 @@ import br.uel.easymenu.service.UniversityService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static br.uel.easymenu.utils.CalendarUtils.today;
+
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private final static String UNIVERSITY_NAME = "university_name";
@@ -145,7 +147,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         setUniversityMenu();
 
         // currentUniversity may be null, but we don't care
-        GroupedMeals groupedMeals = mealDao.mealsOfTheWeekGroupedByDay(Calendar.getInstance(), currentUniversity);
+        GroupedMeals groupedMeals = mealDao.mealsOfTheWeekGroupedByDay(today(), currentUniversity);
 
         FragmentStatePagerAdapter mealsPagerAdapter = (groupedMeals.size() > 0) ?
                 new MealsPagerAdapter(getSupportFragmentManager(), groupedMeals) :
@@ -155,8 +157,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.setupWithViewPager(viewPager);
 
         // Setting today's tab
-        if (groupedMeals.hasDate(Calendar.getInstance())) {
-            int index = groupedMeals.getPositionByDay(Calendar.getInstance());
+        if (groupedMeals.hasDate(today())) {
+            int index = groupedMeals.getPositionByDay(today());
             TabLayout.Tab tab = tabLayout.getTabAt(index);
             if (tab != null) {
                 tab.select();

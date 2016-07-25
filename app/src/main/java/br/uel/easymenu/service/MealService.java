@@ -19,6 +19,8 @@ import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.model.University;
 import br.uel.easymenu.service.DefaultResponseHandler.Action;
 
+import static br.uel.easymenu.utils.CalendarUtils.today;
+
 public class MealService {
 
     private final static Map<String, Integer> periodTime = new HashMap<String, Integer>() {{
@@ -59,7 +61,7 @@ public class MealService {
             throw new IllegalArgumentException("Don't pass a non-persisted university to this method " + university);
         }
 
-        List<Meal> mealsCurrentWeek = mealDao.mealsOfTheWeek(Calendar.getInstance(), university);
+        List<Meal> mealsCurrentWeek = mealDao.mealsOfTheWeek(today(), university);
         Collections.sort(meals);
 
         return replaceMeals(meals, mealsCurrentWeek);

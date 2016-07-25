@@ -80,7 +80,7 @@ public class TestDaoMeal {
 
     @Test
     public void testMealCreationProperties() {
-        Meal meal = new MealBuilder().withCalendar(Calendar.getInstance()).withPeriod(Meal.LUNCH).build();
+        Meal meal = new MealBuilder().withPeriod(Meal.LUNCH).build();
         long id = mealDao.insert(meal);
 
         Meal newMeal = mealDao.findById(id);

@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.greenrobot.eventbus.EventBus;
@@ -112,6 +113,7 @@ public class AppModule {
     @Provides public Serializer provideSerializer() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setDateFormat(CalendarUtils.SDF);
+        mapper.registerModule(new JodaModule());
         return new JacksonSerializer(mapper);
     }
 }

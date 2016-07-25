@@ -3,6 +3,8 @@ package br.uel.easymenu;
 import android.app.Application;
 import android.content.Context;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import br.uel.easymenu.ioc.AppComponent;
 import br.uel.easymenu.ioc.AppModule;
 import br.uel.easymenu.ioc.DaggerAppComponent;
@@ -16,6 +18,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        JodaTimeAndroid.init(this);
     }
 
     public void setComponent(AppComponent component) {

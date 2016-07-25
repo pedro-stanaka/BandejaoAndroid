@@ -1,5 +1,7 @@
 package br.uel.easymenu.model;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
@@ -32,19 +34,19 @@ public class GroupedMeals {
         return meals.get(index);
     }
 
-    public Calendar getDateByIndex(int index) {
+    public DateTime getDateByIndex(int index) {
         List<String> keys = new ArrayList<>(mealsMap.keySet());
         String calendar = keys.get(index);
         return CalendarUtils.fromStringToCalendar(calendar);
     }
 
-    public boolean hasDate(Calendar calendar) {
-        String dateString = CalendarUtils.fromCalendarToString(calendar);
+    public boolean hasDate(DateTime dateTime) {
+        String dateString = CalendarUtils.fromCalendarToString(dateTime);
         return mealsMap.containsKey(dateString);
     }
 
-    public int getPositionByDay(Calendar calendar) {
-        String dateString = CalendarUtils.fromCalendarToString(calendar);
+    public int getPositionByDay(DateTime dateTime) {
+        String dateString = CalendarUtils.fromCalendarToString(dateTime);
         int index = 0;
         for (String key : mealsMap.keySet()) {
             if (key.equals(dateString)) {

@@ -1,6 +1,7 @@
 package br.uel.easymenu.dao;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import br.uel.easymenu.model.GroupedMeals;
@@ -9,8 +10,8 @@ import br.uel.easymenu.model.University;
 
 public interface MealDao extends Dao<Meal> {
 
-    public List<Meal> mealsOfTheWeek(Calendar calendar, University university);
+    public List<Meal> mealsOfTheWeek(DateTime dateTime, University university);
 
-    public GroupedMeals mealsOfTheWeekGroupedByDay(Calendar calendar, University university);
+    public GroupedMeals mealsOfTheWeekGroupedByDay(DateTime dateTime, University university);
 
 }

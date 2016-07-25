@@ -84,6 +84,10 @@ dependencies {
     compile 'com.bignerdranch.android:expandablerecyclerview:2.1.1'
     compile 'com.commonsware.cwac:wakeful:1.0.+'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'net.danlew:android.joda:2.9.3'
+    compile ('com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0') {
+        exclude module: 'joda-time'
+    }
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-all:1.3'

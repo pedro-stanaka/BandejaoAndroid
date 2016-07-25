@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -49,7 +51,7 @@ public class MealsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        Calendar calendar = groupedMeals.getDateByIndex(position);
-        return CalendarUtils.dayOfWeekName(calendar) + "  " + CalendarUtils.simpleLocaleFormat(calendar);
+        DateTime dateTime = groupedMeals.getDateByIndex(position);
+        return CalendarUtils.dayOfWeekName(dateTime) + "  " + CalendarUtils.simpleLocaleFormat(dateTime);
     }
 }

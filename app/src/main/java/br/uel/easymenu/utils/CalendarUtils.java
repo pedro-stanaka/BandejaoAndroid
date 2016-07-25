@@ -1,46 +1,41 @@
 package br.uel.easymenu.utils;
 
-import java.text.DateFormat;
-import java.text.ParseException;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
-import java.util.SimpleTimeZone;
 
 public class CalendarUtils {
 
     public static final String CALENDAR_FORMAT = "yyyy-MM-dd";
     public static final SimpleDateFormat SDF = new SimpleDateFormat(CALENDAR_FORMAT, Locale.getDefault());
 
-    public static java.util.Calendar fromStringToCalendar(String calendarString) {
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-
-        try {
-            SDF.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
-            Date date = SDF.parse(calendarString);
-            calendar.setTime(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return calendar;
+    public static DateTime fromStringToCalendar(String calendarString) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern(CALENDAR_FORMAT);
+        return formatter.parseDateTime(calendarString);
     }
 
-    public static String fromCalendarToString(java.util.Calendar calendar) {
-        SDF.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
-        return SDF.format(calendar.getTime());
+    public static String fromCalendarToString(DateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern(CALENDAR_FORMAT);
+        return formatter.print(dateTime);
     }
 
-    public static String simpleLocaleFormat(Calendar calendar) {
-        DateFormat dateFormatSimple = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-        dateFormatSimple.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
-        return dateFormatSimple.format(calendar.getTime());
+    public static String simpleLocaleFormat(DateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormat.shortDate().withLocale(Locale.getDefault());
+        return formatter.print(dateTime);
     }
 
-    public static String dayOfWeekName(Calendar calendar) {
-        DateFormat dateFormatDayOfWeek = new SimpleDateFormat("E", Locale.getDefault());
-        dateFormatDayOfWeek.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
-        return dateFormatDayOfWeek.format(calendar.getTime());
+    public static String dayOfWeekName(DateTime dateTime) {
+        return dayOfWeekName(dateTime, Locale.getDefault());
+    }
+
+    public static String dayOfWeekName(DateTime dateTime, Locale locale) {
+        return dateTime.dayOfWeek().getAsShortText(locale);
+    }
+
+    public static DateTime today() {
+        return DateTime.now();
     }
 }
