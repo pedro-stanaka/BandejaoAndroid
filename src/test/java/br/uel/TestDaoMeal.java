@@ -130,7 +130,7 @@ public class TestDaoMeal {
 
     @Test
     public void testNewYearWeek() throws Exception {
-        List<Meal> meals = createMeals("2014-12-27", "2014-12-31", "2015-01-01", "2015-01-02", "2015-01-04");
+        List<Meal> meals = createMeals("2014-12-27", "2014-12-31", "2015-01-01", "2015-01-02", "2015-01-04", "2016-01-01");
         mealDao.insert(meals);
 
         List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2015-01-02"));

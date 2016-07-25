@@ -1,6 +1,9 @@
 package br.uel.model;
 
-public class Dish {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Dish implements Parcelable{
 
     private long id;
 
@@ -12,6 +15,11 @@ public class Dish {
 
     public Dish(String dishName) {
         this.dishName = dishName;
+    }
+
+    public Dish(Parcel in) {
+        id = in.readLong();
+        dishName = in.readString();
     }
 
     public long getId() {
@@ -45,4 +53,28 @@ public class Dish {
                 ", id=" + id +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(dishName);
+    }
+
+    public static final Parcelable.Creator<Dish> CREATOR = new Parcelable.Creator<Dish>() {
+
+        @Override
+        public Dish createFromParcel(Parcel source) {
+            return new Dish(source);
+        }
+
+        @Override
+        public Dish[] newArray(int size) {
+            return new Dish[size];
+        }
+    };
 }

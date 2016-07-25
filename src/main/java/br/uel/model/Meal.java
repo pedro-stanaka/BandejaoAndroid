@@ -1,8 +1,11 @@
 package br.uel.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.*;
 
-public class Meal {
+public class Meal implements Parcelable {
 
     private long id;
 
@@ -16,9 +19,16 @@ public class Meal {
         this.date = date;
     }
 
+    public Meal(Parcel in) {
+        id = in.readLong();
+        date = (Calendar) in.readSerializable();
+        in.readTypedList(dishes, Dish.CREATOR);
+
+    }
     public Calendar getDate() {
         return date;
     }
+
 
     public long getId() {
         return id;
@@ -52,4 +62,30 @@ public class Meal {
                 ", dishes=" + dishes +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeSerializable(date);
+
+        dest.writeTypedList(dishes);
+    }
+
+    public static final Meal.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
+
+        @Override
+        public Meal createFromParcel(Parcel source) {
+            return new Meal(source);
+        }
+
+        @Override
+        public Meal[] newArray(int size) {
+            return new Meal[size];
+        }
+    };
 }

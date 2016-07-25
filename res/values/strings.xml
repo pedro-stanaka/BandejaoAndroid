@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Maven Quickstart</string>
-    <string name="hello">Hello cardapioru!</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="url_ru">http://www.uel.br/ru/pages/cardapio.php</string>
+	<string name="app_name">Cardápio</string>
+	<string name="hello">Hello cardapioru!</string>
+	<string name="action_settings">Settings</string>
+	<string name="hello_world">Hello world!</string>
+	<string name="url_ru">http://www.uel.br/ru/pages/cardapio.php</string>
 </resources>
