@@ -4,16 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import br.uel.DbHelper;
+import br.uel.tables.DbHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 public abstract class SqliteDao<T> implements Dao<T> {
 
-    private SQLiteDatabase database;
+    protected SQLiteDatabase database;
 
     private String tableName;
 
@@ -59,6 +58,11 @@ public abstract class SqliteDao<T> implements Dao<T> {
     @Override
     public List<T> fetchAll() {
         Cursor cursor = database.rawQuery("SELECT * FROM " + tableName, null);
+
+        return fetchObjectsFromCursor(cursor);
+    }
+
+    protected List<T> fetchObjectsFromCursor(Cursor cursor) {
         List<T> objects = new ArrayList<T>();
         while (cursor.moveToNext()) {
             objects.add(buildObject(cursor));

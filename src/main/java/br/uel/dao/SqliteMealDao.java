@@ -3,11 +3,12 @@ package br.uel.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import br.uel.DbHelper;
+import br.uel.tables.DbHelper;
+import br.uel.model.Dish;
 import br.uel.model.Meal;
+import br.uel.tables.MealTable;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.List;
 
 public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
@@ -15,16 +16,22 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     private Context context;
 
     public SqliteMealDao(Context context) {
-        super(context, DbHelper.TABLE_MEAL);
+        super(context, MealTable.NAME);
         this.context = context;
     }
 
     @Override
     public long insert(Meal meal) {
         long id = super.insert(meal);
+        meal.setId(id);
 
         SqliteDishDao dishDao = new SqliteDishDao(context);
-        dishDao.insert(meal.getDishes());
+        for (Dish dish : meal.getDishes()) {
+            dish.setMeal(meal);
+            long dishId = dishDao.insert(dish);
+            dish.setId(dishId);
+        }
+
         return id;
     }
 
@@ -42,20 +49,24 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     protected void populateValues(ContentValues values, Meal meal) {
 
         if (meal.getId() != 0)
-            values.put(DbHelper.ID_MEAL, meal.getId());
+            values.put(MealTable.ID_MEAL, meal.getId());
 
-        values.put(DbHelper.DATE_MEAL, meal.getDate().getTimeInMillis());
+        values.put(MealTable.DATE_MEAL, meal.getDate().getTimeInMillis());
     }
 
     @Override
     protected Meal buildObject(Cursor cursor) {
         Meal meal = new Meal();
 
-        meal.setId(getLongFromColumn(DbHelper.ID_MEAL, cursor));
+        meal.setId(getLongFromColumn(MealTable.ID_MEAL, cursor));
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(getLongFromColumn(DbHelper.DATE_MEAL, cursor));
+        calendar.setTimeInMillis(getLongFromColumn(MealTable.DATE_MEAL, cursor));
         meal.setDate(calendar);
+
+        SqliteDishDao dishDao = new SqliteDishDao(context);
+        List<Dish> dishes = dishDao.findDishesByMealId(meal.getId());
+        meal.setDishes(dishes);
 
         return meal;
     }

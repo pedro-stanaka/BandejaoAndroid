@@ -4,8 +4,8 @@ import br.uel.dao.*;
 
 import br.uel.model.Dish;
 import br.uel.model.Meal;
+import br.uel.tables.DbHelper;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -24,7 +24,7 @@ public class TestDaoMeal {
 
     private MealDao mealDao = new SqliteMealDao(Robolectric.application);
 
-    private Dao<Dish> dishDao = new SqliteDishDao(Robolectric.application);
+    private DishDao dishDao = new SqliteDishDao(Robolectric.application);
 
     @After
     public void closeDatabase() {
@@ -33,22 +33,26 @@ public class TestDaoMeal {
 
     @Test
     public void testNumberMealCreation() {
-        Meal meal = new Meal();
-        meal.setDate(Calendar.getInstance());
+        Meal meal1 = new Meal();
+        meal1.setDate(Calendar.getInstance());
+
+        Meal meal2 = new Meal();
+        meal2.setDate(Calendar.getInstance());
+
+        Meal meal3 = new Meal();
+        meal3.setDate(Calendar.getInstance());
 
         assertThat(mealDao.count(), equalTo(0));
 
-        mealDao.insert(meal);
-        mealDao.insert(meal);
-        mealDao.insert(meal);
+        mealDao.insert(meal1);
+        mealDao.insert(meal2);
+        mealDao.insert(meal3);
 
         assertThat(mealDao.count(), equalTo(3));
     }
 
     @Test
     public void testMealCreationProperties() {
-        MealDao mealDao = new SqliteMealDao(Robolectric.application);
-
         Meal meal = new Meal(Calendar.getInstance());
         long id = mealDao.insert(meal);
 
@@ -62,22 +66,30 @@ public class TestDaoMeal {
         MealDao mealDao = new SqliteMealDao(Robolectric.application);
         Meal meal = new Meal(Calendar.getInstance());
 
-        meal.addDish(new Dish("Beans"));
-        meal.addDish(new Dish("Rice"));
-        meal.addDish(new Dish("Pasta"));
+        Dish dish1 = new Dish("Beans");
+        Dish dish2 = new Dish("Rice");
+        Dish dish3 = new Dish("Pasta");
 
-        mealDao.insert(meal);
+        meal.addDish(dish1);
+        meal.addDish(dish2);
+        meal.addDish(dish3);
+
+        long mealId = mealDao.insert(meal);
 
         assertThat(dishDao.count(), equalTo(3));
 
-        Dish dish = dishDao.findById(2);
+        Dish dish = dishDao.findById(dish2.getId());
         assertThat(dish.getDishName(), equalTo("Rice"));
+
+        List<Dish> dishes = dishDao.findDishesByMealId(mealId);
+        assertThat(dishes.get(1).getDishName(), equalTo("Rice"));
+
+        Meal newMeal = mealDao.findById(mealId);
+        assertThat(newMeal.getDishes().get(1).getDishName(), equalTo("Rice"));
     }
 
     @Test
     public void testMealDeletion() throws Exception {
-        MealDao mealDao = new SqliteMealDao(Robolectric.application);
-
         Meal meal = new Meal(Calendar.getInstance());
         long id = mealDao.insert(meal);
         mealDao.delete(id);

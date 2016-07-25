@@ -36,6 +36,10 @@ public class Meal {
         return dishes;
     }
 
+    public void setDishes(List<Dish> dishes) {
+        this.dishes = dishes;
+    }
+
     public void addDish(Dish dish) {
         dishes.add(dish);
     }
@@ -44,7 +48,7 @@ public class Meal {
     public String toString() {
         return "Meal{" +
                 "id=" + id +
-                ", date=" + date +
+                ", date=" + date.getTimeInMillis() +
                 ", dishes=" + dishes +
                 '}';
     }

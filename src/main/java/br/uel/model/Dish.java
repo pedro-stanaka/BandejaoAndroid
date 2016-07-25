@@ -6,6 +6,8 @@ public class Dish {
 
     private String dishName;
 
+    private Meal meal;
+
     public Dish() { }
 
     public Dish(String dishName) {
@@ -28,11 +30,19 @@ public class Dish {
         this.dishName = dishName;
     }
 
+    public Meal getMeal() {
+        return meal;
+    }
+
+    public void setMeal(Meal meal) {
+        this.meal = meal;
+    }
+
     @Override
     public String toString() {
         return "Dish{" +
-                "id=" + id +
-                ", dishName='" + dishName + '\'' +
+                "dishName='" + dishName + '\'' +
+                ", id=" + id +
                 '}';
     }
 }
