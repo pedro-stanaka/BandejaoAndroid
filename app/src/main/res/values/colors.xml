@@ -3,4 +3,5 @@
     <color name="primary">#029141</color>
     <color name="primaryDark">#32cd32</color>
     <color name="secondaryColor">#000</color>
+    <color name="primaryLight">#029141FF</color>
 </resources>

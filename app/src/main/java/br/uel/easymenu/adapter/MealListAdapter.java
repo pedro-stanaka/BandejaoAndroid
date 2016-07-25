@@ -16,6 +16,9 @@ import br.uel.easymenu.model.Meal;
 
 public class MealListAdapter extends ExpandableRecyclerAdapter<MealViewHolder, DishViewHolder> {
 
+    public static final String MEAL_TAG = "MEAL";
+    public static final String DISH_TAG = "DISH";
+
     private LayoutInflater inflater;
 
     public MealListAdapter(Context context, List<Meal> meals) {
@@ -26,12 +29,14 @@ public class MealListAdapter extends ExpandableRecyclerAdapter<MealViewHolder, D
     @Override
     public MealViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
         View mealView = inflater.inflate(R.layout.parent_meal_item, parentViewGroup, false);
+        mealView.setTag(MEAL_TAG);
         return new MealViewHolder(mealView);
     }
 
     @Override
     public DishViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
         View dishView = inflater.inflate(R.layout.dish_text, childViewGroup, false);
+        dishView.setTag(DISH_TAG);
         return new DishViewHolder(dishView);
     }
 

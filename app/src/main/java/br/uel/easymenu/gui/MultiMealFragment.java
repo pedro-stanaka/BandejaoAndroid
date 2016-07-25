@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import br.uel.easymenu.R;
+import br.uel.easymenu.adapter.LastDishDivider;
 import br.uel.easymenu.adapter.MealListAdapter;
 import br.uel.easymenu.model.Meal;
 
@@ -29,6 +30,7 @@ public class MultiMealFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) expandableListLayout.findViewById(R.id.meals_list);
         listAdapter = new MealListAdapter(this.getContext(), meals);
         recyclerView.setAdapter(listAdapter);
+        recyclerView.addItemDecoration(new LastDishDivider(this.getContext()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         return expandableListLayout;
