@@ -107,7 +107,7 @@ public class TestDaoMeal {
         assertThat(queryMeals.get(0).getDate(), equalTo(meals.get(0).getDate()));
 
         List<Meal> newMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-14"));
-        assertThat(newMeals.size(), equalTo(3));
+        assertThat(newMeals.size(), equalTo(2));
         assertThat(newMeals.get(0).getDate(), equalTo(meals.get(1).getDate()));
     }
 
