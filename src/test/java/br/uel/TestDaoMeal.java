@@ -4,6 +4,8 @@ import br.uel.dao.*;
 
 import br.uel.model.Dish;
 import br.uel.model.Meal;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -11,6 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.Calendar;
+import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -19,53 +22,53 @@ import static org.junit.Assert.assertThat;
 @RunWith(RobolectricTestRunner.class)
 public class TestDaoMeal {
 
-    private MealDao mealDao;
+    private MealDao mealDao = new SqliteMealDao(Robolectric.application);
+
+    private Dao<Dish> dishDao = new SqliteDishDao(Robolectric.application);
+
+    @After
+    public void closeDatabase() {
+        DbHelper.getInstance(Robolectric.application).getWritableDatabase().close();
+    }
 
     @Test
     public void testNumberMealCreation() {
-        MealDao mealDao = new SqliteMealDao(Robolectric.application);
-
         Meal meal = new Meal();
         meal.setDate(Calendar.getInstance());
 
-        assertThat(mealDao.fetchAll().size(), equalTo(0));
+        assertThat(mealDao.count(), equalTo(0));
 
         mealDao.insert(meal);
         mealDao.insert(meal);
         mealDao.insert(meal);
 
-        assertThat(mealDao.fetchAll().size(), equalTo(3));
+        assertThat(mealDao.count(), equalTo(3));
     }
 
     @Test
     public void testMealCreationProperties() {
         MealDao mealDao = new SqliteMealDao(Robolectric.application);
 
-        Calendar calendar = Calendar.getInstance();
-        Meal meal =new Meal();
-        meal.setId(1);
-        meal.setDate(calendar);
+        Meal meal = new Meal(Calendar.getInstance());
+        long id = mealDao.insert(meal);
 
-        mealDao.insert(meal);
+        Meal newMeal = mealDao.findById(id);
 
-        meal = mealDao.findById(1);
-
-        assertThat(meal.getDate().getTimeInMillis(), equalTo(calendar.getTimeInMillis()));
+        assertThat(newMeal.getDate().getTimeInMillis(), equalTo(meal.getDate().getTimeInMillis()));
     }
 
     @Test
     public void testMealCreationWithDishes() throws Exception {
         MealDao mealDao = new SqliteMealDao(Robolectric.application);
-        Meal meal = new Meal(1, Calendar.getInstance());
+        Meal meal = new Meal(Calendar.getInstance());
 
-        meal.addDish(new Dish(1, "Beans"));
-        meal.addDish(new Dish(2, "Rice"));
-        meal.addDish(new Dish(3, "Pasta"));
+        meal.addDish(new Dish("Beans"));
+        meal.addDish(new Dish("Rice"));
+        meal.addDish(new Dish("Pasta"));
 
         mealDao.insert(meal);
 
-        Dao<Dish> dishDao = new SqliteDishDao(Robolectric.application);
-        assertThat(dishDao.fetchAll().size(), equalTo(3));
+        assertThat(dishDao.count(), equalTo(3));
 
         Dish dish = dishDao.findById(2);
         assertThat(dish.getDishName(), equalTo("Rice"));
@@ -75,10 +78,11 @@ public class TestDaoMeal {
     public void testMealDeletion() throws Exception {
         MealDao mealDao = new SqliteMealDao(Robolectric.application);
 
-        Meal meal = new Meal(10, Calendar.getInstance());
-        mealDao.insert(meal);
-        mealDao.delete(10);
+        Meal meal = new Meal(Calendar.getInstance());
+        long id = mealDao.insert(meal);
+        mealDao.delete(id);
 
-        assertThat(mealDao.fetchAll().size(), equalTo(0));
+        assertThat(mealDao.count(), equalTo(0));
     }
+
 }

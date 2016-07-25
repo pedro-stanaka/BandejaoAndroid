@@ -12,8 +12,7 @@ public class Meal {
 
     public Meal() { }
 
-    public Meal(long id, Calendar date) {
-        this.id = id;
+    public Meal(Calendar date) {
         this.date = date;
     }
 

@@ -8,8 +8,7 @@ public class Dish {
 
     public Dish() { }
 
-    public Dish(long id, String dishName) {
-        this.id = id;
+    public Dish(String dishName) {
         this.dishName = dishName;
     }
 

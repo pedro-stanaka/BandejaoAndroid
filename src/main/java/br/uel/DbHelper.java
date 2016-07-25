@@ -1,5 +1,6 @@
 package br.uel;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -37,7 +38,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static DbHelper getInstance(Context context) {
 
-        if(instance == null) {
+        if (instance == null) {
             instance = new DbHelper(context.getApplicationContext());
         }
 

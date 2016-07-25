@@ -24,17 +24,22 @@ public abstract class SqliteDao<T> implements Dao<T> {
     }
 
     @Override
-    public void insert(T object) {
+    public long insert(T object) {
         ContentValues values = new ContentValues();
         populateValues(values, object);
-        database.insert(tableName, null, values);
+        return database.insert(tableName, null, values);
     }
 
     @Override
-    public void insert(Collection<T> objects) {
+    public Collection<Long> insert(Collection<T> objects) {
+        List<Long> idsList = new ArrayList<Long>();
+
         for(T object : objects) {
-            this.insert(object);
+            long id = this.insert(object);
+            idsList.add(id);
         }
+
+        return idsList;
     }
 
     @Override
@@ -59,6 +64,13 @@ public abstract class SqliteDao<T> implements Dao<T> {
             objects.add(buildObject(cursor));
         }
         return objects;
+    }
+
+    @Override
+    public int count() {
+        Cursor cursor = database.rawQuery("SELECT COUNT(*) AS COUNT_TABLE FROM " + tableName, null);
+        cursor.moveToFirst();
+        return getIntFromColumn("COUNT_TABLE", cursor);
     }
 
     private boolean isCursorNotEmpty(Cursor cursor) {

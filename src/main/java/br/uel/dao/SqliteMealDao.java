@@ -20,11 +20,12 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
     }
 
     @Override
-    public void insert(Meal meal) {
-        super.insert(meal);
+    public long insert(Meal meal) {
+        long id = super.insert(meal);
 
         SqliteDishDao dishDao = new SqliteDishDao(context);
         dishDao.insert(meal.getDishes());
+        return id;
     }
 
     @Override
