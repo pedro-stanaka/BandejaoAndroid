@@ -42,7 +42,7 @@ public class NetworkEvent {
     }
 
     public enum Type {
-        ERROR, SUCCESS
+        ERROR, SUCCESS, START, NO_CHANGE
     }
 
     public enum NetworkErrorType {

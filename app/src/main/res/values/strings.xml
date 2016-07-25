@@ -22,6 +22,7 @@
     <string name="unknown_network_error">There was an unknown error from the server</string>
     <string name="invalid_json">The server returned a different format</string>
     <string name="new_meals">Menu has been updated. Nice Meal!!! =)</string>
+    <string name="no_change">The meals were updated</string>
 
     <string name="breakfast">Breakfast</string>
     <string name="lunch">Lunch</string>
@@ -35,5 +36,7 @@
     <string name="rate_app">Rate this app</string>
     <string name="visit_website">Visit Website</string>
     <string name="campus">Campus</string>
+    <string name="refresh_all">Refresh all universities</string>
+    <string name="refresh_meal">Refresh meals</string>
 
 </resources>

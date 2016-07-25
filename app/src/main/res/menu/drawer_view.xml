@@ -9,6 +9,10 @@
         android:title="@string/visit_website" />
 
     <item
+        android:id="@+id/refresh_all"
+        android:title="@string/refresh_all"/>
+
+    <item
         android:id="@+id/campus"
         android:title="@string/campus">
         <menu>

@@ -73,14 +73,14 @@ public class AppModule {
 
     @Provides @Named("url.weekly_universities") public String provideUniversitiesUrl() {
         String url = context.getString(R.string.url_weekly_university);
-        return returnUrl(url);
+        String university_name = context.getString(R.string.university_name);
+        String uri = String.format(url, university_name);
+        return returnUrl(uri);
     }
 
     private String returnUrl(String url) {
         String ip = context.getString(R.string.ip);
-        String university_name = context.getString(R.string.university_name);
-        String uri = String.format(url, university_name);
-        return ip + uri;
+        return ip + url;
     }
 
     @Provides public MealService provideMealService(@Named("url.weekly_meals") String mealsUrl,

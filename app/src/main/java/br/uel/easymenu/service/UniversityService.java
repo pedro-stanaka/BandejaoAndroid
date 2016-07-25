@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.uel.easymenu.dao.UniversityDao;
-import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.model.University;
 
 public class UniversityService {
@@ -58,7 +57,7 @@ public class UniversityService {
         List<String> dbListNames = listOfUniversityNames(mealsInDbAndServer);
 
         for (University serverUniversity : serverUniversities) {
-            if(!dbListNames.contains(serverUniversity.getName())) {
+            if (!dbListNames.contains(serverUniversity.getName())) {
                 universityDao.insert(serverUniversity);
                 changed = true;
             }
@@ -70,16 +69,16 @@ public class UniversityService {
         boolean changed = false;
 
         for (University databaseUniversity : mealsInDbAndServer) {
-            for(University serverUniversity : incomingUniversities) {
-                if(serverUniversity.getName().equals(databaseUniversity.getName())) {
+            for (University serverUniversity : incomingUniversities) {
+                if (serverUniversity.getName().equals(databaseUniversity.getName())) {
                     serverUniversity.setId(databaseUniversity.getId());
                 }
             }
         }
 
-        for(University university : incomingUniversities) {
+        for (University university : incomingUniversities) {
             boolean changedMeal = mealService.matchMeals(university.getMeals(), university);
-            if(changedMeal) changed = true;
+            if (changedMeal) changed = true;
         }
         return changed;
     }
@@ -87,7 +86,7 @@ public class UniversityService {
     private boolean deleteNonServerUniversity(List<String> incomingUniversityNames) {
         boolean changed = false;
         List<University> mealsInDbAndServer = universityDao.notInNamesList(incomingUniversityNames);
-        for(University university : mealsInDbAndServer) {
+        for (University university : mealsInDbAndServer) {
             universityDao.delete(university.getId());
             changed = true;
         }
@@ -105,13 +104,11 @@ public class UniversityService {
     // TODO: Documentation
     public University selectUniversity(University currentUniversity) {
         if (universityDao.count() == 1) {
-            currentUniversity =  universityDao.fetchAll().get(0);
-        }
-        else if (universityDao.count() > 1) {
+            currentUniversity = universityDao.fetchAll().get(0);
+        } else if (universityDao.count() > 1) {
             if (currentUniversity == null) {
                 currentUniversity = universityDao.orderByName().get(0);
-            }
-            else {
+            } else {
                 // Current University may not exist in the database if it was deleted
                 University university = universityDao.findByName(currentUniversity.getName());
                 if (university == null) {

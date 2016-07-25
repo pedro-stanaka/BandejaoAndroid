@@ -48,13 +48,14 @@ public class MealService {
     }
 
     public void makeRequest(final University university) {
-        Action<Meal> action = new Action<Meal>() {
+        String url = String.format(urlWeeklyMeals, university.getName());
+
+        handler.makeRequest(url, Meal.class, new Action<Meal>() {
             @Override
             public boolean makeBusiness(List<Meal> meals) {
                 return matchMeals(meals, university);
             }
-        };
-        handler.makeRequest(urlWeeklyMeals, Meal.class, action);
+        });
     }
 
     public boolean matchMeals(List<Meal> meals, University university) {

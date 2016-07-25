@@ -29,6 +29,9 @@ public class DefaultResponseHandler<T> {
     }
 
     public void makeRequest(String url, final Class<T> clazz, final Action<T> action) {
+        NetworkEvent event = new NetworkEvent(NetworkEvent.Type.START);
+        this.eventBus.post(event);
+
         this.networkRequest.get(url, new NetworkServiceListener() {
             @Override
             public void onSuccess(String response) {
@@ -39,6 +42,10 @@ public class DefaultResponseHandler<T> {
                     boolean updateUi = action.makeBusiness(objects);
                     if(updateUi) {
                         NetworkEvent event = new NetworkEvent(NetworkEvent.Type.SUCCESS);
+                        eventBus.post(event);
+                    }
+                    else {
+                        NetworkEvent event = new NetworkEvent(NetworkEvent.Type.NO_CHANGE);
                         eventBus.post(event);
                     }
                 }

@@ -1,5 +1,7 @@
 package br.uel.easymenu.service;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
@@ -15,6 +17,8 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.uel.easymenu.App;
+
 public class VolleyNetworkRequest implements NetworkRequest {
 
     private RequestQueue requestQueue;
@@ -25,10 +29,12 @@ public class VolleyNetworkRequest implements NetworkRequest {
 
     @Override
     public void get(String url, final NetworkServiceListener listener) {
+        Log.d(App.TAG, "Sending request " + url);
         final StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 response = response.replaceAll("\\\\", "");
+                Log.d(App.TAG, "Receiving response of size " + response.length());
                 listener.onSuccess(response);
             }
         }, new Response.ErrorListener() {
