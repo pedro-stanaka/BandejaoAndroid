@@ -5,7 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="ip">http://easymenu.gjhenrique.com</string>
-    <string name="url_current_meal">/weekly/UFAC</string>
+    <string name="url_current_meal">/weekly/%1$s</string>
+    <string name="university_name">UFAC</string>
     <string name="playservices_not_supported">Play services is not supported</string>
     <string name="nonexistent_meals">There are no meals this week yet! =(</string>
     <string name="nonexistent_meals_title">No meals</string>

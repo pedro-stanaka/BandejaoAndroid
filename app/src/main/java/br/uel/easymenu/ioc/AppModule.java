@@ -61,8 +61,10 @@ public class AppModule {
 
     @Provides @Named("url.weekly_meals") public String provideWeeklyUrl() {
         String ip = context.getResources().getString(R.string.ip);
-        String weeklyMeals = context.getResources().getString(R.string.url_current_meal);
-        return ip + weeklyMeals;
+        String weeklyMealsUrl = context.getResources().getString(R.string.url_current_meal);
+        String university_name = context.getResources().getString(R.string.university_name);
+        String url = String.format(weeklyMealsUrl, university_name);
+        return ip + url;
     }
 
     @Provides public NetworkService provideNetworkService(RequestQueue queue,
