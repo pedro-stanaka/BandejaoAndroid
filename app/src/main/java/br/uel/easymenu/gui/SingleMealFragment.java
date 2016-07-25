@@ -12,6 +12,9 @@ import android.widget.TextView;
 import br.uel.easymenu.R;
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.utils.StringUtils;
+
+import static br.uel.easymenu.utils.StringUtils.filterHtml;
 
 public class SingleMealFragment extends Fragment {
 
@@ -31,7 +34,7 @@ public class SingleMealFragment extends Fragment {
         }
 
         for (Dish dish : meal.getDishes()) {
-            addTextViewToLayout(inflater, periodLayout, dish.getDishName());
+            addTextViewToLayout(inflater, periodLayout, filterHtml(dish.getDishName()));
         }
 
         return rootView;

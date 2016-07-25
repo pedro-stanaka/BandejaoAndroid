@@ -10,6 +10,8 @@ import br.uel.easymenu.R;
 import br.uel.easymenu.adapter.MealItem;
 import br.uel.easymenu.model.Dish;
 
+import static br.uel.easymenu.utils.StringUtils.filterHtml;
+
 public class DishViewHolder extends ChildViewHolder {
 
     private TextView dishNameTextView;
@@ -25,7 +27,7 @@ public class DishViewHolder extends ChildViewHolder {
     public void bind(Dish dish) {
         String dishName = (dish.getDishName().equals(MealItem.EMPTY_DISH)) ?
                 this.context.getString(R.string.empty_dishes) :
-                dish.getDishName();
+                filterHtml(dish.getDishName());
 
         this.dishNameTextView.setText(dishName);
     }

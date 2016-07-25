@@ -1,13 +1,17 @@
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        mavenCentral()
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'com.github.triplet.play'
+
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -19,7 +23,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         applicationId "br.uel.easymenu"
@@ -68,6 +72,11 @@ android {
 
     buildOverlayUniversities(project)
 
+    play {
+        jsonFile = file('keys.json')
+//        uploadImages = true
+    }
+
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
@@ -75,32 +84,50 @@ android {
 }
 
 def buildOverlayUniversities(project) {
-    if(project.hasProperty("uni")) {
+    if (project.hasProperty("uni")) {
         def universities = []
 
-        if(project.uni.equals("all")) {
+        if (project.uni.equals("all")) {
             new File("src/overlay").eachDir { dir ->
                 universities << dir.getName()
             }
-        }
-        else {
+        } else {
             universities << project.uni
         }
 
         universities.each { name ->
             android {
-                sourceSets {
-                    "$name" {
-                        res.srcDirs = ["src/overlay/$name/res"]
-                    }
-                }
                 productFlavors {
                     "$name" {
                         applicationId "br.uel.easymenu.$name"
                     }
+                    sourceSets[name].setRoot("src/overlay/${name}")
+                    gambiarra(project, name)
                 }
             }
         }
+    }
+}
+
+def gambiarra(project, name) {
+    def flavorName = name.capitalize()
+    def copyFolderName = "copyPlayFolder${flavorName}Release"
+    def deleteFolderName = "deletePlayFolder${flavorName}Release"
+    def copyPlayFolderTask = project.tasks.create(name: copyFolderName, type: Copy, overwrite: true) {
+        from("src/overlay/uel/play") {
+            include "**/*"
+        }
+        into "src/${name}/play"
+    }
+
+    def deletePlayFolderTask = project.tasks.create(name: deleteFolderName, type: Delete, overwrite: true) {
+        delete "src/${name}"
+    }
+
+    afterEvaluate { projectEvaluation ->
+        def uploadPlayResourcesRelease = projectEvaluation.tasks."publishListing${flavorName}Release"
+        uploadPlayResourcesRelease.dependsOn copyPlayFolderTask
+        uploadPlayResourcesRelease.finalizedBy deletePlayFolderTask
     }
 }
 
@@ -121,7 +148,7 @@ dependencies {
     compile 'com.commonsware.cwac:wakeful:1.1.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'net.danlew:android.joda:2.9.3'
-    compile ('com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0') {
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0') {
         exclude module: 'joda-time'
     }
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
@@ -140,7 +167,7 @@ dependencies {
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.1') {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
         exclude module: 'support-v13'
