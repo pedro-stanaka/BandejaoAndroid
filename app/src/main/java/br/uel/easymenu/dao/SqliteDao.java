@@ -118,6 +118,6 @@ public abstract class SqliteDao<T> implements Dao<T> {
 
     @Override
     public void deleteAll() {
-        database.rawQuery("DELETE FROM " + tableName, null);
+        database.delete(tableName, null, null);
     }
 }

@@ -1,7 +1,0 @@
-[
-  {
-    "date": "{{ monday }}",
-    "period": "BOTH",
-    "dishes": ["Rice", "Burger", "Beans"]
-  }
-]

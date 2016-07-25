@@ -73,6 +73,10 @@ public class MealService {
                 long id = universityDao.insert(university);
                 university.setId(id);
                 persistedUniversity = university;
+
+                // TODO: Move this into UniversityService and UpdateUI only once
+                NetworkEvent event = new NetworkEvent(NetworkEvent.Type.SUCCESS);
+                eventBus.post(event);
             }
 
             List<Meal> meals = university.getMeals();

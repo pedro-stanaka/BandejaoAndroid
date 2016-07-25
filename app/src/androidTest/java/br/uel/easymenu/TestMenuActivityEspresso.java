@@ -2,6 +2,7 @@ package br.uel.easymenu;
 
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -57,8 +58,8 @@ public class TestMenuActivityEspresso {
 
     @Before
     public void launchActivity() throws Exception {
-        String successString = JsonUtils.convertJsonToString(SUCCESS_RESPONSE_FILE);
-        appRule.enqueueRequest(successString);
+        String response = JsonUtils.convertJsonToString(SUCCESS_RESPONSE_FILE);
+        appRule.enqueueRequest(response);
         activityRule.launchActivity(new Intent());
     }
 
@@ -97,10 +98,20 @@ public class TestMenuActivityEspresso {
         assertAllDishes(2, 4, message);
     }
 
+    @Test(expected = NoMatchingViewException.class)
+    public void mealWithPeriod() throws Exception {
+        onView(selectTab(mondayPlusDays(1))).perform(click());
+
+        // This assertion passes
+        onView(withText("Banana")).check(matches(isDisplayed()));
+
+        // This doesn't
+        onView(withText(R.string.both)).check(matches(isDisplayed()));
+    }
+
     private void assertPeriod(String period) {
         int resId = ResourceUtils.getPeriodResourceId(period);
-        String resource = activityRule.getActivity().getString(resId);
-        onView(allOf(withText(resource), isDescendantOfA(recyclerViewMatcher(0)))).check(matches(isDisplayed()));
+        onView(allOf(withText(resId), isDescendantOfA(recyclerViewMatcher(0)))).check(matches(isDisplayed()));
     }
 
     // There is no easy way to expand parents via espresso custom matchers

@@ -29,26 +29,9 @@
       },
       {
         "date": "{{ tuesday }}",
-        "period": "LUNCH",
-        "dishes": [
-          "Rice",
-          "Burger",
-          "Beans"
-        ]
-      },
-      {
-        "date": "{{ tuesday }}",
-        "period": "BREAKFAST",
-        "dishes": [
-          "Cereal",
-          "Omelette"
-        ]
-      },
-      {
-        "date": "{{ tuesday }}",
         "period": "BOTH",
         "dishes": [
-          "Rice"
+          "Banana"
         ]
       },
       {
