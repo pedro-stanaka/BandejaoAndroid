@@ -1,34 +1,60 @@
 package br.uel.gui;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import br.uel.service.GcmService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.inject.Inject;
 import roboguice.RoboGuice;
 import roboguice.activity.RoboActivity;
 
 public class MainActivity extends RoboActivity {
 
-    private static final String URL_MEALS = "http://cardapioru.apiary.io/meals/current_week";
-
     @Inject
-    private SharedPreferences sharedPreferences;
+    private GcmService gcmService;
 
-
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RoboGuice.getInjector(this).injectMembers(this);
-        super.onCreate(savedInstanceState);
 
+        super.onCreate(savedInstanceState);
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
 
-//        Checar se a base de dados está populada
-//        Se não estiver populada, enviar uma requsição para o servidor
-//        Depois checar se o registration_id está tudo certo
-//        Se não estiver, requisitar para o google e enviar para o servidor
-//        Lembrar de checar se a versão está tudo certo
+        if (checkPlayServices()) {
 
+            String regId = gcmService.getRegistrationId();
+
+            if (regId == null) {
+                gcmService.registerInBackground();
+            }
+        } else {
+            Log.e("Meal", "No valid Google Play Services APK found");
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkPlayServices();
+    }
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }

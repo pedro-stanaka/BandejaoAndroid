@@ -3,7 +3,13 @@ package br.uel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -24,7 +30,10 @@ public class Meal implements Parcelable {
     };
 
     private long id;
+
+    //    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
     private Calendar date;
+
     private List<Dish> dishes = new ArrayList<Dish>();
 
     public Meal() {
@@ -91,4 +100,5 @@ public class Meal implements Parcelable {
 
         dest.writeTypedList(dishes);
     }
+
 }

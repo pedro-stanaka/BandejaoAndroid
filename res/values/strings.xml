@@ -8,4 +8,6 @@
 	<string name="url_ru">http://www.uel.br/ru/pages/cardapio.php</string>
 	<string name="ip">http://cardapioru.apiary.io</string>
 	<string name="url_current_meal">/meals/current_week</string>
+
+	<string name="sender_id">*** Insert your sender id here ***</string>
 </resources>

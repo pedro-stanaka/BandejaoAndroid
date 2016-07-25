@@ -34,12 +34,6 @@ public class MenuActivity extends ActionBarActivity implements RoboContext, Acti
     @Inject
     private NetworkService networkService;
 
-    @InjectResource(R.string.ip)
-    private String ip;
-
-    @InjectResource(R.string.url_current_meal)
-    private String currentMealUrl;
-
     @Inject
     private SharedPreferences sharedPreferences;
 
@@ -57,12 +51,23 @@ public class MenuActivity extends ActionBarActivity implements RoboContext, Acti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.remove(MENU_WITHOUT_MEALS);
+        edit.commit();
+
+        for(Meal meal : mealDao.fetchAll())
+            mealDao.delete(meal.getId());
+
         actionBar = getSupportActionBar();
 
-        if(! (sharedPreferences.getBoolean(MENU_WITHOUT_MEALS, false)))
+        if(menuWithMeals())
             processNewMeals();
 
         setGuiWithMeals();
+    }
+
+    private boolean menuWithMeals() {
+        return !(sharedPreferences.getBoolean(MENU_WITHOUT_MEALS, false));
     }
 
     private void setGuiWithMeals() {
@@ -100,8 +105,7 @@ public class MenuActivity extends ActionBarActivity implements RoboContext, Acti
     }
 
     private void processNewMeals() {
-        String url = ip + currentMealUrl;
-        networkService.persistCurrentMealsFromServer(url, new NetworkService.NetworkServiceListener() {
+        networkService.persistCurrentMealsFromServer(new NetworkService.NetworkServiceListener() {
             @Override
             public void onSuccess() {
 //                There are the first meals in the database

@@ -1,15 +1,16 @@
 package br.uel.service;
 
-import br.uel.dao.MealDao;
+import android.util.Log;
+import br.uel.App;
+import br.uel.R;
 import br.uel.model.Meal;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.android.volley.toolbox.StringRequest;
 import com.google.inject.Inject;
-import com.spothero.volley.JacksonRequest;
-import com.spothero.volley.JacksonRequestListener;
+import roboguice.inject.InjectResource;
 
 import java.util.List;
 
@@ -18,32 +19,42 @@ public class NetworkService {
     @Inject
     private RequestQueue requestQueue;
 
-    @Inject
-    private MealDao mealDao;
+    @InjectResource(R.string.ip)
+    private String ip;
 
-    public void persistCurrentMealsFromServer(String url, final NetworkServiceListener listener) {
-        JacksonRequest request = new JacksonRequest<>(Request.Method.GET, url, new JacksonRequestListener<List<Meal>>() {
+    @InjectResource(R.string.url_current_meal)
+    private String currentMealUrl;
+
+    @Inject
+    private MealService mealService;
+
+    public void persistCurrentMealsFromServer(final NetworkServiceListener listener) {
+        String url = ip + currentMealUrl;
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public void onResponse(List<Meal> response, int statusCode, VolleyError error) {
-                NetworkService.this.mealDao.insert(response);
+            public void onResponse(String response) {
+
+                List<Meal> meals = mealService.deserializeMeal(response);
+                mealService.persistMeals(meals);
 
                 if (listener != null) {
                     listener.onSuccess();
                 }
+                Log.i(App.TAG, "Received meals: " + meals);
             }
-
+        }, new Response.ErrorListener() {
             @Override
-            public JavaType getReturnType() {
-                return new ObjectMapper().getTypeFactory().
-                        constructCollectionType(List.class, Meal.class);
+            public void onErrorResponse(VolleyError error) {
+                Log.e(App.TAG, "Error: " + error.getLocalizedMessage());
             }
         });
 
         requestQueue.add(request);
     }
 
-    public void persistCurrentMealsFromServer(String url) {
-        this.persistCurrentMealsFromServer(url, null);
+    public void persistCurrentMealsFromServer() {
+        this.persistCurrentMealsFromServer(null);
     }
 
     public interface NetworkServiceListener {
