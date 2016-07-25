@@ -58,11 +58,16 @@ public class MenuActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        setGuiWithMeals();
 
         bus.register(this);
         // TODO: Check if it has Internet
         networkService.persistCurrentMealsFromServer();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setGuiWithMeals();
     }
 
     @Override
