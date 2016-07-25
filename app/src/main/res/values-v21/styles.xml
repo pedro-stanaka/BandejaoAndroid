@@ -1,0 +1,6 @@
+<resources>
+    <style name="Theme.EasyMenuTheme" parent="Base.Theme.EasyMenuTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+</resources>

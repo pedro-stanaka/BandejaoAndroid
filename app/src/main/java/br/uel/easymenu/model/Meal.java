@@ -12,6 +12,8 @@ import java.util.Locale;
 
 public class Meal implements Parcelable {
 
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
     public static final Meal.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
 
         @Override
@@ -52,7 +54,6 @@ public class Meal implements Parcelable {
         date = (Calendar) in.readSerializable();
         period = in.readString();
         in.readTypedList(dishes, Dish.CREATOR);
-
     }
 
     public Calendar getDate() {
@@ -61,6 +62,10 @@ public class Meal implements Parcelable {
 
     public void setDate(Calendar date) {
         this.date = date;
+    }
+
+    public boolean compareDate(Calendar compareDate) {
+        return SDF.format(this.date.getTime()).equals(SDF.format(compareDate.getTime()));
     }
 
     public long getId() {
@@ -140,8 +145,7 @@ public class Meal implements Parcelable {
         Meal meal = (Meal) o;
 
         // Compare the Date without Time
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        if(date != null ? !sdf.format(date.getTime()).equals(sdf.format(meal.date.getTime())) : meal.date != null) return false;
+        if(date != null ? !this.compareDate(meal.date) : meal.date != null) return false;
         if(period != null ? !period.equals(meal.period) : meal.period != null) return false;
         return !(dishes != null ? !dishes.equals(meal.dishes) : meal.dishes != null);
     }

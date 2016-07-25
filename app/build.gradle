@@ -30,6 +30,7 @@ dependencies {
     compile 'org.roboguice:roboguice:3.0b-experimental'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:design:23.2.1'
     compile 'com.commonsware.cwac:wakeful:1.0.+'
 
     testCompile 'junit:junit:4.12'
