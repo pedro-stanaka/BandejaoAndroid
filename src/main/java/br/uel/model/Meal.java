@@ -1,19 +1,18 @@
 package br.uel.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Meal {
 
-    private String date;
+    private Calendar date;
 
     private List<String> dishes = new ArrayList<String>();
 
-    public String getDate() {
+    public Calendar getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Calendar date) {
         this.date = date;
     }
 

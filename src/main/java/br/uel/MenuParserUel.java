@@ -9,7 +9,10 @@ import org.jsoup.nodes.Element;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import br.uel.model.Meal;
@@ -39,6 +42,7 @@ public class MenuParserUel implements MenuParser {
         for (Element mealElement : menuPage.select("#conteudo2CT table td")) {
             meals.add(iterateDishes(mealElement));
         }
+
         return meals;
     }
 
@@ -58,9 +62,18 @@ public class MenuParserUel implements MenuParser {
         return meal;
     }
 
-    private String parseDate(String rawDate) {
-        String [] date = rawDate.split(" ");
-        return date[date.length - 1];
+    private Calendar parseDate(String rawDate) {
+        String [] dates = rawDate.split(" ");
+        String dateString = dates[dates.length - 1];
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+        try {
+            cal.setTime(sdf.parse(dateString));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return cal;
     }
 
     private Document createNewDocument(URL url) {

@@ -8,7 +8,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ParserTest {
@@ -31,8 +36,23 @@ public class ParserTest {
 
     @Test
     public void shouldReturnCorrectDate() {
-        assertEquals(meals.get(0).getDate(), "10/03/14");
-        assertEquals(meals.get(1).getDate(), "11/03/14");
+        Date date = meals.get(0).getDate().getTime();
+        assertThat(date, is(createCalendar("10/03/14")));
+        assertThat(date, is(createCalendar("10/03/14")));
+    }
+
+    private Date createCalendar(String dateString) {
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+
+        try {
+            cal.setTime(sdf.parse(dateString));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return cal.getTime();
     }
 
     @Test
