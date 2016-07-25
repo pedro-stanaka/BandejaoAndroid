@@ -1,5 +1,6 @@
 package br.uel.easymenu.utils;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,4 +33,15 @@ public class CalendarUtils {
         return SDF.format(calendar.getTime());
     }
 
+    public static String simpleLocaleFormat(Calendar calendar) {
+        DateFormat dateFormatSimple = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        dateFormatSimple.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
+        return dateFormatSimple.format(calendar.getTime());
+    }
+
+    public static String dayOfWeekName(Calendar calendar) {
+        DateFormat dateFormatDayOfWeek = new SimpleDateFormat("E", Locale.getDefault());
+        dateFormatDayOfWeek.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
+        return dateFormatDayOfWeek.format(calendar.getTime());
+    }
 }

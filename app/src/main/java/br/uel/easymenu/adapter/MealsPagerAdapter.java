@@ -14,6 +14,7 @@ import java.util.Locale;
 import br.uel.easymenu.gui.MealFragment;
 import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.utils.CalendarUtils;
 
 public class MealsPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -42,12 +43,7 @@ public class MealsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-
         Calendar calendar = groupedMeals.getDateByIndex(position);
-
-        DateFormat dateFormatDate = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-        DateFormat dateFormatDayOfWeek = new SimpleDateFormat("E", Locale.getDefault());
-
-        return dateFormatDayOfWeek.format(calendar.getTime()) + "  " + dateFormatDate.format(calendar.getTime());
+        return CalendarUtils.dayOfWeekName(calendar) + "  " + CalendarUtils.simpleLocaleFormat(calendar);
     }
 }

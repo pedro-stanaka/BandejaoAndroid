@@ -65,8 +65,6 @@ public class MealService {
                 // Updating UI
                 NetworkEvent event = new NetworkEvent(NetworkEvent.Type.SUCCESS);
                 eventBus.post(event);
-
-                // TODO: Update Widget
             } catch (Exception e) {
                 Log.e(App.TAG, "Error in new meals persistence " + e.getMessage());
             } finally {
