@@ -40,7 +40,6 @@ public class MenuActivity extends AppCompatActivity implements RoboContext {
     @Inject
     private SharedPreferences sharedPreferences;
 
-    private final static String MENU_WITHOUT_MEALS = "without_meals";
 
     // TODO: Use InjectView
     private ViewPager viewPager;
@@ -84,28 +83,7 @@ public class MenuActivity extends AppCompatActivity implements RoboContext {
         }
     }
 
-    //        return !(sharedPreferences.getBoolean(MENU_WITHOUT_MEALS, false));
-    // TODO: Move this to MainActivity.
-    // The meals should be updated via a BroadcastReceiver
-    private void processNewMeals() {
-        networkService.persistCurrentMealsFromServer(new NetworkService.NetworkServiceListener() {
-            @Override
-            public void onSuccess() {
-//                There are the first meals in the database
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(MENU_WITHOUT_MEALS, true);
-                editor.commit();
 
-//                actionBar.removeAllTabs();
-                setGuiWithMeals();
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                Toast.makeText(MenuActivity.this, errorMessage, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
     @Override
     public Map<Key<?>, Object> getScopedObjectMap() {

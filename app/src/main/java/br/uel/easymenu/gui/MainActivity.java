@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.google.android.gms.common.ConnectionResult;
@@ -20,6 +21,7 @@ import br.uel.easymenu.gcm.RegistrationIntentService;
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.scheduler.DailyListener;
+import br.uel.easymenu.service.NetworkService;
 import roboguice.RoboGuice;
 import roboguice.activity.RoboActivity;
 
@@ -27,7 +29,11 @@ public class MainActivity extends RoboActivity {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
+    private final static String MENU_WTIH_MEALS = "withoutMeals";
     private final static String FIRST_RUN_ALARM = "firstRunAlarm";
+
+    @Inject
+    private NetworkService networkService;
 
     @Inject
     private SharedPreferences sharedPreferences;
@@ -44,13 +50,15 @@ public class MainActivity extends RoboActivity {
         startActivity(intent);
 
         boolean firstRunAlarm = sharedPreferences.getBoolean(FIRST_RUN_ALARM, false);
-
         if(!firstRunAlarm) {
             WakefulIntentService.scheduleAlarms(new DailyListener(), this, false);
 
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(FIRST_RUN_ALARM, true);
-            editor.apply();
+            setKeyPreferenceToTrue(FIRST_RUN_ALARM);
+        }
+
+        boolean firstRunNetwork = sharedPreferences.getBoolean(MENU_WTIH_MEALS, false);
+        if(!firstRunNetwork) {
+            setupNewMeals();
         }
 
         if (checkPlayServices()) {
@@ -59,27 +67,25 @@ public class MainActivity extends RoboActivity {
         } else {
             Log.e(App.TAG, "No valid Google Play Services APK found");
         }
+    }
 
-        // Please, remove this
-        List<Dish> dishes = new ArrayList<Dish>() {{
-           add(new Dish("Rice"));
-           add(new Dish("Rice"));
-        }};
+    private void setupNewMeals() {
+        networkService.persistCurrentMealsFromServer(new NetworkService.NetworkServiceListener() {
+            @Override
+            public void onSuccess() {
+                setKeyPreferenceToTrue(MENU_WTIH_MEALS);
+            }
 
-        List<Dish> dishes2 = new ArrayList<Dish>() {{
-           add(new Dish("Beans"));
-           add(new Dish("Beans"));
-        }};
+            @Override
+            public void onError(String errorMessage) {
+            }
+        });
+    }
 
-        Meal meal = new Meal(Calendar.getInstance(), Meal.LUNCH, dishes);
-
-        Calendar calendar2 = Calendar.getInstance();
-//        calendar2.add(Calendar.DAY_OF_MONTH, 1);
-        Meal meal2 = new Meal(calendar2, Meal.DINNER, dishes2);
-
-        mealDao.insert(meal);
-        mealDao.insert(meal2);
-        finish();
+    private void setKeyPreferenceToTrue(String key) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(key, true);
+        editor.apply();
     }
 
     private boolean checkPlayServices() {
