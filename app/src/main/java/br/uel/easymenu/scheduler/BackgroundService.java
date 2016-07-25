@@ -4,10 +4,6 @@ import android.content.Intent;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
-import javax.inject.Inject;
-
-import br.uel.easymenu.service.NetworkService;
-
 public class BackgroundService extends WakefulIntentService {
 
     public BackgroundService() {

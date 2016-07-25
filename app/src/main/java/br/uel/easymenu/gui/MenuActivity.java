@@ -2,7 +2,6 @@ package br.uel.easymenu.gui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -34,7 +33,7 @@ import br.uel.easymenu.dao.UniversityDao;
 import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.model.University;
 import br.uel.easymenu.service.NetworkEvent;
-import br.uel.easymenu.service.NetworkService;
+import br.uel.easymenu.service.UniversityService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -49,7 +48,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     UniversityDao universityDao;
 
     @Inject
-    NetworkService networkService;
+    UniversityService universityService;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -92,10 +91,11 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setDisplayHomeAsUpEnabled(true);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Log.e(App.TAG, getApplicationContext()+"");
         bus.register(this);
+
         // TODO: Check if it has Internet
-        networkService.persistCurrentMealsFromServer();
+        universityService.syncUniversitiesWithServer();
+//        networkService.persistCurrentMealsFromServer();
     }
 
     @Override
@@ -135,7 +135,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setGuiWithMeals() {
-        selectUniversity();
+        currentUniversity = universityService.selectUniversity(currentUniversity);
         setUniversityMenu();
 
         // currentUniversity may be null, but we don't care
@@ -154,24 +154,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             TabLayout.Tab tab = tabLayout.getTabAt(index);
             if (tab != null) {
                 tab.select();
-            }
-        }
-    }
-
-    private void selectUniversity() {
-        if (universityDao.count() == 1) {
-            currentUniversity =  universityDao.fetchAll().get(0);
-        }
-        else if (universityDao.count() > 1) {
-            if(currentUniversity == null) {
-                currentUniversity = universityDao.orderByName().get(0);
-            }
-            else {
-                // Current University may not exist in the database if it was deleted
-                University university = universityDao.findByName(currentUniversity.getName());
-                if(university == null) {
-                    currentUniversity = universityDao.orderByName().get(0);
-                }
             }
         }
     }

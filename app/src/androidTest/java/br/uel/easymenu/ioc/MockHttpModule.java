@@ -17,4 +17,9 @@ public class MockHttpModule extends AppModule {
     public String provideWeeklyUrl() {
         return this.server.url("/").toString();
     }
+
+    @Override
+    public String provideUniversitiesUrl() {
+        return this.server.url("/").toString();
+    }
 }

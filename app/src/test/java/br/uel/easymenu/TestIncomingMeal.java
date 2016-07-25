@@ -10,8 +10,6 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -70,7 +68,7 @@ public class TestIncomingMeal {
         universityDao.insertWithMeals(university);
         meals.remove(0);
 
-        mealService.replaceMealsFromCurrentWeek(meals, university);
+        mealService.matchMeals(meals, university);
         assertThat(mealDao.count(), equalTo(university.getMeals().size()));
     }
 
@@ -82,7 +80,7 @@ public class TestIncomingMeal {
 
         List<Meal> secondMeals =  MealBuilder.createFakeMeals();
 
-        mealService.replaceMealsFromCurrentWeek(secondMeals, university);
+        mealService.matchMeals(secondMeals, university);
         // It shouldn't remove the first meals and insert the new swapped one
         assertThat(firstMeals.get(0).getId(), equalTo(mealDao.fetchAll().get(0).getId()));
     }
@@ -97,7 +95,7 @@ public class TestIncomingMeal {
         Collections.swap(swappedMeals, 0, 2);
         Collections.swap(swappedMeals, 1, 2);
 
-        mealService.replaceMealsFromCurrentWeek(swappedMeals, university);
+        mealService.matchMeals(swappedMeals, university);
         assertThat(firstMeals.get(0).getId(), equalTo(mealDao.fetchAll().get(0).getId()));
     }
 
@@ -116,7 +114,7 @@ public class TestIncomingMeal {
         List<Meal> exceptionMeals = MealBuilder.createFakeMeals();
         // Removing to confirm the rollback
         exceptionMeals.remove(0);
-        mealService.replaceMealsFromCurrentWeek(exceptionMeals, university);
+        mealService.matchMeals(exceptionMeals, university);
 
         assertEquals(initialMealsSize, university.getMeals().size());
     }
