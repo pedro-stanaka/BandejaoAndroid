@@ -1,8 +1,8 @@
 package br.uel;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.os.Build;
+import android.support.v7.app.ActionBar;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +26,10 @@ public class TestMenuDisplay {
         RoboGuice.getInjector(Robolectric.application).injectMembers(this);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @Config(reportSdk = 10)
     @Test
     public void testCorrectDisplay() throws Exception {
-        ActionBar actionBar = mainActivity.getActionBar();
+        ActionBar actionBar = mainActivity.getSupportActionBar();
 
         assertThat(actionBar.getTabCount(), equalTo(1));
     }

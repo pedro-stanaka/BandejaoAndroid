@@ -1,7 +1,6 @@
 package br.uel;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Build;
@@ -9,6 +8,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import br.uel.dao.MealDao;
 import br.uel.model.Meal;
@@ -22,15 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class MainActivity extends FragmentActivity implements RoboContext, ActionBar.TabListener {
+public class MainActivity extends ActionBarActivity implements RoboContext, ActionBar.TabListener {
 
     @Inject
     private MealDao mealDao;
 
     private ViewPager viewPager;
-
-    private FragmentPagerAdapter mealsPagerAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,9 +39,9 @@ public class MainActivity extends FragmentActivity implements RoboContext, Actio
 
         List<Meal> meals = mealDao.mealsOfTheWeek(Calendar.getInstance());
 
-        mealsPagerAdapter = getFragmentFromAdapter(meals);
+        FragmentPagerAdapter mealsPagerAdapter = getFragmentFromAdapter(meals);
 
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
@@ -75,17 +73,20 @@ public class MainActivity extends FragmentActivity implements RoboContext, Actio
         return new HashMap<>();
     }
 
+
     @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+    public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
         viewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+    public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+
     }
 
     @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+    public void onTabReselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+
     }
 }
 

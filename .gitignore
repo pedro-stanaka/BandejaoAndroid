@@ -71,5 +71,5 @@ release.properties
 
 
 ### User defined ####
-
 default.properties
+gen-external-apklibs/
