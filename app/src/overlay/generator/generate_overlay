@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-# gem install color-tools OptionParser mustache
-
 require 'fileutils'
 require 'yaml'
 require 'color'

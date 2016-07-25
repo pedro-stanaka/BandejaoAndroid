@@ -1,43 +1,35 @@
-image of the server sending to the university
+![](images/broadcast.png)
 
-Android client app that fetches, stores and displays the weekly meals provided by the _Bandejao_ API. 
+Android client app that fetches, stores and displays the weekly meals provided by the [Bandejao](https://bandejao.gjhenrique.com) [API](https://github.com/gjhenrique/BandejaoServer). 
 
 This Android project follows the principle of creating multiple apps for the universities based on a single code.
-With the use of dynamic [Product Flavors](http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Product-flavors), and custom _generators_, we can build and publish a new app in a breeze.
+With the use of dynamic [Product Flavors](http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Product-flavors) and custom [generators](app/src/overlay/generator/generate_overlay), 
+we can build and publish an app for a new university in a breeze.
 
-get it on google play image
+[![Google Play](images/play-store.png)](https://play.google.com/store/apps/details?id=br.uel.easymenu)
 
 ## Features
-* _GCM_ notifications
-* Daily synchronization with _CWAC Wakeful_
+* [GCM](https://developers.google.com/cloud-messaging/) notifications
+* Daily synchronization with [CWAC Wakeful](https://github.com/commonsguy/cwac-wakeful)
 * Material design
 * Easy inclusion of new universities
 
-## Build
-// Import with Android studio
-
-* export SDK_HOME
-* gradle.properties
-* ./gradlew yada yada
-
-
 ## Create an app for your own university
-
-With the principle __One code. Multiple apps__, an automated mechanism to include new universities is required.
-To include a new app for the, follow these steps.
-
+To accomplish the task of __One code with multiple apps__, an automated mechanism to include new universities resources and the correct URL is required.
+To add your university, follow these simple steps:
 
 ### Include the university information
-Include your university information in the _universities.yml_ file
+We will build a fake university called Programming University
+Add your university information in the [universities.yml](app/src/overlay/universities.yml) file
 ```yaml
-# University name.
-# Generally, it is the initials, but you can put whatever you want.
+# The key is the university name.
+# This name has to match the name of 
 PU:
   # Used for the Play Store description
   long_name: Programming University
-  # Color of the Toolbar background
+  # Color of the toolbar background
   primary_color: "000"
-  # Color of status bar and other minor widgets
+  # Color of status bar and other minor elements
   secondary_color: "dd00dd"
   # Default language 
   default_language: en-US
@@ -45,16 +37,17 @@ PU:
 
 ### Generate the resources
 Generates the strings, colors, generators.
-For text files, we use _mustache_ for texts and _gimp script-fu_ for painting the images in the colors of the university
-// gimp must be installed
-gem install mustache, etc.
-```generate_overlay```
+For text files, we use [mustache](https://mustache.github.io) for texts and [gimp script-fu](https://docs.gimp.org/en/gimp-concepts-script-fu.html) for adapting the colors of the image.
+```bash
+sudo apt-get install gimp
+cd app/overlay/app/src/overlay/generator
+bundle
+./generate_overlay --uni=pu
+```
 
 ### Build and publish
-Builds the correct universities
-This command includes the correct commands
-Builds the apk with the overlaid resources
-./gradlew assembleReleasePu -Puni=pu
-
-Publish the apk
-./gradlew generatePlayPu 
+```bash
+# -Puni=<university name> creates the Product Flavor for the university
+# Builds the code and publishes the apk and the resources to Play Store
+./gradlew -Puni=pu publishPuRelease
+```

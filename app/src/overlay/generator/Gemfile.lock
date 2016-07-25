@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    OptionParser (0.5.1)
+    color-tools (1.3.0)
+    mustache (1.0.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  OptionParser
+  color-tools
+  mustache
+
+BUNDLED WITH
+   1.12.5
