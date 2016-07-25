@@ -1,0 +1,11 @@
+UEL:
+  primary_color: "069404"
+  secondary_color: "000"
+  default_language: pt-BR
+  long_name: Universidade Estadual de Londrina
+
+UFAC:
+  primary_color: 034ea2
+  secondary_color: fdb813
+  default_language: pt-BR
+  long_name: Universidade Federal do Acre

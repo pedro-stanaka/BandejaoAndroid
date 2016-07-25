@@ -1,0 +1,150 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'yaml'
+require 'color'
+require 'optparse'
+require 'mustache'
+
+# gem install color-tools OptionParser mustache
+
+OVERLAY_FILES_PATH = File.dirname(__FILE__) + '/overlay_files'
+CONFIG_FILE = File.dirname(__FILE__) + '/universities.yml'
+LAUNCHER_FILE = File.dirname(__FILE__) + '/icon_launcher.xcf'
+LAUNCHER_BASELINE = 48
+
+DENSITIES = { 'xxxhdpi' => 4.0,
+              'xxhdpi'  => 3.0,
+              'xhdpi'   => 2.0,
+              'hdpi'    => 1.5,
+              'mdpi'    => 1.0,
+              'ldpi'    => 0.75 }
+
+class University
+  attr_reader :name, :primary_color, :secondary_color, :long_name, :default_language
+
+  def initialize(name, primary_color, secondary_color, long_name, default_language)
+    @name = name
+    @primary_color = primary_color
+    @secondary_color = secondary_color
+    @long_name = long_name
+    @default_language = default_language
+  end
+
+  def overlay_path
+    File.dirname(__FILE__) + "/../#{name.downcase}"
+  end
+end
+
+class Image
+  def initialize(base_image, path, resolution, university)
+    @base_image = base_image
+    @university = university
+
+    # If the path does not exist, we create it
+    dir = File.dirname(path)
+    FileUtils.mkdir_p(dir) unless File.directory? dir
+    @path = path
+
+    @resolution = if resolution.is_a? Numeric
+                    # Ruby does not provide a simple way to declare a array of size 2
+                    # The ideal was to declare [resolution resolution]
+                    [resolution].push resolution
+                  else
+                    resolution
+                  end
+  end
+
+  def paint_image
+    gimp_primary_color = color_to_list @university.primary_color
+    gimp_secondary_color = color_to_list @university.secondary_color
+
+    gimp_resolution = "'(#{@resolution[0]} #{@resolution[1]})"
+    cmd = "gimp -i -b \"(process-image \\\"#{@base_image}\\\" #{gimp_primary_color} #{gimp_secondary_color} #{gimp_resolution} \\\"#{@path}\\\")\" -b '(gimp-quit 0)'"
+    puts "Resizing launcher of #{@resolution} resolution into #{@path}"
+    `#{cmd}`
+  end
+
+  # Converts html color to scheme list in form of a string
+  # dd514c -> '(221 81 76)
+  def color_to_list(html_color)
+    color = Color::RGB.from_html(html_color)
+    red = color.r * 255
+    green = color.g * 255
+    blue = color.b * 255
+    "'(#{red} #{green} #{blue})"
+  end
+end
+
+def generate_launcher(university)
+  DENSITIES.each do |name, factor|
+    resolution = factor * LAUNCHER_BASELINE
+    path = university.overlay_path + "/res/mipmap-#{name}/ic_launcher.png"
+    image = Image.new(LAUNCHER_FILE, path, resolution, university)
+    image.paint_image
+  end
+end
+
+def generate_overlay_files(university)
+  files = Dir.glob("#{OVERLAY_FILES_PATH}/**/*").reject { |file| File.directory? file }
+
+  files.each do |file|
+    template = File.read(file)
+
+    replace_string = {
+      primary_color: university.primary_color,
+      secondary_color: university.secondary_color, name: university.name,
+      long_name: university.long_name,
+      default_language: university.default_language
+    }
+    final_text = Mustache.render template, replace_string
+
+    path = file.gsub(OVERLAY_FILES_PATH, '')
+    final_path = university.overlay_path + path
+
+    dir = File.dirname(final_path)
+    FileUtils.mkdir_p(dir) unless File.directory? dir
+
+    puts "Writing file #{final_path}"
+    File.write(final_path, final_text)
+  end
+end
+
+def parse_command_line
+  options = {}
+  OptionParser.new do |opts|
+    opts.on('--uni=NAME') do |v|
+      options[:uni] = v
+    end
+  end.parse!
+  options
+end
+
+universities_yml = YAML.load_file(CONFIG_FILE)
+universities = universities_yml.map do |name, values|
+  University.new(name, values['primary_color'], values['secondary_color'],
+                 values['long_name'], values['default_language'])
+end
+
+options = parse_command_line
+
+if options[:uni].nil?
+  STDERR.puts 'Specify the university with --uni=NAME'
+  exit
+else
+  params_universities = if options[:uni] == 'all'
+                          universities
+                        else
+                          uni = universities.find { |un| un.name.downcase == options[:uni].downcase }
+                          if uni.nil?
+                            STDERR.puts "University not found. Available options #{universities.keys}"
+                            exit -1
+                          end
+                          [uni]
+                        end
+
+  params_universities.each do |university|
+    generate_launcher university
+    generate_overlay_files university
+  end
+end
