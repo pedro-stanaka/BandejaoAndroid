@@ -1,18 +1,20 @@
 package br.uel;
 
-import br.uel.model.Meal;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import javax.print.Doc;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import br.uel.model.Meal;
 
 public class MenuParserUel implements MenuParser {
 
 //    private final static String URL = ";
+    private final static int REQUEST_TIMEOUT = 5000;
 
     @Override
     public List<Meal> parseHtml(String url) {
@@ -66,7 +68,8 @@ public class MenuParserUel implements MenuParser {
 
         Document menuPage = null;
         try {
-            menuPage = Jsoup.connect(url).get();
+            // Try to get the page or the file in a maximum time of REQUEST_TIMEOUT
+            menuPage = Jsoup.parse(new URL(url), REQUEST_TIMEOUT);
         } catch (IOException e) {
             e.printStackTrace();
         }

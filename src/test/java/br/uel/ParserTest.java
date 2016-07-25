@@ -1,9 +1,11 @@
 package br.uel;
 
-import br.uel.model.Meal;
 import org.junit.Test;
 
+import java.net.URL;
 import java.util.List;
+
+import br.uel.model.Meal;
 
 public class ParserTest {
 
@@ -11,7 +13,9 @@ public class ParserTest {
 
     @Test
     public void testMeals() {
+
+        URL pageFileUrl = getClass().getResource("/");
         List<Meal> meals = menuParser.parseHtml("http://www.uel.br/ru/pages/cardapio.php");
-            
+
     }
 }
