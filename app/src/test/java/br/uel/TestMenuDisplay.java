@@ -51,7 +51,7 @@ public class TestMenuDisplay {
     public void testJsonFormatter() throws Exception {
         List<Meal> meals = new ArrayList<>();
 
-        Meal meal = new Meal(Calendar.getInstance());
+        Meal meal = new Meal(Calendar.getInstance(), "BOTH");
 
         Dish dish1 = new Dish("Beans");
         Dish dish2 = new Dish("Rice");
@@ -63,7 +63,7 @@ public class TestMenuDisplay {
 
         meals.add(meal);
 
-        meal = new Meal(Calendar.getInstance());
+        meal = new Meal(Calendar.getInstance(), "BOTH");
 
         dish1 = new Dish("Beans");
         dish2 = new Dish("Rice");
@@ -76,6 +76,7 @@ public class TestMenuDisplay {
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(meals);
+        //TODO: Finish this test
     }
 
     @After

@@ -73,6 +73,8 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
 
         String dateString = dateFormat.format(meal.getDate().getTime());
         values.put(MealTable.DATE_MEAL, dateString);
+
+        values.put(MealTable.PERIOD, meal.getPeriod());
     }
 
     @Override
@@ -81,6 +83,7 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
 
         meal.setId(getLongFromColumn(MealTable.ID_MEAL, cursor));
         meal.setDate(parseDateToCalendar(cursor));
+        meal.setPeriod(getStringFromColumn(MealTable.PERIOD, cursor));
 
         SqliteDishDao dishDao = new SqliteDishDao(context);
         List<Dish> dishes = dishDao.findDishesByMealId(meal.getId());

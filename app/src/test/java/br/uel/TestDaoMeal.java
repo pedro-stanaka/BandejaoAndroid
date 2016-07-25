@@ -24,9 +24,11 @@ import br.uel.easymenu.tables.DbHelper;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
+// TODO: Refactor this test
 public class TestDaoMeal {
 
     private MealDao mealDao = new SqliteMealDao(RuntimeEnvironment.application);
@@ -46,12 +48,14 @@ public class TestDaoMeal {
         List<Meal> meals = createMeals(3);
         mealDao.insert(meals);
 
-        assertThat(mealDao.count(), equalTo(3));
+        // Same date and period are replaced.
+        // That's why it is 1
+        assertThat(mealDao.count(), equalTo(1));
     }
 
     @Test
     public void testMealCreationProperties() {
-        Meal meal = new Meal(Calendar.getInstance());
+        Meal meal = new Meal(Calendar.getInstance(), Meal.LUNCH);
         long id = mealDao.insert(meal);
 
         Meal newMeal = mealDao.findById(id);
@@ -59,12 +63,13 @@ public class TestDaoMeal {
         assertThat(newMeal.getDate().get(Calendar.DAY_OF_YEAR), equalTo(meal.getDate().get(Calendar.DAY_OF_YEAR)));
         assertThat(newMeal.getDate().get(Calendar.MONTH), equalTo(meal.getDate().get(Calendar.MONTH)));
         assertThat(newMeal.getDate().get(Calendar.YEAR), equalTo(meal.getDate().get(Calendar.YEAR)));
+        assertTrue(newMeal.isLunch());
     }
 
     @Test
     public void testMealCreationWithDishes() {
         MealDao mealDao = new SqliteMealDao(RuntimeEnvironment.application);
-        Meal meal = new Meal(Calendar.getInstance());
+        Meal meal = new Meal(Calendar.getInstance(), Meal.BOTH);
 
         Dish dish1 = new Dish("Beans");
         Dish dish2 = new Dish("Rice");
@@ -90,7 +95,7 @@ public class TestDaoMeal {
 
     @Test
     public void testMealDeletion() {
-        Meal meal = new Meal(Calendar.getInstance());
+        Meal meal = new Meal(Calendar.getInstance(), "BOTH");
         long id = mealDao.insert(meal);
         mealDao.delete(id);
 
@@ -149,7 +154,7 @@ public class TestDaoMeal {
         List<Meal> meals = new ArrayList<Meal>();
 
         for (int i = 0; i < number; i++) {
-            meals.add(createMeal(Calendar.getInstance()));
+            meals.add(createMeal(Calendar.getInstance(), Meal.BOTH));
         }
 
         return meals;
@@ -160,7 +165,7 @@ public class TestDaoMeal {
 
         for (String calendarString : calendars) {
             Calendar calendar = fromStringToCalendar(calendarString);
-            meals.add(createMeal(calendar));
+            meals.add(createMeal(calendar, Meal.BOTH));
         }
 
         return meals;
@@ -178,11 +183,10 @@ public class TestDaoMeal {
         return calendar;
     }
 
-    private Meal createMeal(Calendar calendar) {
+    private Meal createMeal(Calendar calendar, String period) {
         Meal meal = new Meal();
         meal.setDate(calendar);
+        meal.setPeriod(period);
         return meal;
     }
-
-
 }
