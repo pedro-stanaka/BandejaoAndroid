@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.Calendar;
-
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,9 +53,9 @@ public class MealService {
 
     public void replaceMealsFromCurrentWeek(List<Meal> meals) {
         List<Meal> mealsCurrentWeek = mealDao.mealsOfTheWeek(Calendar.getInstance());
+        Collections.sort(meals);
 
-        if (mealsCurrentWeek != meals) {
-
+        if (!meals.equals(mealsCurrentWeek)) {
             mealDao.beginTransaction();
             try {
                 Log.i(App.TAG, "Deleting " + meals.size() + " meals in the database: " + mealsCurrentWeek);

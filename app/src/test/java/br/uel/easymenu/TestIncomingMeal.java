@@ -10,6 +10,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -60,6 +61,29 @@ public class TestIncomingMeal {
         meals.remove(0);
         mealService.replaceMealsFromCurrentWeek(meals);
         assertEquals(mealDao.count(), meals.size());
+    }
+
+    @Test
+    public void twoEqualMealsShouldNotBeReplaced() {
+        List<Meal> firstMeals =  MealBuilder.createFakeMeals();
+        List<Meal> secondMeals =  MealBuilder.createFakeMeals();
+
+        mealDao.insert(firstMeals);
+        mealService.replaceMealsFromCurrentWeek(secondMeals);
+        // It shouldn't remove the first meals and insert the new swapped one
+        assertEquals(firstMeals.get(0).getId(), mealDao.fetchAll().get(0).getId());
+    }
+
+    @Test
+    public void mealsShouldNotBeReplacedWithDifferentOrder() throws Exception {
+        List<Meal> firstMeals = MealBuilder.createFakeMeals();
+        List<Meal> swappedMeals = MealBuilder.createFakeMeals();
+
+        Collections.swap(swappedMeals, 0, 2);
+        Collections.swap(swappedMeals, 1, 2);
+        mealDao.insert(firstMeals);
+        mealService.replaceMealsFromCurrentWeek(swappedMeals);
+        assertEquals(firstMeals.get(0).getId(), mealDao.fetchAll().get(0).getId());
     }
 
     @Test

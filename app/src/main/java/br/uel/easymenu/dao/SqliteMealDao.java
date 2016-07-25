@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import java.util.Collections;
 import java.util.List;
 
 import br.uel.easymenu.model.Dish;
@@ -51,13 +52,19 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
 
         String sql = "SELECT * FROM " + MealTable.NAME +
                 " WHERE (" + SAME_WEEK + ") AND ( " + SAME_YEAR + ")" +
-                " GROUP BY " + MealTable.DATE_MEAL + ", " + MealTable.PERIOD +
-                " ORDER BY " + MealTable.DATE_MEAL;
+                " GROUP BY " + MealTable.DATE_MEAL + ", " + MealTable.PERIOD;
 
         String[] params = new String[]{calendarQueryString, calendarQueryString};
 
         Cursor cursor = database.rawQuery(sql, params);
-        return fetchObjectsFromCursor(cursor);
+        List<Meal> meals = fetchObjectsFromCursor(cursor);
+
+        // I know this should be in a service layer.
+        // But we would be adding complexity if we add another layer to the system
+        // Also, the clause to ORDER BY period would be more complicated than to sort the objects in memory
+        Collections.sort(meals);
+
+        return meals;
     }
 
     @Override

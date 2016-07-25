@@ -12,7 +12,7 @@ import java.util.List;
 
 import br.uel.easymenu.utils.CalendarUtils;
 
-public class Meal implements Parcelable {
+public class Meal implements Parcelable, Comparable<Meal> {
 
     public static final Meal.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
 
@@ -169,5 +169,40 @@ public class Meal implements Parcelable {
         int result = date != null ? date.hashCode() : 0;
         result = 31 * result + (dishes != null ? dishes.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(Meal another) {
+        if(this.date.after(another.date)) {
+            return 1;
+        }
+        else if(this.date.before(another.date)) {
+            return -1;
+        }
+        else {
+           if(rankMeal(this.period) > rankMeal(another.period)) {
+               return 1;
+           }
+           else if(rankMeal(this.period) < rankMeal(another.period)) {
+               return -1;
+           }
+           else {
+               return 0;
+           }
+        }
+    }
+
+    private int rankMeal(String period) {
+        switch(period) {
+            case Meal.BOTH:
+                return 0;
+            case Meal.BREAKFAST:
+                return 1;
+            case Meal.LUNCH:
+                return 2;
+            case Meal.DINNER:
+                return 3;
+        }
+        return -1;
     }
 }
