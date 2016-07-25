@@ -3,7 +3,9 @@ package br.uel.easymenu.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 import br.uel.easymenu.model.University;
@@ -31,6 +33,29 @@ public class SqliteUniversityDao extends SqliteDao<University> implements Univer
         SqliteMealDao mealDao = new SqliteMealDao(context);
         mealDao.insert(university.getMeals());
         return university.getId();
+    }
+
+    @Override
+    public List<University> notInNamesList(List<String> universityNames) {
+        return inQuery(universityNames, false);
+    }
+
+    @Override
+    public List<University> inNamesList(List<String> universityNames) {
+        return inQuery(universityNames, true);
+    }
+
+    private List<University> inQuery(List<String> universityNames, boolean isInQuery) {
+        List<String> placeHolderList = Collections.nCopies(universityNames.size(), "?");
+        String placeHolder = TextUtils.join(",", placeHolderList);
+
+        String query = isInQuery ? " IN " : " NOT IN";
+        String sql = "SELECT * FROM " + UniversityTable.NAME + " WHERE NAME " + query +  "( " + placeHolder + ")";
+
+        String[] params = universityNames.toArray(new String[universityNames.size()]);
+
+        Cursor cursor = database.rawQuery(sql, params);
+        return fetchObjectsFromCursor(cursor);
     }
 
     @Override

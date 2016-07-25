@@ -9,8 +9,9 @@ public class UniversityTable {
     public static final String FULL_NAME = "full_name";
 
     private static final String CREATE_TABLE_MEALS = "CREATE TABLE " + NAME + " (" +
-            ID_UNIVERSITY + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
-            UNIVERSITY_NAME + " TEXT, " + FULL_NAME + " TEXT)";
+            ID_UNIVERSITY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            UNIVERSITY_NAME + " TEXT, " + FULL_NAME + " TEXT, " +
+            " UNIQUE(" + UNIVERSITY_NAME + "))";
 
     public static String onCreate() {
         return CREATE_TABLE_MEALS;

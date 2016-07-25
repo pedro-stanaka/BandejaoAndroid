@@ -3,6 +3,7 @@ package br.uel.easymenu.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import org.joda.time.DateTime;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import br.uel.easymenu.App;
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.model.Meal;
@@ -92,7 +94,12 @@ public class SqliteMealDao extends SqliteDao<Meal> implements MealDao {
         values.put(MealTable.DATE_MEAL, dateString);
 
         values.put(MealTable.PERIOD, meal.getPeriod());
-        values.put(MealTable.UNIVERSITY_ID, meal.getUniversity().getId());
+
+        // Non persisted university
+        if(meal.getUniversity().getId() != 0)
+            values.put(MealTable.UNIVERSITY_ID, meal.getUniversity().getId());
+        else
+            Log.w(App.TAG, "Non persisted university " + meal.getUniversity());
     }
 
     @Override

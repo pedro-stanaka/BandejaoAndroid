@@ -1,14 +1,13 @@
 package br.uel.easymenu.service;
 
-import android.util.Log;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import br.uel.easymenu.App;
 import br.uel.easymenu.dao.UniversityDao;
+import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.model.University;
 
 public class UniversityService {
@@ -33,33 +32,74 @@ public class UniversityService {
     }
 
     public void syncUniversitiesWithServer() {
-        DefaultResponseHandler.Action<University> action = new DefaultResponseHandler.Action<University>() {
+        handler.makeRequest(urlWeeklyUniversities, University.class, new DefaultResponseHandler.Action<University>() {
             @Override
             public boolean makeBusiness(List<University> universities) {
                 return matchUniversity(universities);
             }
-        };
-        handler.makeRequest(urlWeeklyUniversities, University.class, action);
+        });
     }
 
     // TODO: Documentation
-    public boolean matchUniversity(List<University> universities) {
+    // We don't override equals
+    public boolean matchUniversity(List<University> serverUniversities) {
+        List<String> serverUniversityNames = listOfUniversityNames(serverUniversities);
+        List<University> mealsInDbAndServer = universityDao.inNamesList(serverUniversityNames);
+
+        boolean isInsertion = insertUniversities(mealsInDbAndServer, serverUniversities);
+        boolean isMealsChanged = syncMealsServer(mealsInDbAndServer, serverUniversities);
+        boolean isDeleted = deleteNonServerUniversity(serverUniversityNames);
+
+        return isInsertion || isMealsChanged || isDeleted;
+    }
+
+    private boolean insertUniversities(List<University> mealsInDbAndServer, List<University> serverUniversities) {
         boolean changed = false;
-        for(University university : universities) {
-            University persistedUniversity = universityDao.findByName(university.getName());
+        List<String> dbListNames = listOfUniversityNames(mealsInDbAndServer);
 
-            if(persistedUniversity == null) {
+        for (University serverUniversity : serverUniversities) {
+            if(!dbListNames.contains(serverUniversity.getName())) {
+                universityDao.insert(serverUniversity);
                 changed = true;
-                Log.i(App.TAG, "Inserting university: " + university.toString());
-                long id = universityDao.insert(university);
-                university.setId(id);
-                persistedUniversity = university;
             }
+        }
+        return changed;
+    }
 
-            boolean changedMeal = mealService.matchMeals(university.getMeals(), persistedUniversity);
+    private boolean syncMealsServer(List<University> mealsInDbAndServer, List<University> incomingUniversities) {
+        boolean changed = false;
+
+        for (University databaseUniversity : mealsInDbAndServer) {
+            for(University serverUniversity : incomingUniversities) {
+                if(serverUniversity.getName().equals(databaseUniversity.getName())) {
+                    serverUniversity.setId(databaseUniversity.getId());
+                }
+            }
+        }
+
+        for(University university : incomingUniversities) {
+            boolean changedMeal = mealService.matchMeals(university.getMeals(), university);
             if(changedMeal) changed = true;
         }
         return changed;
+    }
+
+    private boolean deleteNonServerUniversity(List<String> incomingUniversityNames) {
+        boolean changed = false;
+        List<University> mealsInDbAndServer = universityDao.notInNamesList(incomingUniversityNames);
+        for(University university : mealsInDbAndServer) {
+            universityDao.delete(university.getId());
+            changed = true;
+        }
+        return changed;
+    }
+
+    private List<String> listOfUniversityNames(List<University> universities) {
+        List<String> listUniversityNames = new ArrayList<>(universities.size());
+        for (University university : universities) {
+            listUniversityNames.add(university.getName());
+        }
+        return listUniversityNames;
     }
 
     // TODO: Documentation

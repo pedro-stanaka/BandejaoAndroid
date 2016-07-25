@@ -2,6 +2,7 @@ package br.uel.easymenu;
 
 import android.database.sqlite.SQLiteException;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,8 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,8 +24,10 @@ import br.uel.easymenu.ioc.RobolectricApp;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.model.University;
 import br.uel.easymenu.service.MealService;
+import br.uel.easymenu.service.UniversityService;
 import br.uel.easymenu.tables.DbHelper;
 
+import static br.uel.easymenu.utils.CalendarUtils.fromCalendarToString;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -43,6 +48,9 @@ public class TestIncomingMeal {
     @Inject
     UniversityDao universityDao;
 
+    @Inject
+    UniversityService universityService;
+
     @Before
     public void setupTests() {
         DbHelper.resetConnection();
@@ -55,18 +63,23 @@ public class TestIncomingMeal {
     }
 
     @Test
-    public void testPersistNewMeals() throws Exception {
-        List<Meal> meals = MealBuilder.createFakeMeals();
-        mealDao.insert(meals);
-        assertThat(mealDao.count(), equalTo(meals.size()));
-    }
-
-    @Test
     public void testReplaceOldMeals() throws Exception {
         University university = UniversityBuilder.createFakeUniversty();
         List<Meal> meals = university.getMeals();
         universityDao.insertWithMeals(university);
         meals.remove(0);
+
+        mealService.matchMeals(meals, university);
+        assertThat(mealDao.count(), equalTo(meals.size()));
+    }
+
+    @Test
+    public void addMealShouldUpdate() throws Exception {
+        University university = UniversityBuilder.createFakeUniversty();
+        List<Meal> meals = university.getMeals();
+        universityDao.insertWithMeals(university);
+        DateTime dateTime = meals.get(0).getDate().plusDays(1);
+        meals.add(new MealBuilder().withDate(fromCalendarToString(dateTime)).build());
 
         mealService.matchMeals(meals, university);
         assertThat(mealDao.count(), equalTo(meals.size()));

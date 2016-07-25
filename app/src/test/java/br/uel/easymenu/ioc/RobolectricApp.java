@@ -6,6 +6,7 @@ import br.uel.easymenu.TestDaoMeal;
 import br.uel.easymenu.TestDaoUniversity;
 import br.uel.easymenu.TestDate;
 import br.uel.easymenu.TestIncomingMeal;
+import br.uel.easymenu.TestIncomingUniversity;
 import br.uel.easymenu.TestJsonResponse;
 import br.uel.easymenu.TestMealByHour;
 import br.uel.easymenu.dao.MealDao;
@@ -21,6 +22,7 @@ public class RobolectricApp {
         void inject(TestDaoUniversity testDaoUniversity);
         void inject(TestMealByHour testMealByHour);
         void inject(TestDate testDate);
+        void inject(TestIncomingUniversity testIncomingUniversity);
     }
 
     public static RobolectricComponent component() {
