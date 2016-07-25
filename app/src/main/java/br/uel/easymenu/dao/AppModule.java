@@ -9,6 +9,8 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.text.SimpleDateFormat;
 
 public class AppModule implements Module {
@@ -34,5 +36,7 @@ public class AppModule implements Module {
 //        Required for Jackson not consider time zones
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
         binder.bind(ObjectMapper.class).toInstance(mapper);
+
+        binder.bind(EventBus.class).toInstance(EventBus.getDefault());
     }
 }

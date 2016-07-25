@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
 	<string name="app_name">Cardápio</string>
 	<string name="hello">Hello cardapioru!</string>
 	<string name="action_settings">Settings</string>
@@ -8,6 +7,14 @@
 	<string name="url_ru">http://www.uel.br/ru/pages/cardapio.php</string>
 	<string name="ip">http://cardapioru.apiary.io</string>
 	<string name="url_current_meal">/meals/current_week</string>
+	<string name="playservices_not_supported">Play services is not supported</string>
 
-	<string name="sender_id">*** Insert your sender id here ***</string>
+    <string name="connection_error">It appears that you don\'t have a valid connection to the Internet</string>
+    <string name="permission_error">It appears that you don\'t have the permissions to access the EasyMenu URL</string>
+    <string name="server_error">Sorry. It occurred an error from the server</string>
+    <string name="network_error">It occurred a network error</string>
+    <string name="parse_error">The server did not return a valid JSON</string>
+    <string name="unknown_network_error">There was an unknown error from the server</string>
+    <string name="network_sucess">Menu has been updated. Nice Meal!!! =)</string>
+
 </resources>

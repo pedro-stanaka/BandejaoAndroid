@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.inject.Inject;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
@@ -21,6 +23,9 @@ public class MealService {
 
     @Inject
     private MealDao mealDao;
+
+    @Inject
+    private EventBus eventBus;
 
     public List<Meal> deserializeMeal(String json) {
         List<Meal> meals = null;
@@ -56,6 +61,9 @@ public class MealService {
 
                 Log.i(App.TAG, "Inserting " + meals.size() + " new meals in the database: " + meals);
                 mealDao.setTransactionSuccess();
+
+                NetworkEvent event = new NetworkEvent(NetworkEvent.Type.SUCCESS);
+                eventBus.post(event);
             } catch (Exception e) {
                 Log.e(App.TAG, "Error in new meals persistence " + e.getMessage());
             } finally {

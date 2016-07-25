@@ -7,9 +7,13 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.google.inject.Key;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -20,6 +24,7 @@ import br.uel.easymenu.adapter.MealsPagerAdapter;
 import br.uel.easymenu.adapter.MissingMealAdapter;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.model.GroupedMeals;
+import br.uel.easymenu.service.NetworkEvent;
 import br.uel.easymenu.service.NetworkService;
 import roboguice.RoboGuice;
 import roboguice.util.RoboContext;
@@ -35,6 +40,7 @@ public class MenuActivity extends AppCompatActivity implements RoboContext {
     @Inject
     private SharedPreferences sharedPreferences;
 
+    private EventBus bus = EventBus.getDefault();
 
     // TODO: Use InjectView
     private ViewPager viewPager;
@@ -55,7 +61,30 @@ public class MenuActivity extends AppCompatActivity implements RoboContext {
 
         setSupportActionBar(toolbar);
         setGuiWithMeals();
-        // TODO: Setup do broadcast receiver
+
+        bus.register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        bus.unregister(this);
+        super.onDestroy();
+    }
+
+    @Subscribe
+    public void updatedMeals(NetworkEvent event) {
+        String message;
+        if(!(event.hasMessage()) && event.getEventType() == NetworkEvent.Type.ERROR) {
+            message = getResources().getString(event.getError().resourceId);
+        }
+        else if (event.getEventType() == NetworkEvent.Type.SUCCESS){
+            message = getResources().getString(R.string.network_sucess);
+        }
+        else {
+            message = event.getMessage();
+        }
+
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     private void setGuiWithMeals() {

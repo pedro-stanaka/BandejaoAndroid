@@ -14,6 +14,7 @@ import br.uel.easymenu.App;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.gcm.RegistrationIntentService;
 import br.uel.easymenu.scheduler.DailyListener;
+import br.uel.easymenu.service.NetworkEvent;
 import br.uel.easymenu.service.NetworkService;
 import roboguice.RoboGuice;
 import roboguice.activity.RoboActivity;
@@ -70,7 +71,7 @@ public class MainActivity extends RoboActivity {
             }
 
             @Override
-            public void onError(String errorMessage) {
+            public void onError(NetworkEvent.NetworkErrorType errorMessage) {
             }
         });
     }
