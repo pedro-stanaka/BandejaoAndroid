@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,26 +27,26 @@ public class TestJsonResponse {
     private List<Meal> meals;
 
     @Before
-    public void injectVariables() {
+    public void injectVariables() throws Exception {
         TestApp.component().inject(this);
-        String mealsJson = convertStreamToString(getClass().getResourceAsStream("/success.json"));
+        String mealsJson = JsonUtils.convertJsonToString("success.json");
         meals = mealService.deserializeMeal(mealsJson);
     }
 
     @Test
-    public void mealSize() {
+    public void mealSize() throws Exception {
         assertThat(meals.size(), equalTo(3));
     }
 
     @Test
-    public void mealPeriods() {
+    public void mealPeriods() throws Exception {
         assertThat(meals.get(0).getPeriod(), equalTo(Meal.LUNCH));
         assertThat(meals.get(1).getPeriod(), equalTo(Meal.BREAKFAST));
         assertThat(meals.get(2).getPeriod(), equalTo(Meal.BOTH));
     }
 
     @Test
-    public void mealDishes() {
+    public void mealDishes() throws Exception {
         assertThat(meals.get(0).getDishes().get(1).getDishName(), equalTo("Burger"));
         assertThat(meals.get(1).getDishes().get(1).getDishName(), equalTo("Lettuce"));
         assertThat(meals.get(2).getDishes().get(0).getDishName(), equalTo("Rice"));
@@ -58,17 +57,5 @@ public class TestJsonResponse {
         assertThat(meals.get(0).getStringDate(), equalTo("2016-04-15"));
         assertThat(meals.get(1).getStringDate(), equalTo("2016-04-15"));
         assertThat(meals.get(2).getStringDate(), equalTo("2016-04-16"));
-    }
-
-    public String convertStreamToString(java.io.InputStream is) {
-        String result = null;
-        try {
-            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-            result = s.hasNext() ? s.next() : "";
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 }

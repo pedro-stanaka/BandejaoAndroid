@@ -1,0 +1,47 @@
+[
+  {
+    "date": "{{ monday }}",
+    "period": "LUNCH",
+    "dishes": ["Rice", "Burger", "Beans"]
+  },
+  {
+    "date": "{{ monday }}",
+    "period": "BREAKFAST",
+    "dishes": ["Pizza", "Lettuce"]
+  },
+  {
+    "date": "{{ monday }}",
+    "period": "DINNER",
+    "dishes": ["Rice"]
+  },
+  {
+    "date": "{{ tuesday }}",
+    "period": "LUNCH",
+    "dishes": ["Rice", "Burger", "Beans"]
+  },
+  {
+    "date": "{{ tuesday }}",
+    "period": "BREAKFAST",
+    "dishes": ["Pizza", "Lettuce"]
+  },
+  {
+    "date": "{{ tuesday }}",
+    "period": "BOTH",
+    "dishes": ["Rice"]
+  },
+  {
+    "date": "{{ wednesday }}",
+    "period": "LUNCH",
+    "dishes": ["Rice", "Burger", "Beans"]
+  },
+  {
+    "date": "{{ wednesday }}",
+    "period": "BREAKFAST",
+    "dishes": ["Pizza", "Lettuce"]
+  },
+  {
+    "date": "{{ wednesday }}",
+    "period": "DINNER",
+    "dishes": ["Rice"]
+  }
+]

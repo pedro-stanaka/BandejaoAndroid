@@ -8,8 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.junit.After;
+import com.jayway.awaitility.Awaitility;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -20,11 +24,16 @@ import org.robolectric.shadows.ShadowToast;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.gui.MenuActivity;
+import br.uel.easymenu.ioc.AppComponent;
+import br.uel.easymenu.ioc.DaggerTestApp_MockHttpComponent;
+import br.uel.easymenu.ioc.MockHttpModule;
 import br.uel.easymenu.ioc.TestApp;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.service.NetworkEvent;
@@ -43,58 +52,39 @@ public class TestMenuActivity {
     @Inject
     MealDao mealDao;
 
+    private MockWebServer webServer;
+
     @Before
-    public void setupTests() {
+    public void setupTests() throws Exception {
         DbHelper.resetConnection();
-        menuActivity = Robolectric.buildActivity(MenuActivity.class).create().get();
         TestApp.component().inject(this);
+
+        webServer = new MockWebServer();
+        webServer.start();
+
+        AppComponent component = DaggerTestApp_MockHttpComponent
+                .builder()
+                .appModule(new MockHttpModule(RuntimeEnvironment.application, webServer))
+                .build();
+        ((App) RuntimeEnvironment.application).setComponent(component);
     }
 
-    @After
     public void closeDatabase() {
         DbHelper.getInstance(RuntimeEnvironment.application).getWritableDatabase().close();
     }
 
     @Test
-    public void emptyMealsDoesNotShowAnything() {
-        TabLayout tabs = (TabLayout) menuActivity.findViewById(R.id.tabs);
-        TabLayout.Tab singleTab = tabs.getTabAt(0);
+    public void updatedMealsRefreshTheUI() throws Exception {
+        buildActivityWithJsonResponse("3-days.json");
 
-        String menu = menuActivity.getResources().getString(R.string.nonexistent_meals_title);
-        assertEquals(singleTab.getText().toString(), menu);
-    }
-
-    @Test
-    public void updatedMealsRefreshTheUI() {
-        createFakeMealsAndUpdateUI();
         TabLayout layout = (TabLayout) menuActivity.findViewById(R.id.tabs);
         assertTrue(layout != null);
         assertEquals(layout.getTabCount(), 3);
     }
 
     @Test
-    public void errorEventWithoutShowsGenericToast() {
-        NetworkEvent.NetworkErrorType errorEvent = NetworkEvent.NetworkErrorType.SERVER_ERROR;
-        menuActivity.updatedMeals(new NetworkEvent(errorEvent));
-
-        String networkErrorMessage = menuActivity.getResources().getString(R.string.server_error);
-        assertEquals(ShadowToast.getTextOfLatestToast(), networkErrorMessage);
-    }
-
-    @Test
-    public void errorEventWithMessageShouldDisplayMessage() throws Exception {
-        String mockText = "MOCK";
-
-        NetworkEvent.NetworkErrorType errorEvent = NetworkEvent.NetworkErrorType.SERVER_ERROR;
-        NetworkEvent event = new NetworkEvent(errorEvent, mockText);
-        menuActivity.updatedMeals(event);
-
-        assertEquals(ShadowToast.getTextOfLatestToast(), mockText);
-    }
-
-    @Test
-    public void viewPagerDisplaysTheRightDishes() {
-        createFakeMealsAndUpdateUI();
+    public void viewPagerDisplaysTheRightDishes() throws Exception {
+        buildActivityWithJsonResponse("3-days.json");
         View view = getViewFromViewPager(0);
 
         assertTrue(viewContainsText(view, "Burger"));
@@ -104,8 +94,8 @@ public class TestMenuActivity {
     }
 
     @Test
-    public void viewPagerDisplaysTheRightPeriods() {
-        createFakeMealsAndUpdateUI();
+    public void viewPagerDisplaysTheRightPeriods() throws Exception {
+        buildActivityWithJsonResponse("3-days.json");
         View view = getViewFromViewPager(1);
 
         String breakfast = getStringFromResources(R.string.breakfast);
@@ -119,11 +109,7 @@ public class TestMenuActivity {
 
     @Test
     public void dontDisplayTitleWhenOnlyMealPeriodIsBoth() throws Exception {
-        MealBuilder builder = new MealBuilder();
-        Meal meal = builder.withPeriod(Meal.BOTH).withDishes("Rice", "Beans").build();
-        mealDao.insert(meal);
-
-        this.updateUI();
+        buildActivityWithJsonResponse("1-day-both.json");
 
         String both = getStringFromResources(R.string.both);
         View view = getViewFromViewPager(0);
@@ -133,23 +119,40 @@ public class TestMenuActivity {
     }
 
     @Test
-    public void twoUpdatesDontMessTheUI() {
-        createFakeMealsAndUpdateUI();
-        TabLayout layout = (TabLayout) menuActivity.findViewById(R.id.tabs);
-        updateUI();
+    public void twoUpdatesDontMessTheUI() throws Exception {
+        buildActivityWithJsonResponse("3-days.json");
 
         List<Meal> meals = MealBuilder.createFakeMeals(CalendarFactory.mondayPlusDays(4));
         mealDao.insert(meals);
         updateUI();
 
+        TabLayout layout = (TabLayout) menuActivity.findViewById(R.id.tabs);
         assertEquals(layout.getTabCount(), 4);
     }
 
     @Test
-    public void displayMessageWhenMealHasEmptyDishes() {
-        Meal meal = new MealBuilder().withPeriod(Meal.LUNCH).build();
-        mealDao.insert(meal);
-        updateUI();
+    public void errorEventWithoutShowsGenericToast() {
+        webServer.enqueue(new MockResponse().setResponseCode(500).setBody("Server error"));
+        menuActivity = Robolectric.buildActivity(MenuActivity.class).create().get();
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).until(hasErrorOccurred());
+
+        String networkErrorMessage = menuActivity.getResources().getString(R.string.server_error);
+        assertEquals(ShadowToast.getTextOfLatestToast(), networkErrorMessage);
+    }
+
+    @Test
+    public void emptyMealsDoesNotShowAnything() {
+        menuActivity = Robolectric.buildActivity(MenuActivity.class).create().get();
+        TabLayout tabs = (TabLayout) menuActivity.findViewById(R.id.tabs);
+        TabLayout.Tab singleTab = tabs.getTabAt(0);
+
+        String menu = menuActivity.getResources().getString(R.string.nonexistent_meals_title);
+        assertEquals(singleTab.getText().toString(), menu);
+    }
+
+    @Test
+    public void displayMessageWhenMealHasEmptyDishes() throws Exception {
+        buildActivityWithJsonResponse("meal-without-dish.json");
 
         String emptyDishes = getStringFromResources(R.string.empty_dishes);
         String lunch = getStringFromResources(R.string.lunch);
@@ -159,6 +162,19 @@ public class TestMenuActivity {
         assertTrue(viewContainsText(view, lunch));
     }
 
+    // TODO: This should be designed better when the server reports the error
+    @Ignore
+    @Test
+    public void errorEventWithMessageShouldDisplayMessage() throws Exception {
+        String mockText = "MOCK";
+
+        NetworkEvent.NetworkErrorType errorEvent = NetworkEvent.NetworkErrorType.SERVER_ERROR;
+        NetworkEvent event = new NetworkEvent(errorEvent, mockText);
+        menuActivity.updatedMeals(event);
+
+        assertEquals(ShadowToast.getTextOfLatestToast(), mockText);
+    }
+
     private String getStringFromResources(int resourceId) {
         return this.menuActivity.getResources().getString(resourceId);
     }
@@ -166,7 +182,7 @@ public class TestMenuActivity {
     private View getViewFromViewPager(int index) {
         ViewPager viewPager = (ViewPager) menuActivity.findViewById(R.id.viewpager);
         PagerAdapter adapter = viewPager.getAdapter();
-        Fragment fragment = (Fragment) adapter.instantiateItem(viewPager, 0);
+        Fragment fragment = (Fragment) adapter.instantiateItem(viewPager, index);
         SupportFragmentTestUtil.startFragment(fragment, MenuActivity.class);
         return fragment.getView();
     }
@@ -188,18 +204,31 @@ public class TestMenuActivity {
         return false;
     }
 
-    private void createFakeMealsAndUpdateUI() {
-        List<Meal> meals = MealBuilder.createFakeMeals(
-                CalendarFactory.monday(),
-                CalendarFactory.mondayPlusDays(1),
-                CalendarFactory.mondayPlusDays(2));
-        mealDao.insert(meals);
-
-        updateUI();
-    }
-
     private void updateUI() {
         NetworkEvent.Type successEvent = NetworkEvent.Type.SUCCESS;
         menuActivity.updatedMeals(new NetworkEvent(successEvent));
+    }
+
+    private void buildActivityWithJsonResponse(String jsonFile) throws Exception {
+        String jsonResponse = JsonUtils.convertJsonToString(jsonFile);
+        webServer.enqueue(new MockResponse().setBody(jsonResponse));
+        menuActivity = Robolectric.buildActivity(MenuActivity.class).create().get();
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).until(hasMealsPersisted());
+    }
+
+    private Callable<Boolean> hasMealsPersisted() {
+        return new Callable<Boolean>() {
+            @Override public Boolean call() throws Exception {
+                return mealDao.count() > 0;
+            }
+        };
+    }
+
+    private Callable<Boolean> hasErrorOccurred() {
+        return new Callable<Boolean>() {
+            @Override public Boolean call() throws Exception {
+                return ShadowToast.getTextOfLatestToast() != null;
+            }
+        };
     }
 }
