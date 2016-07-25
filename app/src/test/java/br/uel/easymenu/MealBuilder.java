@@ -1,4 +1,4 @@
-package br.uel;
+package br.uel.easymenu;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

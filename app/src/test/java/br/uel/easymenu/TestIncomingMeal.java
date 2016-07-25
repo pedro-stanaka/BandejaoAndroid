@@ -1,4 +1,4 @@
-package br.uel;
+package br.uel.easymenu;
 
 import android.database.sqlite.SQLiteException;
 
@@ -18,7 +18,6 @@ import org.robolectric.annotation.Config;
 
 import java.util.List;
 
-import br.uel.easymenu.BuildConfig;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.dao.SqliteMealDao;
 import br.uel.easymenu.model.Meal;

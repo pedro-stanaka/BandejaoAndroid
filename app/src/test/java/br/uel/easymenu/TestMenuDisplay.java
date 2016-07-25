@@ -1,10 +1,8 @@
-package br.uel;
+package br.uel.easymenu;
 
 import android.support.v7.app.ActionBar;
 
-import br.uel.easymenu.BuildConfig;
 import br.uel.easymenu.gui.MenuActivity;
-import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -22,7 +20,6 @@ import br.uel.easymenu.tables.DbHelper;
 import roboguice.RoboGuice;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;

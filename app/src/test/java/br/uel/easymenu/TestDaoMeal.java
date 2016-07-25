@@ -1,4 +1,4 @@
-package br.uel;
+package br.uel.easymenu;
 
 import org.junit.After;
 import org.junit.Test;
@@ -14,7 +14,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import br.uel.easymenu.BuildConfig;
 import br.uel.easymenu.dao.DishDao;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.dao.SqliteDishDao;
