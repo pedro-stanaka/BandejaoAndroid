@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import br.uel.gui.MealFragment;
 import br.uel.model.Meal;
 
@@ -13,7 +14,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class MealsPagerAdapter extends FragmentPagerAdapter {
+public class MealsPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<Meal> meals;
 

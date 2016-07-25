@@ -4,9 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.beans.Transient;
-
-public class Dish implements Parcelable{
+public class Dish implements Parcelable {
 
     private long id;
 
@@ -15,7 +13,8 @@ public class Dish implements Parcelable{
     @JsonIgnore
     private Meal meal;
 
-    public Dish() { }
+    public Dish() {
+    }
 
     public Dish(String dishName) {
         this.dishName = dishName;
@@ -30,6 +29,7 @@ public class Dish implements Parcelable{
         return id;
     }
 
+    @JsonIgnore
     public void setId(long id) {
         this.id = id;
     }

@@ -53,6 +53,7 @@ public class Meal implements Parcelable {
         return id;
     }
 
+    @JsonIgnore
     public void setId(long id) {
         this.id = id;
     }

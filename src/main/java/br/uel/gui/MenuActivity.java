@@ -1,18 +1,24 @@
 package br.uel.gui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.Toast;
 import br.uel.adapter.MealsPagerAdapter;
 import br.uel.adapter.MissingMealAdapter;
 import br.uel.R;
 import br.uel.dao.MealDao;
 import br.uel.model.Meal;
+import br.uel.service.NetworkService;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 import roboguice.RoboGuice;
+import roboguice.inject.InjectResource;
 import roboguice.util.RoboContext;
 
 import java.util.Calendar;
@@ -25,23 +31,61 @@ public class MenuActivity extends ActionBarActivity implements RoboContext, Acti
     @Inject
     private MealDao mealDao;
 
+    @Inject
+    private NetworkService networkService;
+
+    @InjectResource(R.string.url_current_meal)
+    private String currentMealUrl;
+
+    @Inject
+    private SharedPreferences sharedPreferences;
+
+    private final static String MENU_WITHOUT_MEALS = "without_meals";
+
+    private ActionBar actionBar;
+
+    private FragmentStatePagerAdapter mealsPagerAdapter;
+
     private ViewPager viewPager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         RoboGuice.getInjector(this).injectMembers(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        TMP: Deleting all meals
+        List<Meal> meals = this.mealDao.fetchAll();
+        for (Meal meal : meals) {
+           mealDao.delete(meal.getId());
+        }
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
+
+        actionBar = getSupportActionBar();
+
+        if(! (sharedPreferences.getBoolean(MENU_WITHOUT_MEALS, false)))
+            processNewMeals();
+
+        setGuiWithMeals();
+    }
+
+    private void setGuiWithMeals() {
         List<Meal> meals = mealDao.mealsOfTheWeek(Calendar.getInstance());
+        mealsPagerAdapter = getFragmentFromAdapter(meals);
+        processViewPager();
+        processActionBar();
+    }
 
-        FragmentPagerAdapter mealsPagerAdapter = getFragmentFromAdapter(meals);
+    private FragmentStatePagerAdapter getFragmentFromAdapter(List<Meal> meals) {
+        if (meals.size() > 0)
+            return new MealsPagerAdapter(getSupportFragmentManager(), meals);
+        else
+            return new MissingMealAdapter(getSupportFragmentManager());
+    }
 
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+    private void processViewPager() {
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(mealsPagerAdapter);
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -50,19 +94,35 @@ public class MenuActivity extends ActionBarActivity implements RoboContext, Acti
                 actionBar.setSelectedNavigationItem(position);
             }
         });
+    }
 
+    private void processActionBar() {
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         for (int i = 0; i < mealsPagerAdapter.getCount(); i++) {
             ActionBar.Tab tab = actionBar.newTab().setText(mealsPagerAdapter.getPageTitle(i)).setTabListener(this);
             actionBar.addTab(tab);
         }
     }
 
-    private FragmentPagerAdapter getFragmentFromAdapter(List<Meal> meals) {
+    private void processNewMeals() {
+        networkService.persistCurrentMealsFromServer(currentMealUrl, new NetworkService.NetworkServiceListener() {
+            @Override
+            public void onSuccess() {
+//                There are the first meals in the database
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(MENU_WITHOUT_MEALS, true);
+                editor.commit();
 
-        if (meals.size() > 0)
-            return new MealsPagerAdapter(getSupportFragmentManager(), meals);
-        else
-            return new MissingMealAdapter(getSupportFragmentManager());
+                actionBar.removeAllTabs();
+                setGuiWithMeals();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Toast.makeText(MenuActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -72,17 +132,17 @@ public class MenuActivity extends ActionBarActivity implements RoboContext, Acti
 
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         viewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
-    public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
     }
 
     @Override
-    public void onTabReselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
     }
 }
