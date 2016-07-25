@@ -52,7 +52,6 @@ def buildOverlayUniversities(project) {
                         applicationId "br.uel.easymenu.$name"
                     }
                 }
-
             }
         }
     }

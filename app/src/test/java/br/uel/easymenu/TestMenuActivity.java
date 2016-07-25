@@ -4,6 +4,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import br.uel.easymenu.adapter.MealListAdapter;
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.gui.MenuActivity;
 import br.uel.easymenu.ioc.AppComponent;
@@ -85,7 +87,8 @@ public class TestMenuActivity {
     @Test
     public void viewPagerDisplaysTheRightDishes() throws Exception {
         buildActivityWithJsonResponse("3-days.json");
-        View view = getViewFromViewPager(0);
+        RecyclerView view = (RecyclerView) getViewFromViewPager(0);
+        expandParents(view);
 
         assertTrue(viewContainsText(view, "Burger"));
         assertTrue(viewContainsText(view, "Rice"));
@@ -93,10 +96,13 @@ public class TestMenuActivity {
         assertTrue(viewContainsText(view, "Beans"));
     }
 
+
+
     @Test
     public void viewPagerDisplaysTheRightPeriods() throws Exception {
         buildActivityWithJsonResponse("3-days.json");
-        View view = getViewFromViewPager(1);
+        RecyclerView view = (RecyclerView) getViewFromViewPager(1);
+        expandParents(view);
 
         String breakfast = getStringFromResources(R.string.breakfast);
         String lunch = getStringFromResources(R.string.lunch);
@@ -110,11 +116,12 @@ public class TestMenuActivity {
     @Test
     public void dontDisplayTitleWhenOnlyMealPeriodIsBoth() throws Exception {
         buildActivityWithJsonResponse("1-day-both.json");
-
-        String both = getStringFromResources(R.string.both);
         View view = getViewFromViewPager(0);
+
         assertTrue(viewContainsText(view, "Rice"));
         assertTrue(viewContainsText(view, "Beans"));
+
+        String both = getStringFromResources(R.string.both);
         assertFalse(viewContainsText(view, both));
     }
 
@@ -142,8 +149,10 @@ public class TestMenuActivity {
 
     @Test
     public void emptyMealsDoesNotShowAnything() {
-        menuActivity = Robolectric.buildActivity(MenuActivity.class).create().get();
+        // Call resume() because we are setting the GUI in the resume cycle
+        menuActivity = Robolectric.buildActivity(MenuActivity.class).create().resume().get();
         TabLayout tabs = (TabLayout) menuActivity.findViewById(R.id.tabs);
+        assertEquals(tabs.getTabCount(), 1);
         TabLayout.Tab singleTab = tabs.getTabAt(0);
 
         String menu = menuActivity.getResources().getString(R.string.nonexistent_meals_title);
@@ -153,12 +162,11 @@ public class TestMenuActivity {
     @Test
     public void displayMessageWhenMealHasEmptyDishes() throws Exception {
         buildActivityWithJsonResponse("meal-without-dish.json");
+        RecyclerView view = (RecyclerView) getViewFromViewPager(0);
 
         String emptyDishes = getStringFromResources(R.string.empty_dishes);
-        String lunch = getStringFromResources(R.string.lunch);
-
-        View view = getViewFromViewPager(0);
         assertTrue(viewContainsText(view, emptyDishes));
+        String lunch = getStringFromResources(R.string.lunch);
         assertTrue(viewContainsText(view, lunch));
     }
 
@@ -204,6 +212,15 @@ public class TestMenuActivity {
         return false;
     }
 
+    private void expandParents(RecyclerView view) {
+        MealListAdapter adapter = (MealListAdapter) view.getAdapter();
+        adapter.expandAllParents();
+
+        // http://stackoverflow.com/questions/27052866/android-robolectric-click-recyclerview-item
+        view.measure(0, 0);
+        view.layout(0, 0, 100, 10000);
+    }
+
     private void updateUI() {
         NetworkEvent.Type successEvent = NetworkEvent.Type.SUCCESS;
         menuActivity.updatedMeals(new NetworkEvent(successEvent));
@@ -212,7 +229,7 @@ public class TestMenuActivity {
     private void buildActivityWithJsonResponse(String jsonFile) throws Exception {
         String jsonResponse = JsonUtils.convertJsonToString(jsonFile);
         webServer.enqueue(new MockResponse().setBody(jsonResponse));
-        menuActivity = Robolectric.buildActivity(MenuActivity.class).create().get();
+        menuActivity = Robolectric.buildActivity(MenuActivity.class).create().resume().get();
         Awaitility.await().atMost(2, TimeUnit.SECONDS).until(hasMealsPersisted());
     }
 
