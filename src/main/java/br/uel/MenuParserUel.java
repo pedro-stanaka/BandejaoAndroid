@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +19,9 @@ public class MenuParserUel implements MenuParser {
 //    private final static String URL = ";
     private final static int REQUEST_TIMEOUT = 5000;
 
+    static final String FILE_BASE = "file:";
     @Override
-    public List<Meal> parseHtml(String url) {
+    public List<Meal> parseHtml(URL url) {
 
 
         Document menuPage = createNewDocument(url);
@@ -35,11 +37,9 @@ public class MenuParserUel implements MenuParser {
         menuPage.select(":containsOwn(\u00a0)").remove();
 
         for (Element mealElement : menuPage.select("#conteudo2CT table td")) {
-
-
             meals.add(iterateDishes(mealElement));
         }
-        return null;
+        return meals;
     }
 
     private Meal iterateDishes(Element mealElement) {
@@ -48,10 +48,8 @@ public class MenuParserUel implements MenuParser {
             String info = infoElement.text().trim();
             if (info.contains("feira")) {
                 meal.setDate(parseDate(info));
-                System.out.println("Data => " + info);
             } else {
                 if (!info.equals("")) {
-                    System.out.println(info);
                     meal.addDish(info);
                 }
             }
@@ -60,22 +58,21 @@ public class MenuParserUel implements MenuParser {
         return meal;
     }
 
-    //TODO
     private String parseDate(String rawDate) {
-
-        return rawDate;
+        String [] date = rawDate.split(" ");
+        return date[date.length - 1];
     }
 
-    private Document createNewDocument(String url) {
+    private Document createNewDocument(URL url) {
 
         Document menuPage = null;
         try {
             // Try to get the page or the file in a maximum time of REQUEST_TIMEOUT
-            if (URLUtil.isFileUrl(url)){
-                menuPage = Jsoup.parse(new File(url), null);
+            if (isFileURl(url.toString())) {
+                menuPage = Jsoup.parse(new File(url.getPath()), null);
             }
             else{
-                menuPage = Jsoup.connect(url).get();
+                menuPage = Jsoup.connect(url.toString()).get();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,4 +80,7 @@ public class MenuParserUel implements MenuParser {
         return menuPage;
     }
 
+    private boolean isFileURl(String url) {
+        return (null != url) && (url.startsWith(FILE_BASE));
+    }
 }
