@@ -2,6 +2,7 @@ package br.uel.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +22,7 @@ public class Meal implements Parcelable {
             return new Meal[size];
         }
     };
+
     private long id;
     private Calendar date;
     private List<Dish> dishes = new ArrayList<Dish>();

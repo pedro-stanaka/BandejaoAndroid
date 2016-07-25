@@ -59,6 +59,22 @@
 		    <scope>compile</scope>
 	    </dependency>
 	    <dependency>
+		    <groupId>com.google.android.gms</groupId>
+		    <artifactId>play-services</artifactId>
+		    <version>4.4.52</version>
+		    <type>apklib</type>
+	    </dependency>
+	    <dependency>
+		    <groupId>com.google.android.gms</groupId>
+		    <artifactId>google-play-services-jar</artifactId>
+		    <version>4.4.52</version>
+	    </dependency>
+	    <dependency>
+		    <groupId>com.spothero.volley</groupId>
+		    <artifactId>volley-jackson-extension</artifactId>
+		    <version>1.0.1</version>
+	    </dependency>
+	    <dependency>
             <groupId>org.roboguice</groupId>
             <artifactId>roboguice</artifactId>
             <version>3.0b-experimental</version>
@@ -68,6 +84,7 @@
             <artifactId>jsoup</artifactId>
             <version>1.7.2</version>
         </dependency>
+
     </dependencies>
     <build>
         <finalName>${project.artifactId}</finalName>

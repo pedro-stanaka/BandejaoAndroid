@@ -2,6 +2,9 @@ package br.uel.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.beans.Transient;
 
 public class Dish implements Parcelable{
 
@@ -9,6 +12,7 @@ public class Dish implements Parcelable{
 
     private String dishName;
 
+    @JsonIgnore
     private Meal meal;
 
     public Dish() { }

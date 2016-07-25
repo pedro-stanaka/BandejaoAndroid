@@ -1,9 +1,10 @@
-package br.uel;
+package br.uel.adapter;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import br.uel.gui.MealFragment;
 import br.uel.model.Meal;
 
 import java.text.DateFormat;

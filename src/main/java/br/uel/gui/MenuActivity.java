@@ -1,16 +1,13 @@
-package br.uel;
+package br.uel.gui;
 
-import android.annotation.TargetApi;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
+import br.uel.adapter.MealsPagerAdapter;
+import br.uel.adapter.MissingMealAdapter;
+import br.uel.R;
 import br.uel.dao.MealDao;
 import br.uel.model.Meal;
 import com.google.inject.Inject;
@@ -23,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends ActionBarActivity implements RoboContext, ActionBar.TabListener {
+public class MenuActivity extends ActionBarActivity implements RoboContext, ActionBar.TabListener {
 
     @Inject
     private MealDao mealDao;
@@ -62,7 +59,7 @@ public class MainActivity extends ActionBarActivity implements RoboContext, Acti
 
     private FragmentPagerAdapter getFragmentFromAdapter(List<Meal> meals) {
 
-        if(meals.size() > 0)
+        if (meals.size() > 0)
             return new MealsPagerAdapter(getSupportFragmentManager(), meals);
         else
             return new MissingMealAdapter(getSupportFragmentManager());
