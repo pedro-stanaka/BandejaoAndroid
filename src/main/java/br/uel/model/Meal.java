@@ -4,12 +4,22 @@ import java.util.*;
 
 public class Meal {
 
+    private long id;
+
     private Calendar date;
 
     private List<String> dishes = new ArrayList<String>();
 
     public Calendar getDate() {
         return date;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public void setDate(Calendar date) {
@@ -27,4 +37,6 @@ public class Meal {
     public void addDish(String dish) {
         dishes.add(dish);
     }
+
+
 }
