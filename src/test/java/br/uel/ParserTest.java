@@ -1,21 +1,30 @@
 package br.uel;
 
-import org.junit.Test;
-
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
 
 import br.uel.model.Meal;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
 
 public class ParserTest {
 
     private MenuParser menuParser = new MenuParserUel();
 
+    private List<Meal> meals;
+
+    @Before
+    public void prepareMeals() {
+
+        URL url = getClass().getResource("/menu_page.html");
+
+        meals = menuParser.parseHtml(url.toString());
+    }
+
     @Test
-    public void testMeals() {
-
-        URL pageFileUrl = getClass().getResource("/");
-        List<Meal> meals = menuParser.parseHtml("http://www.uel.br/ru/pages/cardapio.php");
-
+    public void dateWithCorrectFormat() {
+        System.out.println(meals.size());
     }
 }
