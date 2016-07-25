@@ -1,12 +1,13 @@
 package br.uel.easymenu.gui;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -18,19 +19,33 @@ public class MultiMealFragment extends Fragment {
 
     public static final String MEAL_BUNDLE = "meal_args";
 
+    private MealListAdapter listAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         List<Meal> meals = getArguments().getParcelableArrayList(MEAL_BUNDLE);
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.meal_fragment, container, false);
-        LinearLayout mealLayout = (LinearLayout) rootView.findViewById(R.id.layout_meals);
-
         View expandableListLayout = inflater.inflate(R.layout.expandable_listview, container, false);
-        ExpandableListView expandableListView = (ExpandableListView) expandableListLayout.findViewById(R.id.periods);
-        MealListAdapter adapter = new MealListAdapter(this.getContext(), meals);
-        expandableListView.setAdapter(adapter);
+        RecyclerView recyclerView = (RecyclerView) expandableListLayout.findViewById(R.id.meals_list);
+        listAdapter = new MealListAdapter(this.getContext(), meals);
+        recyclerView.setAdapter(listAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        mealLayout.addView(expandableListLayout);
-        return rootView;
+        return expandableListLayout;
     }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        listAdapter.onRestoreInstanceState(savedInstanceState);
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        listAdapter.onSaveInstanceState(outState);
+    }
+
+
 }
