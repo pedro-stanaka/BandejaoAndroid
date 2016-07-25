@@ -22,8 +22,6 @@ import roboguice.activity.RoboActivity;
 
 public class MainActivity extends RoboActivity {
 
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
     private final static String MENU_WTIH_MEALS = "withoutMeals";
     private final static String FIRST_RUN_ALARM = "firstRunAlarm";
 
