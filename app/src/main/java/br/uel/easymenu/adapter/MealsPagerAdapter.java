@@ -5,13 +5,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 
-import br.uel.easymenu.gui.MealFragment;
+import br.uel.easymenu.gui.MultiMealFragment;
+import br.uel.easymenu.gui.SingleMealFragment;
 import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.utils.CalendarUtils;
@@ -28,12 +26,19 @@ public class MealsPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
-        ArrayList<Meal> meals = groupedMeals.getMealsByIndex(position);
-        bundle.putParcelableArrayList(MealFragment.MEAL_ARGS, meals);
+        Fragment fragment;
 
-        Fragment mealFragment = new MealFragment();
-        mealFragment.setArguments(bundle);
-        return mealFragment;
+        ArrayList<Meal> meals = groupedMeals.getMealsByIndex(position);
+        if (meals.size() == 1 && meals.get(0).isBoth()) {
+            bundle.putParcelable(SingleMealFragment.MEAL_BUNDLE, meals.get(0));
+            fragment = new SingleMealFragment();
+        } else {
+            bundle.putParcelableArrayList(MultiMealFragment.MEAL_BUNDLE, meals);
+            fragment = new MultiMealFragment();
+        }
+
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
