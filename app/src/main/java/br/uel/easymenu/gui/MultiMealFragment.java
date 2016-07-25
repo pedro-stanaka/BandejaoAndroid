@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 
 import java.util.Calendar;
 import java.util.List;
@@ -35,13 +38,14 @@ public class MultiMealFragment extends Fragment {
         int tabPosition = getArguments().getInt(TAB_POSITION);
 
         View expandableListLayout = inflater.inflate(R.layout.expandable_listview, container, false);
-        RecyclerView recyclerView = (RecyclerView) expandableListLayout.findViewById(R.id.meals_list);
-        MealListAdapter listAdapter = new MealListAdapter(this.getContext(), meals);
+        final RecyclerView recyclerView = (RecyclerView) expandableListLayout.findViewById(R.id.meals_list);
+        final MealListAdapter listAdapter = new MealListAdapter(this.getContext(), meals, recyclerView);
         recyclerView.setAdapter(listAdapter);
         // We set the tag for the espresso tests
         recyclerView.setTag(tabPosition);
         recyclerView.addItemDecoration(new MealDivider(this.getContext()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
 
         int index = mealService.selectMealByTimeIndex(meals, Calendar.getInstance());
         listAdapter.expandParent(index);
