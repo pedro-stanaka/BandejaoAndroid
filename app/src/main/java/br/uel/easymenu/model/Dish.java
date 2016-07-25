@@ -81,4 +81,19 @@ public class Dish implements Parcelable {
             return new Dish[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Dish dish = (Dish) o;
+
+        return !(dishName != null ? !dishName.equals(dish.dishName) : dish.dishName != null);
+    }
+
+    @Override
+    public int hashCode() {
+        return dishName != null ? dishName.hashCode() : 0;
+    }
 }

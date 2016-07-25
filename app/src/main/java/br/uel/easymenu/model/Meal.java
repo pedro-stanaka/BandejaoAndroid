@@ -4,9 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class Meal implements Parcelable {
 
@@ -94,4 +96,23 @@ public class Meal implements Parcelable {
         dest.writeTypedList(dishes);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Meal meal = (Meal) o;
+
+        // Compare the Date without Time
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        if(date != null ? !sdf.format(date.getTime()).equals(sdf.format(meal.date.getTime())) : meal.date != null) return false;
+        return !(dishes != null ? !dishes.equals(meal.dishes) : meal.dishes != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = date != null ? date.hashCode() : 0;
+        result = 31 * result + (dishes != null ? dishes.hashCode() : 0);
+        return result;
+    }
 }
