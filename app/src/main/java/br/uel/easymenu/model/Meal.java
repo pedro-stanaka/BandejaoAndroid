@@ -41,9 +41,10 @@ public class Meal implements Parcelable {
     public Meal() {
     }
 
-    public Meal(Calendar date, String period) {
+    public Meal(Calendar date, String period, List<Dish> dishes) {
         this.date = date;
         this.period = period;
+        this.dishes = dishes;
     }
 
     public Meal(Parcel in) {

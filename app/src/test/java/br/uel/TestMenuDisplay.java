@@ -49,30 +49,10 @@ public class TestMenuDisplay {
 
     @Test
     public void testJsonFormatter() throws Exception {
-        List<Meal> meals = new ArrayList<>();
-
-        Meal meal = new Meal(Calendar.getInstance(), "BOTH");
-
-        Dish dish1 = new Dish("Beans");
-        Dish dish2 = new Dish("Rice");
-        Dish dish3 = new Dish("Pasta");
-
-        meal.addDish(dish1);
-        meal.addDish(dish2);
-        meal.addDish(dish3);
-
-        meals.add(meal);
-
-        meal = new Meal(Calendar.getInstance(), "BOTH");
-
-        dish1 = new Dish("Beans");
-        dish2 = new Dish("Rice");
-        dish3 = new Dish("Pasta");
-
-        meal.addDish(dish1);
-        meal.addDish(dish2);
-        meal.addDish(dish3);
-        meals.add(meal);
+        List<Meal> meals = new ArrayList<Meal>() {{
+            add(new MealBuilder().withDishes("Beans", "Rice", "Pasta").build());
+            add(new MealBuilder().withDishes("Beans", "Rice", "Pasta").build());
+        }};
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(meals);

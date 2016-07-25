@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import br.uel.easymenu.BuildConfig;
 import br.uel.easymenu.dao.DishDao;
@@ -28,7 +29,6 @@ import static org.junit.Assert.assertTrue;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
-// TODO: Refactor this test
 public class TestDaoMeal {
 
     private MealDao mealDao = new SqliteMealDao(RuntimeEnvironment.application);
@@ -42,20 +42,30 @@ public class TestDaoMeal {
 
     @Test
     public void testNumberMealCreation() {
-
         assertThat(mealDao.count(), equalTo(0));
 
-        List<Meal> meals = createMeals(3);
-        mealDao.insert(meals);
+        MealBuilder builder = new MealBuilder();
+        mealDao.insert(builder.withPeriod(Meal.LUNCH).build());
+        mealDao.insert(builder.withPeriod(Meal.BREAKFAST).build());
+        mealDao.insert(builder.withPeriod(Meal.DINNER).build());
 
-        // Same date and period are replaced.
-        // That's why it is 1
+        assertThat(mealDao.count(), equalTo(3));
+    }
+
+    @Test
+    public void testReplaceSameDateAndPeriod() throws Exception {
+        MealBuilder builder = new MealBuilder();
+
+        mealDao.insert(builder.withPeriod(Meal.LUNCH).build());
+        mealDao.insert(builder.withPeriod(Meal.LUNCH).build());
+        mealDao.insert(builder.withPeriod(Meal.LUNCH).build());
+
         assertThat(mealDao.count(), equalTo(1));
     }
 
     @Test
     public void testMealCreationProperties() {
-        Meal meal = new Meal(Calendar.getInstance(), Meal.LUNCH);
+        Meal meal = new MealBuilder().withCalendar(Calendar.getInstance()).withPeriod(Meal.LUNCH).build();
         long id = mealDao.insert(meal);
 
         Meal newMeal = mealDao.findById(id);
@@ -68,22 +78,13 @@ public class TestDaoMeal {
 
     @Test
     public void testMealCreationWithDishes() {
-        MealDao mealDao = new SqliteMealDao(RuntimeEnvironment.application);
-        Meal meal = new Meal(Calendar.getInstance(), Meal.BOTH);
-
-        Dish dish1 = new Dish("Beans");
-        Dish dish2 = new Dish("Rice");
-        Dish dish3 = new Dish("Pasta");
-
-        meal.addDish(dish1);
-        meal.addDish(dish2);
-        meal.addDish(dish3);
+        Meal meal = new MealBuilder().withDishes("Beans", "Rice", "Pasta").build();
 
         long mealId = mealDao.insert(meal);
 
         assertThat(dishDao.count(), equalTo(3));
 
-        Dish dish = dishDao.findById(dish2.getId());
+        Dish dish = dishDao.findById(meal.getDishes().get(1).getId());
         assertThat(dish.getDishName(), equalTo("Rice"));
 
         List<Dish> dishes = dishDao.findDishesByMealId(mealId);
@@ -95,7 +96,7 @@ public class TestDaoMeal {
 
     @Test
     public void testMealDeletion() {
-        Meal meal = new Meal(Calendar.getInstance(), "BOTH");
+        Meal meal = new MealBuilder().build();
         long id = mealDao.insert(meal);
         mealDao.delete(id);
 
@@ -105,6 +106,7 @@ public class TestDaoMeal {
     @Test
     public void testMealGetByDate() {
         List<Meal> meals = createMeals("2014-02-05", "2014-02-10", "2014-02-12");
+
         mealDao.insert(meals);
 
         List<Meal> queryMeals = mealDao.mealsOfTheWeek(fromStringToCalendar("2014-02-07"));
@@ -150,22 +152,12 @@ public class TestDaoMeal {
         assertThat(queryMeals.get(1).getDate(), equalTo(meals.get(2).getDate()));
     }
 
-    private List<Meal> createMeals(int number) {
-        List<Meal> meals = new ArrayList<Meal>();
-
-        for (int i = 0; i < number; i++) {
-            meals.add(createMeal(Calendar.getInstance(), Meal.BOTH));
-        }
-
-        return meals;
-    }
-
     private List<Meal> createMeals(String... calendars) {
-        List<Meal> meals = new ArrayList<Meal>();
 
-        for (String calendarString : calendars) {
-            Calendar calendar = fromStringToCalendar(calendarString);
-            meals.add(createMeal(calendar, Meal.BOTH));
+        List<Meal> meals = new ArrayList<>();
+
+        for (String calendar : calendars) {
+            meals.add(new MealBuilder().withDate(calendar).build());
         }
 
         return meals;
@@ -174,19 +166,12 @@ public class TestDaoMeal {
     private Calendar fromStringToCalendar(String calendarStr) {
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         try {
             calendar.setTime(sdf.parse(calendarStr));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return calendar;
-    }
-
-    private Meal createMeal(Calendar calendar, String period) {
-        Meal meal = new Meal();
-        meal.setDate(calendar);
-        meal.setPeriod(period);
-        return meal;
     }
 }
