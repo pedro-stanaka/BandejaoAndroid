@@ -8,6 +8,7 @@ import java.util.List;
 
 import br.uel.easymenu.model.Dish;
 import br.uel.easymenu.model.Meal;
+import br.uel.easymenu.utils.CalendarUtils;
 
 public class MealBuilder {
 
@@ -21,12 +22,8 @@ public class MealBuilder {
     }
 
     public MealBuilder withDate(String date)  {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            calendar.setTime(sdf.parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Calendar calendar = CalendarUtils.fromStringToCalendar(date);
+        calendar.setTime(calendar.getTime());
         return this;
     }
 
@@ -60,10 +57,19 @@ public class MealBuilder {
     }
 
     public static List<Meal> createFakeMeals() {
-        return new ArrayList<Meal>() {{
-            add(new MealBuilder().withDishes("Rice").withPeriod(Meal.LUNCH).build());
-            add(new MealBuilder().withDishes("Beans").withPeriod(Meal.BOTH).build());
-            add(new MealBuilder().withDishes("Burger").withPeriod(Meal.BREAKFAST).build());
-        }};
+        return createFakeMeals(Calendar.getInstance());
+    }
+
+    public static List<Meal> createFakeMeals(Calendar ... calendars) {
+        ArrayList<Meal> fakeMeals = new ArrayList<>();
+        for(final Calendar calendar : calendars) {
+            fakeMeals.addAll(
+                    new ArrayList<Meal>() {{
+                        add(new MealBuilder().withCalendar(calendar).withDishes("Rice", "Pizza").withPeriod(Meal.LUNCH).build());
+                        add(new MealBuilder().withCalendar(calendar).withDishes("Beans").withPeriod(Meal.BOTH).build());
+                        add(new MealBuilder().withCalendar(calendar).withDishes("Burger").withPeriod(Meal.BREAKFAST).build());
+                    }});
+        }
+        return fakeMeals;
     }
 }
