@@ -76,9 +76,10 @@ public class MealService {
 
             mealDao.beginTransaction();
             try {
-                Log.i(App.TAG, "Deleting " + oldMeals.size() + " meals in the database: " + oldMeals);
+                Log.i(App.TAG, "Deleting " + oldMeals.size() + " meals in the database");
 
                 for (Meal meal : oldMeals) {
+                    Log.i(App.TAG, "Deleting " + meal);
                     mealDao.delete(meal.getId());
                 }
                 Log.i(App.TAG, "Inserting " + newMeals.size() + " new meals in the database: " + newMeals);

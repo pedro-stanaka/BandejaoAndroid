@@ -8,6 +8,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -86,5 +87,18 @@ public class TestDaoUniversity {
         assertThat(0, equalTo(universityDao.count()));
         assertThat(0, equalTo(mealDao.count()));
         assertThat(0, equalTo(dishDao.count()));
+    }
+
+    @Test
+    public void testDoesNotReplaceEqualMealsFromDifferentUniversities() throws Exception {
+        University university1 = UniversityBuilder.createFakeUniversty();
+        university1.setName("Name1");
+        University university2 = UniversityBuilder.createFakeUniversty();
+        university2.setName("Name2");
+        universityDao.insertWithMeals(university1);
+        universityDao.insertWithMeals(university2);
+
+        int totalMeals = university1.getMeals().size() + university2.getMeals().size();
+        assertThat(mealDao.count(), equalTo(totalMeals));
     }
 }
