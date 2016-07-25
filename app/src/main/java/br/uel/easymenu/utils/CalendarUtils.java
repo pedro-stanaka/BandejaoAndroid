@@ -11,7 +11,8 @@ import java.util.TimeZone;
 
 public class CalendarUtils {
 
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    public static final String CALENDAR_FORMAT = "yyyy-MM-dd";
+    public static final SimpleDateFormat SDF = new SimpleDateFormat(CALENDAR_FORMAT, Locale.getDefault());
 
     public static java.util.Calendar fromStringToCalendar(String calendarString) {
         java.util.Calendar calendar = java.util.Calendar.getInstance();

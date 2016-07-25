@@ -1,20 +1,19 @@
 package br.uel.easymenu;
 
-import com.google.inject.Inject;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import br.uel.easymenu.ioc.TestApp;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.service.MealService;
-import roboguice.RoboGuice;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -24,13 +23,13 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class TestJsonResponse {
 
     @Inject
-    private MealService mealService;
+    MealService mealService;
 
     private List<Meal> meals;
 
     @Before
     public void injectVariables() {
-        RoboGuice.getInjector(RuntimeEnvironment.application).injectMembers(this);
+        TestApp.component().inject(this);
         String mealsJson = convertStreamToString(getClass().getResourceAsStream("/success.json"));
         meals = mealService.deserializeMeal(mealsJson);
     }

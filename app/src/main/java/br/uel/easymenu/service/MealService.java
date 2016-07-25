@@ -4,13 +4,15 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import com.google.inject.Inject;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.Calendar;
+
 import java.util.List;
+
+import javax.inject.Inject;
 
 import br.uel.easymenu.App;
 import br.uel.easymenu.dao.MealDao;
@@ -18,14 +20,18 @@ import br.uel.easymenu.model.Meal;
 
 public class MealService {
 
-    @Inject
     private ObjectMapper mapper;
 
-    @Inject
     private MealDao mealDao;
 
-    @Inject
     private EventBus eventBus;
+
+    @Inject
+    public MealService(ObjectMapper mapper, MealDao mealDao, EventBus eventBus) {
+        this.mapper = mapper;
+        this.mealDao = mealDao;
+        this.eventBus = eventBus;
+    }
 
     public List<Meal> deserializeMeal(String json) {
         List<Meal> meals = null;

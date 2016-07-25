@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,12 +21,14 @@ import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.gui.MenuActivity;
+import br.uel.easymenu.ioc.TestApp;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.service.NetworkEvent;
 import br.uel.easymenu.tables.DbHelper;
-import roboguice.RoboGuice;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
@@ -41,12 +41,12 @@ public class TestMenuActivity {
     private MenuActivity menuActivity;
 
     @Inject
-    private MealDao mealDao;
+    MealDao mealDao;
 
     @Before
     public void setupTests() {
         menuActivity = Robolectric.buildActivity(MenuActivity.class).create().get();
-        RoboGuice.getInjector(RuntimeEnvironment.application).injectMembers(this);
+        TestApp.component().inject(this);
     }
 
     @After

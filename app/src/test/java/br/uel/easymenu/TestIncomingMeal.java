@@ -2,12 +2,6 @@ package br.uel.easymenu;
 
 import android.database.sqlite.SQLiteException;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Module;
-import com.google.inject.Stage;
-import com.google.inject.util.Modules;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,12 +12,13 @@ import org.robolectric.annotation.Config;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.uel.easymenu.dao.MealDao;
-import br.uel.easymenu.dao.SqliteMealDao;
+import br.uel.easymenu.ioc.TestApp;
 import br.uel.easymenu.model.Meal;
 import br.uel.easymenu.service.MealService;
 import br.uel.easymenu.tables.DbHelper;
-import roboguice.RoboGuice;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyList;
@@ -34,17 +29,15 @@ import static org.mockito.Mockito.mock;
 @RunWith(RobolectricGradleTestRunner.class)
 public class TestIncomingMeal {
 
-    private MealDao mealDaoMock = mock(MealDao.class);
+    @Inject
+    MealDao mealDao;
 
     @Inject
-    private MealDao mealDao;
-
-    @Inject
-    private MealService mealService;
+    MealService mealService;
 
     @Before
     public void setupTests() {
-        RoboGuice.getInjector(RuntimeEnvironment.application).injectMembers(this);
+        TestApp.component().inject(this);
     }
 
     @After
@@ -70,32 +63,22 @@ public class TestIncomingMeal {
 
     @Test
     public void testDatabaseRollback() throws Exception {
+        // Populating the database first
+        List<Meal> firstMeals = MealBuilder.createFakeMeals();
+        mealDao.insert(firstMeals);
+        int mealsSize = mealDao.count();
+
         // Injection of mock
-        Module module = Modules.override(RoboGuice.newDefaultRoboModule(RuntimeEnvironment.application)).with(new TestModule());
-        RoboGuice.setBaseApplicationInjector(RuntimeEnvironment.application, Stage.DEVELOPMENT, module);
-        RoboGuice.getInjector(RuntimeEnvironment.application).injectMembers(this);
+        MealDao mealDaoMock = mock(MealDao.class);
         doThrow(new SQLiteException()).when(mealDaoMock).insert(anyList());
 
-        // Instance Variable Dao is now a mock.
-        // Therefore, we have to create one manually
-        MealDao manualDao = new SqliteMealDao(RuntimeEnvironment.application);
-        List<Meal> firstMeals = MealBuilder.createFakeMeals();
-        manualDao.insert(firstMeals);
+        TestApp.mockComponent(mealDaoMock).inject(this);
 
         List<Meal> exceptionMeals = MealBuilder.createFakeMeals();
         // Removing to confirm the rollback
         exceptionMeals.remove(0);
         mealService.replaceMealsFromCurrentWeek(exceptionMeals);
 
-        assertEquals(manualDao.count(), firstMeals.size());
-
-        RoboGuice.util.reset();
-    }
-
-    public class TestModule extends AbstractModule {
-        @Override
-        protected void configure() {
-            bind(MealDao.class).toInstance(mealDaoMock);
-        }
+        assertEquals(mealsSize, firstMeals.size());
     }
 }

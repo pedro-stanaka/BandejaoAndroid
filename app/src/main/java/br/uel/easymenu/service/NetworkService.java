@@ -13,40 +13,43 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.inject.Inject;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import br.uel.easymenu.App;
-import br.uel.easymenu.R;
 import br.uel.easymenu.model.Meal;
-import roboguice.inject.InjectResource;
 
 import static br.uel.easymenu.service.NetworkEvent.NetworkErrorType;
 
 public class NetworkService {
 
-    @Inject
     private RequestQueue requestQueue;
 
-    @InjectResource(R.string.ip)
-    private String ip;
+    private String urlWeeklyMeals;
 
-    @InjectResource(R.string.url_current_meal)
-    private String currentMealUrl;
-
-    @Inject
     private MealService mealService;
 
-    @Inject
     private EventBus eventBus;
 
-    public void persistCurrentMealsFromServer(final NetworkServiceListener listener) {
-        String url = ip + currentMealUrl;
+    @Inject
+    public NetworkService(RequestQueue queue,
+                          @Named("url.weekly_meals") String urlWeeklyMeals,
+                          MealService mealService,
+                          EventBus eventBus) {
+        this.requestQueue = queue;
+        this.urlWeeklyMeals = urlWeeklyMeals;
+        this.mealService = mealService;
+        this.eventBus = eventBus;
+    }
 
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+    public void persistCurrentMealsFromServer(final NetworkServiceListener listener) {
+
+        StringRequest request = new StringRequest(Request.Method.GET, urlWeeklyMeals, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 

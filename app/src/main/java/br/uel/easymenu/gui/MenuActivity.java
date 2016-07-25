@@ -5,16 +5,19 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
-
-import com.google.inject.Inject;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 
+import javax.inject.Inject;
+
+import br.uel.easymenu.App;
 import br.uel.easymenu.R;
 import br.uel.easymenu.adapter.MealsPagerAdapter;
 import br.uel.easymenu.adapter.MissingMealAdapter;
@@ -22,38 +25,39 @@ import br.uel.easymenu.dao.MealDao;
 import br.uel.easymenu.model.GroupedMeals;
 import br.uel.easymenu.service.NetworkEvent;
 import br.uel.easymenu.service.NetworkService;
-import roboguice.RoboGuice;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
-@ContentView(R.layout.activity_main)
-public class MenuActivity extends RoboAppCompatActivity {
+public class MenuActivity extends AppCompatActivity {
 
     @Inject
-    private MealDao mealDao;
+    MealDao mealDao;
 
     @Inject
-    private NetworkService networkService;
+    NetworkService networkService;
 
     @Inject
-    private SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences;
 
     @Inject
-    private EventBus bus;
+    EventBus bus;
 
-    @InjectView(R.id.viewpager)
-    private ViewPager viewPager;
+    @Bind(R.id.viewpager)
+    ViewPager viewPager;
 
-    @InjectView(R.id.toolbar)
-    private Toolbar toolbar;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
-    @InjectView(R.id.tabs)
-    private TabLayout tabLayout;
+    @Bind(R.id.tabs)
+    TabLayout tabLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        RoboGuice.getInjector(this).injectMembersWithoutViews(this);
         super.onCreate(savedInstanceState);
+        Log.d(App.TAG, (mealDao == null)+"");
+        setContentView(R.layout.activity_main);
+        App.component().inject(this);
+        ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
         setGuiWithMeals();
